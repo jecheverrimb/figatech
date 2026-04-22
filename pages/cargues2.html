@@ -1,0 +1,167 @@
+<!-- GARANTÍAS > CARGUES -->
+<div class="breadcrumb">
+  <a href="#" onclick="navTo('inicio');return false">Inicio</a>
+  <span class="sep">/</span>
+  <a href="#">Garantías</a>
+  <span class="sep">/</span>
+  <span>Cargues</span>
+</div>
+<div class="page-header">
+  <div>
+    <div class="page-title">Cargue de garantías</div>
+    <div class="page-subtitle">Consulte, agregue o modifique el estado de sus cargues</div>
+  </div>
+  <div class="page-actions">
+    <button class="btn btn-outline" onclick="navTo('novedades')">
+      <span class="material-icons">notifications_none</span> Novedades
+    </button>
+    <button class="btn btn-filled" onclick="navTo('cargar')">
+      <span class="material-icons">upload_file</span> Cargar créditos
+    </button>
+  </div>
+</div>
+
+<!-- Banner de éxito post-cargue -->
+<div style="background:#d1fae5;border:1.5px solid #6ee7b7;border-radius:10px;padding:1rem 1.5rem;display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem">
+  <span class="material-icons" style="color:#059669;font-size:1.5rem">check_circle</span>
+  <div>
+    <strong style="color:#065f46">¡Cargue exitoso!</strong>
+    <span style="color:#065f46"> Recuerda subir el soporte de pago para completar el proceso.</span>
+  </div>
+</div>
+
+<div class="table-card">
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="material-icons">search</span>
+      <input type="text" id="buscador2" placeholder="Buscador" oninput="renderTablaCargues2()">
+    </div>
+    <div class="pills">
+      <button class="pill active" id="pill2-todo" onclick="filtrarCargues2('Todo',this)">
+        Todo <span class="material-icons">close</span>
+      </button>
+      <button class="pill" onclick="filtrarCargues2('Cargado',this)">Cargado</button>
+      <button class="pill" onclick="filtrarCargues2('Pagado',this)">Pagado</button>
+      <button class="pill" onclick="filtrarCargues2('Aprobado',this)">Aprobado</button>
+    </div>
+  </div>
+
+  <table id="tabla-cargues2">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Fecha de cargue</th>
+        <th>Cobertura</th>
+        <th>Administración</th>
+        <th>IVA</th>
+        <th>Comisión total</th>
+        <th>Estado</th>
+        <th>Opciones</th>
+      </tr>
+    </thead>
+    <tbody id="tbody-cargues2"></tbody>
+  </table>
+</div>
+
+<script>
+  var filtroActivo2 = 'Todo';
+
+  function abrirPagoDesde2(id) {
+    window.subSoporteReturnPage = 'confirmacion-pago';
+    rowSubirId  = id;
+    modoSoporte = 'nuevo';
+    document.getElementById('modal-subir-titulo').textContent = 'Soportes de pago';
+    ['1','2'].forEach(function(n) {
+      document.getElementById('nombre-soporte-' + n).textContent = 'Haz clic para subir';
+      var slot = document.getElementById('upload-slot-' + n);
+      slot.classList.remove('has-file');
+      slot.querySelector('.material-icons').textContent = n === '1' ? 'cloud_upload' : 'add_circle_outline';
+      document.getElementById('file-soporte-' + n).value = '';
+    });
+    abrirModal('modal-subir');
+  }
+
+  /* Fallback: si cargues.html no se cargó antes, cargarPago no existe */
+  if (typeof cargarPago !== 'function') {
+    window.cargarPago = function() {
+      var archivo1 = document.getElementById('file-soporte-1').files[0];
+      if (!archivo1) { showToast('Debes subir al menos el Soporte 1', 'error'); return; }
+      var c = cargues.find(function(x) { return x.id === rowSubirId; });
+      if (c) c.estado = 'Pagado';
+      cerrarModal('modal-subir');
+      var destino = window.subSoporteReturnPage || 'cargues2';
+      window.subSoporteReturnPage = null;
+      navTo(destino);
+    };
+  }
+
+  function renderTablaCargues2() {
+    var tbody = document.getElementById('tbody-cargues2');
+    if (!tbody) return;
+    var buscador = document.getElementById('buscador2');
+    var query = buscador ? buscador.value.toLowerCase() : '';
+    tbody.innerHTML = '';
+
+    cargues.forEach(function(c, index) {
+      var coincideFiltro   = filtroActivo2 === 'Todo' || c.estado === filtroActivo2;
+      var coincideBusqueda = c.id.toLowerCase().includes(query) || c.fecha.toLowerCase().includes(query);
+      if (!coincideFiltro || !coincideBusqueda) return;
+
+      var tr = document.createElement('tr');
+      if (index === 0) tr.style.background = '#f0fdf4';
+
+      var badgeClass = { Cargado: 'badge-cargado', Pagado: 'badge-pagado', Aprobado: 'badge-aprobado' }[c.estado] || '';
+      var estadoBadge = '<span class="badge ' + badgeClass + '">' + c.estado + '</span>';
+
+      var btnPrincipal = '';
+      if (c.estado === 'Cargado') {
+        btnPrincipal = '<button class="btn-accion btn-accion-pago" onclick="abrirPagoDesde2(\'' + c.id + '\')">'
+          + '<span class="material-icons">upload</span> Subir pago</button>';
+      } else if (c.estado === 'Pagado') {
+        btnPrincipal = '<button class="btn-accion btn-accion-cambiar" onclick="abrirPagoDesde2(\'' + c.id + '\')">'
+          + '<span class="material-icons">swap_horiz</span> Cambiar soporte</button>';
+      } else if (c.estado === 'Aprobado') {
+        btnPrincipal = '<button class="btn-accion btn-accion-descargar" onclick="showToast(\'Descargando garantías...\',\'info\')">'
+          + '<span class="material-icons">download</span> Descargar garantías</button>';
+      }
+
+      var dotsItems = '<button onclick="closeMenus()"><span class="material-icons">visibility</span> Ver detalle</button>';
+      if (c.estado === 'Cargado') {
+        dotsItems += '<button onclick="closeMenus()"><span class="material-icons">download</span> Descargar</button>'
+          + '<div class="dots-divider"></div>'
+          + '<button class="danger" onclick="closeMenus();showToast(\'Cargue eliminado\',\'info\')"><span class="material-icons">delete</span> Eliminar</button>';
+      }
+
+      tr.innerHTML =
+        '<td><span class="td-id">' + c.id + '</span></td>'
+        + '<td>' + c.fecha + '</td>'
+        + '<td>' + c.cobertura + '</td>'
+        + '<td>' + c.admin + '</td>'
+        + '<td>' + c.iva + '</td>'
+        + '<td><strong>' + c.total + '</strong></td>'
+        + '<td>' + estadoBadge + '</td>'
+        + '<td><div class="td-actions">'
+          + btnPrincipal
+          + '<div style="position:relative">'
+            + '<button class="btn-dots" onclick="toggleDotsMenu(\'dots2-' + c.id + '\',event)">···</button>'
+            + '<div class="dots-menu" id="dots2-' + c.id + '">' + dotsItems + '</div>'
+          + '</div>'
+        + '</div></td>';
+
+      tbody.appendChild(tr);
+    });
+
+    if (!tbody.children.length) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--gray-400)">No se encontraron resultados</td></tr>';
+    }
+  }
+
+  function filtrarCargues2(estado, btn) {
+    filtroActivo2 = estado;
+    document.querySelectorAll('#sec-cargues2 .pill').forEach(function(p) { p.classList.remove('active'); });
+    btn.classList.add('active');
+    renderTablaCargues2();
+  }
+
+  renderTablaCargues2();
+</script>

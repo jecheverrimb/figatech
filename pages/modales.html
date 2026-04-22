@@ -1,0 +1,175 @@
+<!-- Modal: Subir soporte de pago (2 archivos) -->
+<div class="overlay" id="modal-subir">
+  <div class="modal" style="max-width:500px">
+    <button class="modal-close" onclick="cerrarModal('modal-subir')"><span class="material-icons">close</span></button>
+    <h2 id="modal-subir-titulo">Soportes de pago</h2>
+    <p class="modal-desc">Carga hasta 2 archivos de soporte (PNG, JPG, JPEG, PDF). Al menos uno es obligatorio.</p>
+    <input type="file" id="file-soporte-1" style="display:none" accept=".png,.jpg,.jpeg,.pdf" onchange="handleSoporteFile(1,this)">
+    <input type="file" id="file-soporte-2" style="display:none" accept=".png,.jpg,.jpeg,.pdf" onchange="handleSoporteFile(2,this)">
+    <div class="upload-slots">
+      <div class="upload-slot" id="upload-slot-1" onclick="document.getElementById('file-soporte-1').click()">
+        <span class="material-icons">cloud_upload</span>
+        <div class="slot-label">Soporte 1</div>
+        <div class="slot-name" id="nombre-soporte-1">Haz clic para subir</div>
+      </div>
+      <div class="upload-slot" id="upload-slot-2" onclick="document.getElementById('file-soporte-2').click()">
+        <span class="material-icons">add_circle_outline</span>
+        <div class="slot-label">Soporte 2 <span style="font-weight:400;color:var(--gray-400)">(opcional)</span></div>
+        <div class="slot-name" id="nombre-soporte-2">Haz clic para subir</div>
+      </div>
+    </div>
+    <div class="modal-actions end">
+      <button class="btn btn-ghost" onclick="cerrarModal('modal-subir')">Cancelar</button>
+      <button class="btn btn-filled" onclick="cargarPago()">
+        <span class="material-icons">payments</span> Cargar pago
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Confirmar cargue -->
+<div class="overlay" id="modal-confirmar">
+  <div class="modal" style="max-width:480px">
+    <button class="modal-close" onclick="cerrarModal('modal-confirmar')"><span class="material-icons">close</span></button>
+    <h2>Confirmar cargue</h2>
+    <p class="modal-desc">Verifica que toda la información sea correcta antes de continuar.</p>
+    <table class="confirm-table">
+      <tr><td>Fecha de reporte</td><td>Abril 2026</td></tr>
+      <tr><td>Cobertura</td><td>$ 138.500</td></tr>
+      <tr><td>Administración</td><td>$ 25.900</td></tr>
+      <tr><td>IVA</td><td>$ 16.620</td></tr>
+      <tr><td>Comisión total</td><td>$ 155.120</td></tr>
+    </table>
+    <div class="confirm-total">
+      <div class="amount">$ 155.120</div>
+      <div class="lbl">Valor total a consignar</div>
+    </div>
+    <div class="modal-actions end" style="margin-top:1.5rem">
+      <button class="btn btn-ghost" onclick="cerrarModal('modal-confirmar')">Atrás</button>
+      <button class="btn btn-filled" onclick="procesarCargue()">
+        <span class="material-icons">cloud_upload</span> Cargar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Garantías cargadas (éxito) -->
+<div class="overlay" id="modal-exito">
+  <div class="modal" style="max-width:460px">
+    <button class="modal-close" onclick="finalizarCargue()"><span class="material-icons">close</span></button>
+    <div class="success-body">
+      <span class="material-icons">check_circle</span>
+      <h2>Garantías cargadas</h2>
+      <p>Tus créditos afianzados han sido cargados con éxito. Descarga el documento informativo; una vez realizado el pago, recuerda subir el soporte de pago.</p>
+    </div>
+    <div class="modal-actions center" style="margin-top:1.5rem">
+      <button class="btn btn-filled" onclick="finalizarCargue()">
+        <span class="material-icons">download</span> Descargar documento
+      </button>
+      <button class="btn btn-ghost" onclick="finalizarCargue()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Confirmar eliminación -->
+<div class="overlay" id="modal-eliminar">
+  <div class="modal" style="max-width:420px">
+    <button class="modal-close" onclick="cerrarModal('modal-eliminar')"><span class="material-icons">close</span></button>
+    <div style="text-align:center;padding:0.5rem 0">
+      <span class="material-icons modal-danger-icon">delete_forever</span>
+      <h2>Eliminar cargue</h2>
+      <p class="modal-desc">¿Estás seguro de que deseas eliminar el cargue <strong id="eliminar-id-txt">#00</strong>? Esta acción no se puede deshacer.</p>
+    </div>
+    <div class="modal-actions end">
+      <button class="btn btn-ghost" onclick="cerrarModal('modal-eliminar')">Cancelar</button>
+      <button class="btn btn-danger" onclick="confirmarEliminar()">
+        <span class="material-icons">delete</span> Eliminar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Compromiso de documentos -->
+<div class="overlay" id="modal-compromiso">
+  <div class="modal" style="max-width:480px">
+    <button class="modal-close" onclick="cerrarModal('modal-compromiso')"><span class="material-icons">close</span></button>
+    <h2>Compromiso de documentos</h2>
+    <p class="modal-desc">Has realizado 1 Cobro Total, recuerda que tu compromiso es enviar los documentos:</p>
+    <ul style="margin:0 0 1rem 1.2rem;display:flex;flex-direction:column;gap:5px">
+      <li style="font-size:0.88rem;color:var(--gray-700)">Fotocopia de cédula deudor</li>
+      <li style="font-size:0.88rem;color:var(--gray-700)">Estado de cuenta</li>
+      <li style="font-size:0.88rem;color:var(--gray-700)">Copia de pagaré</li>
+      <li style="font-size:0.88rem;color:var(--gray-700)">Copia carta de instrucciones</li>
+      <li style="font-size:0.88rem;color:var(--gray-700)">Certificación de reporte a centrales de riesgo</li>
+      <li style="font-size:0.88rem;color:var(--gray-700)">Formato de aceptación de fianza</li>
+      <li style="font-size:0.88rem;color:var(--gray-700)">Formato de endoso</li>
+    </ul>
+    <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:0.85rem 1rem;margin-bottom:1.1rem;font-size:0.84rem;color:#0c4a6e;line-height:1.6">
+      <strong style="display:block;margin-bottom:0.3rem">¿Cómo enviar los documentos?</strong>
+      <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:0.25rem">
+        <span class="material-icons" style="font-size:15px;margin-top:2px;flex-shrink:0">home_work</span>
+        <span><strong>Firma física:</strong> Envíalos directamente a CC Comercial Chipichape, Cali.</span>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:6px">
+        <span class="material-icons" style="font-size:15px;margin-top:2px;flex-shrink:0">email</span>
+        <span><strong>Firma electrónica:</strong> Envíalos al correo <strong>gaf@figarantias.com</strong></span>
+      </div>
+    </div>
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:0.88rem;font-weight:500;padding:0.8rem 1rem;border:1.5px solid var(--gray-200);border-radius:9px;transition:border-color 0.15s" id="label-compromiso">
+      <input type="checkbox" id="chk-compromiso" onchange="toggleBtnReclamar()" style="width:16px;height:16px;cursor:pointer;accent-color:var(--black)">
+      Me comprometo a enviar los documentos
+    </label>
+    <div class="modal-actions end" style="margin-top:1.2rem">
+      <button class="btn btn-ghost" onclick="cerrarModal('modal-compromiso');abrirModal('modal-confirmar-reclamo')">Atrás</button>
+      <button class="btn btn-filled" id="btn-reclamar-modal" style="opacity:0.4;cursor:not-allowed" disabled onclick="procesarReclamo()">Reclamar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Confirmar reclamo -->
+<div class="overlay" id="modal-confirmar-reclamo">
+  <div class="modal" style="max-width:480px">
+    <button class="modal-close" onclick="cerrarModal('modal-confirmar-reclamo')"><span class="material-icons">close</span></button>
+    <h2>Confirmar reclamo</h2>
+    <p class="modal-desc">Verifica que toda la información sea correcta antes de continuar.</p>
+    <table class="confirm-table">
+      <tr><td>Fecha de reclamo</td><td id="cr-fecha">Abril 2026</td></tr>
+      <tr><td>Cobros parciales</td><td>1</td></tr>
+      <tr>
+        <td>
+          Cobros totales
+          <span class="tooltip-wrap" style="margin-left:4px">
+            <button class="tooltip-icon-btn" type="button" tabindex="-1"><span class="material-icons">info</span></button>
+            <span class="tooltip-box">Cobro donde se exige el<br>100% del valor asegurado.</span>
+          </span>
+        </td>
+        <td>1</td>
+      </tr>
+      <tr><td>Nº de créditos a reclamar</td><td>2</td></tr>
+    </table>
+    <div class="confirm-total">
+      <div class="amount">$ 1.500.000</div>
+      <div class="lbl">Valor a reclamar</div>
+    </div>
+    <div class="modal-actions end" style="margin-top:1.5rem">
+      <button class="btn btn-ghost" onclick="cerrarModal('modal-confirmar-reclamo')">Atrás</button>
+      <button class="btn btn-filled" onclick="abrirConfirmarReclamo()">Siguiente</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Reclamo exitoso -->
+<div class="overlay" id="modal-exito-reclamo">
+  <div class="modal" style="max-width:460px">
+    <button class="modal-close" onclick="finalizarReclamo()"><span class="material-icons">close</span></button>
+    <div class="success-body">
+      <span class="material-icons">check_circle</span>
+      <h2>Reclamo enviado</h2>
+      <p>Tu reclamo ha sido registrado exitosamente. Recuerda enviar los documentos comprometidos para continuar con el proceso.</p>
+    </div>
+    <div class="modal-actions center" style="margin-top:1.5rem">
+      <button class="btn btn-filled" onclick="finalizarReclamo()">Ver mis reclamos</button>
+      <button class="btn btn-ghost" onclick="finalizarReclamo()">Cerrar</button>
+    </div>
+  </div>
+</div>

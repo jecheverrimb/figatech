@@ -1,0 +1,200 @@
+<!-- GARANTÍAS > CARGUES -->
+<div class="breadcrumb">
+  <a href="#" onclick="navTo('inicio');return false">Inicio</a>
+  <span class="sep">/</span>
+  <a href="#">Garantías</a>
+  <span class="sep">/</span>
+  <span>Cargues</span>
+</div>
+<div class="page-header">
+  <div>
+    <div class="page-title">Cargue de garantías</div>
+    <div class="page-subtitle">Consulte, agregue o modifique el estado de sus cargues</div>
+  </div>
+  <div class="page-actions">
+    <button class="btn btn-outline" onclick="navTo('novedades')">
+      <span class="material-icons">notifications_none</span> Novedades
+    </button>
+    <button class="btn btn-filled" onclick="navTo('cargar')">
+      <span class="material-icons">upload_file</span> Cargar créditos
+    </button>
+  </div>
+</div>
+
+<div class="table-card">
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="material-icons">search</span>
+      <input type="text" id="buscador" placeholder="Buscador" oninput="buscarCargues(this.value)">
+    </div>
+    <div class="pills">
+      <button class="pill active" onclick="filtrar('Todo',this)">
+        Todo <span class="material-icons">close</span>
+      </button>
+      <button class="pill" onclick="filtrar('Cargado',this)">Cargado</button>
+      <button class="pill" onclick="filtrar('Pagado',this)">Pagado</button>
+      <button class="pill" onclick="filtrar('Aprobado',this)">Aprobado</button>
+    </div>
+  </div>
+
+  <table id="tabla-cargues">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Fecha de cargue</th>
+        <th>Cobertura</th>
+        <th>Administración</th>
+        <th>IVA</th>
+        <th>Comisión total</th>
+        <th>Estado</th>
+        <th>Opciones</th>
+      </tr>
+    </thead>
+    <tbody id="tbody-cargues">
+      <!-- Renderizado por JS -->
+    </tbody>
+  </table>
+</div>
+
+<script>
+  function renderTabla() {
+    const tbody = document.getElementById('tbody-cargues');
+    const query = document.getElementById('buscador').value.toLowerCase();
+    tbody.innerHTML = '';
+
+    cargues.forEach(c => {
+      const coincideFiltro   = filtroActivo === 'Todo' || c.estado === filtroActivo;
+      const coincideBusqueda = c.id.toLowerCase().includes(query) || c.fecha.toLowerCase().includes(query);
+      if (!coincideFiltro || !coincideBusqueda) return;
+
+      const tr = document.createElement('tr');
+
+      const badgeClass = { Cargado: 'badge-cargado', Pagado: 'badge-pagado', Aprobado: 'badge-aprobado' }[c.estado] || '';
+      const estadoBadge = `<span class="badge ${badgeClass}">${c.estado}</span>`;
+
+      let btnPrincipal = '';
+      if (c.estado === 'Cargado') {
+        btnPrincipal = `<button class="btn-accion btn-accion-pago" onclick="abrirSubirSoporte('${c.id}','nuevo')">
+          <span class="material-icons">upload</span> Subir pago
+        </button>`;
+      } else if (c.estado === 'Pagado') {
+        btnPrincipal = `<button class="btn-accion btn-accion-cambiar" onclick="abrirSubirSoporte('${c.id}','cambiar')">
+          <span class="material-icons">swap_horiz</span> Cambiar soporte
+        </button>`;
+      } else if (c.estado === 'Aprobado') {
+        btnPrincipal = `<button class="btn-accion btn-accion-descargar" onclick="descargarGarantias('${c.id}')">
+          <span class="material-icons">download</span> Descargar garantías
+        </button>`;
+      }
+
+      let dotsItems = `<button onclick="closeMenus()"><span class="material-icons">visibility</span> Ver detalle</button>`;
+      if (c.estado === 'Cargado') {
+        dotsItems += `<button onclick="closeMenus()"><span class="material-icons">download</span> Descargar</button>
+          <div class="dots-divider"></div>
+          <button class="danger" onclick="solicitarEliminar('${c.id}')"><span class="material-icons">delete</span> Eliminar</button>`;
+      } else if (c.estado === 'Pagado') {
+        dotsItems += `<button onclick="closeMenus()"><span class="material-icons">delete_sweep</span> Eliminar soporte</button>
+          <button onclick="abrirSubirSoporte('${c.id}','cambiar')"><span class="material-icons">swap_horiz</span> Cambiar soporte</button>
+          <div class="dots-divider"></div>
+          <button class="danger" onclick="solicitarEliminar('${c.id}')"><span class="material-icons">delete</span> Eliminar</button>`;
+      } else if (c.estado === 'Aprobado') {
+        dotsItems += `<button onclick="descargarGarantias('${c.id}')"><span class="material-icons">download</span> Descargar garantías</button>
+          <div class="dots-divider"></div>
+          <button class="danger" onclick="solicitarEliminar('${c.id}')"><span class="material-icons">delete</span> Eliminar</button>`;
+      }
+
+      tr.innerHTML = `
+        <td><span class="td-id">${c.id}</span></td>
+        <td>${c.fecha}</td>
+        <td>${c.cobertura}</td>
+        <td>${c.admin}</td>
+        <td>${c.iva}</td>
+        <td><strong>${c.total}</strong></td>
+        <td>${estadoBadge}</td>
+        <td>
+          <div class="td-actions">
+            ${btnPrincipal}
+            <div style="position:relative">
+              <button class="btn-dots" onclick="toggleDotsMenu('dots-${c.id}',event)">···</button>
+              <div class="dots-menu" id="dots-${c.id}">${dotsItems}</div>
+            </div>
+          </div>
+        </td>`;
+      tbody.appendChild(tr);
+    });
+
+    if (!tbody.children.length) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--gray-400)">No se encontraron resultados</td></tr>`;
+    }
+  }
+
+  function filtrar(estado, btn) {
+    filtroActivo = estado;
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    renderTabla();
+  }
+
+  function buscarCargues() { renderTabla(); }
+
+  function solicitarEliminar(id) {
+    eliminarId = id;
+    document.getElementById('eliminar-id-txt').textContent = '#' + id;
+    closeMenus();
+    abrirModal('modal-eliminar');
+  }
+
+  function confirmarEliminar() {
+    const idx = cargues.findIndex(x => x.id === eliminarId);
+    if (idx !== -1) cargues.splice(idx, 1);
+    cerrarModal('modal-eliminar');
+    renderTabla();
+    showToast('Cargue #' + eliminarId + ' eliminado correctamente', 'info');
+  }
+
+  function abrirSubirSoporte(id, modo) {
+    rowSubirId  = id;
+    modoSoporte = modo || 'nuevo';
+    const titulo = modoSoporte === 'cambiar' ? 'Cambiar soporte de pago' : 'Soportes de pago';
+    document.getElementById('modal-subir-titulo').textContent = titulo;
+    ['1','2'].forEach(n => {
+      document.getElementById('nombre-soporte-' + n).textContent = n === '1' ? 'Haz clic para subir' : 'Haz clic para subir';
+      document.getElementById('upload-slot-' + n).classList.remove('has-file');
+      const icon = document.getElementById('upload-slot-' + n).querySelector('.material-icons');
+      icon.textContent = n === '1' ? 'cloud_upload' : 'add_circle_outline';
+      document.getElementById('file-soporte-' + n).value = '';
+    });
+    abrirModal('modal-subir');
+  }
+
+  function handleSoporteFile(n, input) {
+    if (input.files && input.files[0]) {
+      const slot = document.getElementById('upload-slot-' + n);
+      slot.classList.add('has-file');
+      slot.querySelector('.material-icons').textContent = 'check_circle';
+      document.getElementById('nombre-soporte-' + n).textContent = input.files[0].name;
+    }
+  }
+
+  function cargarPago() {
+    const archivo1 = document.getElementById('file-soporte-1').files[0];
+    if (!archivo1) { showToast('Debes subir al menos el Soporte 1', 'error'); return; }
+    const c = cargues.find(x => x.id === rowSubirId);
+    if (c) c.estado = 'Pagado';
+    cerrarModal('modal-subir');
+    if (window.subSoporteReturnPage) {
+      const destino = window.subSoporteReturnPage;
+      window.subSoporteReturnPage = null;
+      navTo(destino);
+    } else {
+      renderTabla();
+      const msg = modoSoporte === 'cambiar' ? 'Soporte de pago actualizado' : 'Soporte de pago cargado correctamente';
+      showToast(msg, 'success');
+    }
+  }
+
+  function descargarGarantias(id) {
+    closeMenus();
+    showToast('Descargando garantías del cargue #' + id + '...', 'info');
+  }
+</script>

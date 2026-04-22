@@ -1,0 +1,121 @@
+<!-- GARANTÍAS > RECLAMOS > RECLAMAR -->
+<div class="breadcrumb">
+  <a href="#" onclick="navTo('inicio');return false">Inicio</a>
+  <span class="sep">/</span>
+  <a href="#" onclick="navTo('reclamos');return false">Garantías</a>
+  <span class="sep">/</span>
+  <a href="#" onclick="navTo('reclamos');return false">Reclamos</a>
+  <span class="sep">/</span>
+  <span>Reclamar</span>
+</div>
+<div class="page-title" style="margin-bottom:1.5rem">Cargue de créditos afianzados</div>
+
+<div class="step-card">
+  <div class="step-label">1. Para empezar diligencie los siguientes datos:</div>
+  <div class="form-row" style="align-items:flex-end;gap:1rem">
+    <div class="fgroup" style="flex:1;max-width:420px">
+      <label>Archivo a cargar
+        <span class="tooltip-wrap">
+          <button class="tooltip-icon-btn" type="button" tabindex="-1"><span class="material-icons">info</span></button>
+          <span class="tooltip-box">¿No tienes el archivo?<br><span style="color:#93c5fd;text-decoration:underline;cursor:pointer" onclick="alert('Descargando plantilla...')">Descárgalo aquí</span></span>
+        </span>
+      </label>
+      <input type="file" id="file-reclamo-real" accept=".xlsx,.xls" style="display:none" onchange="handleReclamoFile(this)">
+      <div class="file-btn" id="file-btn-reclamo" onclick="document.getElementById('file-reclamo-real').click()">
+        <span class="material-icons">attach_file</span>
+        <span id="file-nombre-reclamo">Seleccione el archivo (.xlsx)</span>
+      </div>
+    </div>
+    <div class="fgroup">
+      <label style="visibility:hidden">Acción</label>
+      <button class="btn btn-filled" onclick="analizarReclamo()">
+        <span class="material-icons">analytics</span> Analizar
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="step-card" id="paso2-reclamo" style="display:none">
+  <div class="step-label">2. Identifica que la información sea correcta para aprobar el cargue</div>
+  <table class="step2-table">
+    <thead>
+      <tr>
+        <th>Nº de documento</th>
+        <th>Nombre</th>
+        <th>Nº de crédito</th>
+        <th>Tipo de cobro</th>
+        <th>Valor a reclamar</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1034567892</td><td>Juan Pablo Herrera Quintero</td><td>1205</td><td>Total</td><td>$800.000</td></tr>
+      <tr><td>1056789012</td><td>Valentina Castro Moreno</td><td>1258</td><td>Parcial</td><td>$500.000</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="form-bottom">
+  <button class="btn btn-ghost" style="min-width:160px;justify-content:center" onclick="navTo('reclamos')">Cancelar</button>
+  <button class="btn btn-filled" id="btn-guardar-reclamo" style="min-width:160px;justify-content:center;opacity:0.4;cursor:not-allowed" disabled onclick="abrirCompromisoModal()">Guardar</button>
+</div>
+
+<script>
+  function handleReclamoFile(input) {
+    if (input.files && input.files[0]) {
+      archivoReclamo = true;
+      document.getElementById('file-nombre-reclamo').textContent = input.files[0].name;
+      document.getElementById('file-btn-reclamo').classList.add('has-file');
+    }
+  }
+
+  function analizarReclamo() {
+    if (!archivoReclamo) { showToast('Selecciona un archivo .xlsx para continuar', 'warning'); return; }
+    document.getElementById('paso2-reclamo').style.display = 'block';
+    const btn = document.getElementById('btn-guardar-reclamo');
+    btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer';
+    document.getElementById('paso2-reclamo').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showToast('Archivo analizado correctamente', 'success');
+  }
+
+  function abrirCompromisoModal() {
+    abrirModal('modal-confirmar-reclamo');
+  }
+
+  function toggleBtnReclamar() {
+    const checked = document.getElementById('chk-compromiso').checked;
+    const btn = document.getElementById('btn-reclamar-modal');
+    btn.disabled = !checked;
+    btn.style.opacity = checked ? '1' : '0.4';
+    btn.style.cursor = checked ? 'pointer' : 'not-allowed';
+    document.getElementById('label-compromiso').style.borderColor = checked ? 'var(--black)' : 'var(--gray-200)';
+  }
+
+  function abrirConfirmarReclamo() {
+    cerrarModal('modal-confirmar-reclamo');
+    document.getElementById('chk-compromiso').checked = false;
+    const btnR = document.getElementById('btn-reclamar-modal');
+    btnR.disabled = true; btnR.style.opacity = '0.4'; btnR.style.cursor = 'not-allowed';
+    document.getElementById('label-compromiso').style.borderColor = 'var(--gray-200)';
+    abrirModal('modal-compromiso');
+  }
+
+  function procesarReclamo() {
+    cerrarModal('modal-compromiso');
+    abrirModal('modal-exito-reclamo');
+  }
+
+  function finalizarReclamo() {
+    cerrarModal('modal-exito-reclamo');
+    const nuevoId = String(Number(reclamos[0].id) + 1).padStart(2, '0');
+    reclamos.unshift({ id: nuevoId, fecha: 'Abril / 2026', parcial: 1, total: 1, valor: '$1.500.000', estado: 'Solicitado' });
+    archivoReclamo = false;
+    document.getElementById('file-nombre-reclamo').textContent = 'Seleccione el archivo (.xlsx)';
+    document.getElementById('file-btn-reclamo').classList.remove('has-file');
+    document.getElementById('file-reclamo-real').value = '';
+    document.getElementById('paso2-reclamo').style.display = 'none';
+    const btn = document.getElementById('btn-guardar-reclamo');
+    btn.disabled = true; btn.style.opacity = '0.4'; btn.style.cursor = 'not-allowed';
+    navTo('reclamos2');
+    showToast('Reclamo enviado exitosamente', 'success');
+  }
+</script>

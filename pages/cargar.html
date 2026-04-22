@@ -1,0 +1,181 @@
+<!-- GARANTÍAS > CARGUES > CARGAR -->
+<div class="breadcrumb">
+  <a href="#" onclick="navTo('inicio');return false">Inicio</a>
+  <span class="sep">/</span>
+  <a href="#" onclick="navTo('cargues');return false">Garantías</a>
+  <span class="sep">/</span>
+  <a href="#" onclick="navTo('cargues');return false">Cargues</a>
+  <span class="sep">/</span>
+  <span>Cargar</span>
+</div>
+<div class="page-title" style="margin-bottom:1.5rem">Cargue de créditos afianzados</div>
+
+<!-- Paso 1 -->
+<div class="step-card">
+  <div class="step-label">
+    1. Para empezar diligencie los siguientes datos:
+    <a onclick="descargarPlantilla()">Plantilla de cargue</a>
+  </div>
+  <div class="form-row">
+    <div class="fgroup">
+      <label>Tipo de comisión</label>
+      <select id="sel-comision">
+        <option value="">Seleccione la comisión</option>
+        <option value="unico">Único 3.6%</option>
+        <option value="mensual">Mensual 0.3%</option>
+      </select>
+    </div>
+
+    <div class="fgroup">
+      <label>
+        Fecha de reporte
+        <span class="tooltip-wrap">
+          <button class="tooltip-icon-btn" type="button" tabindex="-1">
+            <span class="material-icons">info</span>
+          </button>
+          <span class="tooltip-box">
+            Selecciona el mes al que corresponde<br>el cargue. No se permiten fechas futuras.
+          </span>
+        </span>
+      </label>
+      <div class="file-btn" id="fecha-btn" onclick="document.getElementById('sel-fecha').showPicker ? document.getElementById('sel-fecha').showPicker() : document.getElementById('sel-fecha').click()" style="position:relative;cursor:pointer;justify-content:flex-start;gap:0.5rem">
+        <span class="material-icons" style="color:var(--gray-400);font-size:1.1rem">calendar_month</span>
+        <span id="fecha-display" style="color:var(--gray-400)">Seleccione el mes</span>
+        <input type="month" id="sel-fecha" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;border:none" onchange="onFechaChange(this)">
+      </div>
+    </div>
+
+    <div class="fgroup">
+      <label>
+        Archivo a cargar
+        <span class="tooltip-wrap">
+          <button class="tooltip-icon-btn" type="button" tabindex="-1">
+            <span class="material-icons">info</span>
+          </button>
+          <span class="tooltip-box">
+            ¿No tienes el archivo?<br>
+            <span style="color:#93c5fd;text-decoration:underline;cursor:pointer" onclick="descargarPlantilla()">Descárgalo aquí</span>
+          </span>
+        </span>
+      </label>
+      <input type="file" id="file-input-real" accept=".xlsx,.xls" style="display:none" onchange="handleFileSelect(this)">
+      <div class="file-btn" id="file-btn" onclick="document.getElementById('file-input-real').click()">
+        <span class="material-icons">attach_file</span>
+        <span id="file-nombre">Seleccione el archivo (.xlsx)</span>
+      </div>
+    </div>
+
+    <div class="fgroup">
+      <label style="visibility:hidden">Acción</label>
+      <button class="btn btn-filled" id="btn-validar" onclick="validarCargue()">
+        <span class="material-icons">analytics</span>
+        <span id="txt-validar">Analizar</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Paso 2 (oculto hasta analizar) -->
+<div class="step-card" id="paso2" style="display:none">
+  <div class="step-label">
+    2. Identifica que la información sea correcta para aprobar el cargue
+  </div>
+  <table class="step2-table">
+    <thead>
+      <tr>
+        <th>N° Identificación</th>
+        <th>Nombre del titular</th>
+        <th>N° Crédito</th>
+        <th>Cobertura</th>
+        <th>Administración</th>
+        <th>IVA</th>
+        <th>Comisión total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1023456789</td><td>Andrés Felipe Gómez Herrera</td><td>0101</td><td>$ 25.000</td><td>$ 5.000</td><td>$ 3.000</td><td>$ 28.000</td></tr>
+      <tr><td>1045678901</td><td>María Camila Rodríguez Ospina</td><td>0203</td><td>$ 18.000</td><td>$ 3.600</td><td>$ 2.160</td><td>$ 20.160</td></tr>
+      <tr><td>1067890123</td><td>Luis Carlos Martínez Vega</td><td>0305</td><td>$ 32.000</td><td>$ 6.400</td><td>$ 3.840</td><td>$ 35.840</td></tr>
+      <tr><td>1089012345</td><td>Sandra Patricia López Jiménez</td><td>0407</td><td>$ 22.500</td><td>$ 4.500</td><td>$ 2.700</td><td>$ 25.200</td></tr>
+      <tr><td>1012345678</td><td>Carlos Alberto Pérez Molina</td><td>0509</td><td>$ 41.000</td><td>$ 8.200</td><td>$ 4.920</td><td>$ 45.920</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="form-bottom">
+  <button class="btn btn-ghost" onclick="navTo('cargues')">Cancelar</button>
+  <button class="btn btn-filled" id="btn-cargar" onclick="abrirConfirmar()" disabled style="opacity:0.4;cursor:not-allowed">
+    <span class="material-icons">cloud_upload</span> Cargar
+  </button>
+</div>
+
+<script>
+  function onFechaChange(inp) {
+    var parts = inp.value.split('-');
+    if (parts.length < 2) return;
+    var meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    var texto = meses[parseInt(parts[1], 10) - 1] + ' / ' + parts[0];
+    var display = document.getElementById('fecha-display');
+    display.textContent = texto;
+    display.style.color = '#111827';
+  }
+
+  function handleFileSelect(input) {
+    if (input.files && input.files[0]) {
+      archivoSimulado = true;
+      document.getElementById('file-nombre').textContent = input.files[0].name;
+      document.getElementById('file-btn').classList.add('has-file');
+    }
+  }
+
+  function validarCargue() {
+    const comision = document.getElementById('sel-comision').value;
+    const fecha    = document.getElementById('sel-fecha').value;
+    if (!comision) { showToast('Selecciona el tipo de comisión', 'warning'); return; }
+    if (!fecha)    { showToast('Selecciona la fecha de reporte', 'warning'); return; }
+    if (!archivoSimulado) { showToast('Selecciona un archivo .xlsx para cargar', 'warning'); return; }
+    document.getElementById('paso2').style.display = 'block';
+    document.getElementById('txt-validar').textContent = 'Re-analizar';
+    const btnCargar = document.getElementById('btn-cargar');
+    btnCargar.disabled = false;
+    btnCargar.style.opacity = '1';
+    btnCargar.style.cursor = 'pointer';
+    document.getElementById('paso2').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showToast('Archivo analizado correctamente', 'success');
+  }
+
+  function abrirConfirmar() { abrirModal('modal-confirmar'); }
+
+  function procesarCargue() {
+    cerrarModal('modal-confirmar');
+    abrirModal('modal-exito');
+  }
+
+  function finalizarCargue() {
+    cerrarModal('modal-exito');
+    const nuevoId = String(Number(cargues[0].id) + 1).padStart(2,'0');
+    const fechaEl = document.getElementById('sel-fecha');
+    const [año, mes] = fechaEl.value ? fechaEl.value.split('-') : ['2026','04'];
+    const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const fechaTexto = (meses[parseInt(mes,10)-1] || 'Abril') + ' / ' + año;
+    cargues.unshift({ id: nuevoId, fecha: fechaTexto, cobertura: '$25.000', admin: '$4.000', iva: '$2.000', total: '$31.000', estado: 'Cargado' });
+    resetearCargar();
+    navTo('cargues2');
+    showToast('Garantías cargadas exitosamente. Recuerda subir el soporte de pago.', 'success');
+  }
+
+  function resetearCargar() {
+    archivoSimulado = false;
+    document.getElementById('file-nombre').textContent = 'Seleccione el archivo (.xlsx)';
+    document.getElementById('file-btn').classList.remove('has-file');
+    document.getElementById('file-input-real').value = '';
+    document.getElementById('sel-comision').value = '';
+    initMonthInput();
+    document.getElementById('txt-validar').textContent = 'Analizar';
+    document.getElementById('paso2').style.display = 'none';
+    const btnCargar = document.getElementById('btn-cargar');
+    btnCargar.disabled = true; btnCargar.style.opacity = '0.4'; btnCargar.style.cursor = 'not-allowed';
+  }
+
+  initMonthInput();
+</script>

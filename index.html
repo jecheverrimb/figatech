@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FIGATECH - Login</title>
+  
+    <script>
+(function (m, a, z, e) {
+  var s, t, u, v;
+  try {
+    t = m.sessionStorage.getItem('maze-us');
+  } catch (err) {}
+
+  if (!t) {
+    t = new Date().getTime();
+    try {
+      m.sessionStorage.setItem('maze-us', t);
+    } catch (err) {}
+  }
+
+  u = document.currentScript || (function () {
+    var w = document.getElementsByTagName('script');
+    return w[w.length - 1];
+  })();
+  v = u && u.nonce;
+
+  s = a.createElement('script');
+  s.src = z + '?apiKey=' + e;
+  s.async = true;
+  if (v) s.setAttribute('nonce', v);
+  a.getElementsByTagName('head')[0].appendChild(s);
+  m.mazeUniversalSnippetApiKey = e;
+})(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '5ca8b370-175e-49ca-b3bf-9768a1406ace');
+</script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+<!-- ========== LOGIN ========== -->
+<div id="view-login" class="view active">
+  <div class="login-left">
+    <h1>Hola, gestiona<br>tus garantías</h1>
+    <div class="login-field">
+      <label>Cuenta<span>*</span></label>
+      <input type="email" id="inp-cuenta" placeholder="Escriba aquí su correo" value="intermediario@figatech.com">
+    </div>
+    <div class="login-field">
+      <label>Contraseña<span>*</span></label>
+      <input type="password" id="inp-pass" placeholder="••••••••" value="password123">
+    </div>
+    <button class="btn-black" onclick="doLogin()">Ingresar</button>
+    <div class="login-footer"><a href="#">¿Problemas para iniciar sesión?</a></div>
+  </div>
+  <div class="login-right">
+    <div class="img-placeholder">
+      <span class="material-icons">image</span>
+    </div>
+  </div>
+</div>
+
+<!-- ========== APP ========== -->
+<div id="view-app" class="view">
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-logo" onclick="navTo('inicio')">
+      <span class="material-icons">image</span>
+    </div>
+
+    <div class="nav-links">
+      <!-- Inicio -->
+      <div class="nav-item">
+        <span class="nav-link" id="nl-inicio" onclick="navTo('inicio');closeMenus()">Inicio</span>
+      </div>
+
+      <!-- Garantías -->
+      <div class="nav-item">
+        <span class="nav-link" id="nl-garantias" onclick="toggleMenu('dd-garantias',event)">
+          Garantías <span class="material-icons">expand_more</span>
+        </span>
+        <div class="nav-dropdown" id="dd-garantias" style="min-width:600px">
+          <div class="nav-dd-section">Operaciones</div>
+          <div class="nav-dd-grid" style="grid-template-columns:repeat(3, minmax(0, 1fr))">
+            <a class="nav-dd-item" href="#" onclick="navTo('cargues');closeMenus();return false">
+              <div class="nav-dd-icon"><span class="material-icons">upload_file</span></div>
+              <div>
+                <div class="nav-dd-title">Cargues</div>
+                <div class="nav-dd-desc">Gestiona tus cargues</div>
+              </div>
+            </a>
+            <a class="nav-dd-item" href="#" onclick="navTo('reclamos');closeMenus();return false">
+              <div class="nav-dd-icon"><span class="material-icons">gavel</span></div>
+              <div>
+                <div class="nav-dd-title">Reclamos</div>
+                <div class="nav-dd-desc">Gestiona reclamaciones</div>
+              </div>
+            </a>
+            <a class="nav-dd-item" href="#" onclick="navTo('reintegros');closeMenus();return false">
+              <div class="nav-dd-icon"><span class="material-icons">currency_exchange</span></div>
+              <div>
+                <div class="nav-dd-title">Reintegros</div>
+                <div class="nav-dd-desc">Historial de reintegros</div>
+              </div>
+            </a>
+            <a class="nav-dd-item" href="#" onclick="navTo('reestructuraciones');closeMenus();return false">
+              <div class="nav-dd-icon"><span class="material-icons">build_circle</span></div>
+              <div>
+                <div class="nav-dd-title">Reestructuraciones</div>
+                <div class="nav-dd-desc">Modifica condiciones</div>
+              </div>
+            </a>
+            <a class="nav-dd-item" href="#" onclick="navTo('venta-cartera');closeMenus();return false">
+              <div class="nav-dd-icon"><span class="material-icons">sell</span></div>
+              <div>
+                <div class="nav-dd-title">Venta de cartera</div>
+                <div class="nav-dd-desc">Cesión de garantías</div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Consultas -->
+      <div class="nav-item">
+        <span class="nav-link" id="nl-consultas" onclick="navTo('consultas');closeMenus()">Consultas</span>
+      </div>
+    </div>
+
+    <!-- Derecha: cobertura + campana + usuario -->
+    <div class="nav-right">
+      <div class="nav-cobertura">
+        <span class="nav-cob-label">Valor de cobertura</span>
+        <span class="nav-cob-amount">$12.200.000</span>
+      </div>
+      <button class="nav-bell" onclick="toggleMenu('dd-notifs',event)" title="Notificaciones">
+        <span class="material-icons">notifications</span>
+        <span class="bell-badge">3</span>
+      </button>
+      <div class="user-btn" onclick="toggleMenu('dd-user',event)">
+        <span class="material-icons user-icon">account_circle</span>
+        <div class="user-info">
+          <div class="uname">Bienvenido</div>
+          <div class="urole">Intermediario</div>
+        </div>
+        <div class="user-dropdown" id="dd-user">
+          <a href="#" onclick="closeMenus();return false">
+            <span class="material-icons">lock_reset</span> Cambiar contraseña
+          </a>
+          <hr>
+          <a href="#" class="danger" onclick="doLogout();return false">
+            <span class="material-icons">logout</span> Cerrar sesión
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO -->
+  <div class="app-body">
+    <!-- Las secciones se cargarán aquí dinamicamente -->
+    <div id="sec-inicio" class="section active"></div>
+    <div id="sec-cargues" class="section"></div>
+    <div id="sec-cargues2" class="section"></div>
+    <div id="sec-cargar" class="section"></div>
+    <div id="sec-confirmacion-pago" class="section"></div>
+    <div id="sec-reclamos" class="section"></div>
+    <div id="sec-reclamos2" class="section"></div>
+    <div id="sec-reclamar" class="section"></div>
+    <div id="sec-reintegros" class="section"></div>
+    <div id="sec-consultas" class="section"></div>
+    <div id="sec-reestructuraciones" class="section"></div>
+    <div id="sec-venta-cartera" class="section"></div>
+    <div id="sec-novedades" class="section"></div>
+  </div><!-- /app-body -->
+</div><!-- /view-app -->
+
+<!-- ========== MODALES CONTENEDOR ========== -->
+<div id="modales-container"></div>
+
+<!-- ========== TOAST CONTAINER ========== -->
+<div id="toast-container"></div>
+
+<script src="js/datos.js"></script>
+<script src="js/script.js"></script>
+
+<script>
+  // Cache de páginas cargadas
+  const paginasCache = {};
+
+  // Ejecuta los <script> inyectados vía innerHTML (el browser no los corre automáticamente)
+  function ejecutarScripts(container) {
+    container.querySelectorAll('script').forEach(script => {
+      const s = document.createElement('script');
+      s.textContent = script.textContent;
+      document.head.appendChild(s);
+      document.head.removeChild(s);
+    });
+  }
+
+  // Cargar una página (con cache)
+  function cargarPagina(nombre) {
+    if (paginasCache[nombre]) {
+      const el = document.getElementById('sec-' + nombre);
+      if (el) { el.innerHTML = paginasCache[nombre]; ejecutarScripts(el); }
+      return Promise.resolve();
+    }
+    return fetch('pages/' + nombre + '.html')
+      .then(r => r.text())
+      .then(html => {
+        paginasCache[nombre] = html;
+        const el = document.getElementById('sec-' + nombre);
+        if (el) { el.innerHTML = html; ejecutarScripts(el); }
+      })
+      .catch(e => console.error('Error cargando página:', nombre, e));
+  }
+
+  // Cargar modales
+  function cargarModales() {
+    fetch('pages/modales.html')
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById('modales-container').innerHTML = html;
+      })
+      .catch(e => console.error('Error cargando modales:', e));
+  }
+
+  // Mejorar navTo para cargar páginas dinámicamente
+  const navToOriginal = navTo;
+  window.navTo = function(id) {
+    history.pushState({ page: id }, '', '#' + id);
+    cargarPagina(id).then(() => navToOriginal(id));
+  };
+
+  // Inicializar al cargar
+  window.addEventListener('DOMContentLoaded', () => {
+    history.replaceState({ page: 'login' }, '', '#login');
+    cargarModales();
+    cargarPagina('inicio').then(() => {
+      navToOriginal('inicio');
+      initMonthInput();
+    });
+  });
+</script>
+
+</body>
+</html>
