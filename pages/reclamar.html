@@ -21,7 +21,7 @@
         </span>
       </label>
       <input type="file" id="file-reclamo-real" accept=".xlsx,.xls" style="display:none" onchange="handleReclamoFile(this)">
-      <div class="file-btn" id="file-btn-reclamo" onclick="document.getElementById('file-reclamo-real').click()">
+      <div class="file-btn" id="file-btn-reclamo" onclick="simularArchivoReclamo()">
         <span class="material-icons">attach_file</span>
         <span id="file-nombre-reclamo">Seleccione el archivo (.xlsx)</span>
       </div>
@@ -68,6 +68,12 @@
     }
   }
 
+  function simularArchivoReclamo() {
+    archivoReclamo = true;
+    document.getElementById('file-nombre-reclamo').textContent = 'archivo_reclamo.xlsx';
+    document.getElementById('file-btn-reclamo').classList.add('has-file');
+  }
+
   function analizarReclamo() {
     if (!archivoReclamo) { showToast('Selecciona un archivo .xlsx para continuar', 'warning'); return; }
     document.getElementById('paso2-reclamo').style.display = 'block';
@@ -101,11 +107,6 @@
 
   function procesarReclamo() {
     cerrarModal('modal-compromiso');
-    abrirModal('modal-exito-reclamo');
-  }
-
-  function finalizarReclamo() {
-    cerrarModal('modal-exito-reclamo');
     const nuevoId = String(Number(reclamos[0].id) + 1).padStart(2, '0');
     reclamos.unshift({ id: nuevoId, fecha: 'Abril / 2026', parcial: 1, total: 1, valor: '$1.500.000', estado: 'Solicitado' });
     archivoReclamo = false;
@@ -115,7 +116,6 @@
     document.getElementById('paso2-reclamo').style.display = 'none';
     const btn = document.getElementById('btn-guardar-reclamo');
     btn.disabled = true; btn.style.opacity = '0.4'; btn.style.cursor = 'not-allowed';
-    navTo('reclamos2');
-    showToast('Reclamo enviado exitosamente', 'success');
+    navTo('confirmacion-reclamo');
   }
 </script>

@@ -59,7 +59,7 @@
         </span>
       </label>
       <input type="file" id="file-input-real" accept=".xlsx,.xls" style="display:none" onchange="handleFileSelect(this)">
-      <div class="file-btn" id="file-btn" onclick="document.getElementById('file-input-real').click()">
+      <div class="file-btn" id="file-btn" onclick="simularArchivoCargar()">
         <span class="material-icons">attach_file</span>
         <span id="file-nombre">Seleccione el archivo (.xlsx)</span>
       </div>
@@ -126,6 +126,12 @@
       document.getElementById('file-nombre').textContent = input.files[0].name;
       document.getElementById('file-btn').classList.add('has-file');
     }
+  }
+
+  function simularArchivoCargar() {
+    archivoSimulado = true;
+    document.getElementById('file-nombre').textContent = 'archivo_cargue.xlsx';
+    document.getElementById('file-btn').classList.add('has-file');
   }
 
   function validarCargue() {

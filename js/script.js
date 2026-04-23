@@ -1,5 +1,5 @@
 /* ===== NAVEGACIÓN ===== */
-const secciones = ['inicio','cargues','cargues2','cargar','confirmacion-pago','reclamos','reclamos2','reclamar','reintegros','consultas','reestructuraciones','venta-cartera','novedades'];
+const secciones = ['inicio','cargues','cargues2','cargar','confirmacion-pago','reclamos','reclamos2','reclamar','confirmacion-reclamo','reintegros','consultas','reestructuraciones','venta-cartera','novedades'];
 
 window.addEventListener('popstate', function(e) {
   const page = (e.state && e.state.page) || location.hash.replace('#', '') || 'login';
@@ -115,4 +115,14 @@ function initMonthInput() {
 
 function descargarPlantilla() {
   showToast('Descargando plantilla de cargue...', 'info');
+}
+
+function simularSoporte(n) {
+  const nombres = {1: 'soporte_pago_1.pdf', 2: 'soporte_pago_2.pdf'};
+  soportesCargados[n] = true;
+  const slot = document.getElementById('upload-slot-' + n);
+  if (!slot) return;
+  slot.classList.add('has-file');
+  slot.querySelector('.material-icons').textContent = 'check_circle';
+  document.getElementById('nombre-soporte-' + n).textContent = nombres[n];
 }

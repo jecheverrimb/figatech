@@ -22,3 +22,4 @@ let eliminarId = null;
 let modoSoporte = 'nuevo';
 let archivoSimulado = false;
 let archivoReclamo = false;
+let soportesCargados = {1: false, 2: false};

@@ -7,12 +7,12 @@
     <input type="file" id="file-soporte-1" style="display:none" accept=".png,.jpg,.jpeg,.pdf" onchange="handleSoporteFile(1,this)">
     <input type="file" id="file-soporte-2" style="display:none" accept=".png,.jpg,.jpeg,.pdf" onchange="handleSoporteFile(2,this)">
     <div class="upload-slots">
-      <div class="upload-slot" id="upload-slot-1" onclick="document.getElementById('file-soporte-1').click()">
+      <div class="upload-slot" id="upload-slot-1" onclick="simularSoporte(1)">
         <span class="material-icons">cloud_upload</span>
         <div class="slot-label">Soporte 1</div>
         <div class="slot-name" id="nombre-soporte-1">Haz clic para subir</div>
       </div>
-      <div class="upload-slot" id="upload-slot-2" onclick="document.getElementById('file-soporte-2').click()">
+      <div class="upload-slot" id="upload-slot-2" onclick="simularSoporte(2)">
         <span class="material-icons">add_circle_outline</span>
         <div class="slot-label">Soporte 2 <span style="font-weight:400;color:var(--gray-400)">(opcional)</span></div>
         <div class="slot-name" id="nombre-soporte-2">Haz clic para subir</div>

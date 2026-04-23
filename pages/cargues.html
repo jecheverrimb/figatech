@@ -157,12 +157,13 @@
     modoSoporte = modo || 'nuevo';
     const titulo = modoSoporte === 'cambiar' ? 'Cambiar soporte de pago' : 'Soportes de pago';
     document.getElementById('modal-subir-titulo').textContent = titulo;
+    soportesCargados[1] = false;
+    soportesCargados[2] = false;
     ['1','2'].forEach(n => {
       document.getElementById('nombre-soporte-' + n).textContent = n === '1' ? 'Haz clic para subir' : 'Haz clic para subir';
       document.getElementById('upload-slot-' + n).classList.remove('has-file');
       const icon = document.getElementById('upload-slot-' + n).querySelector('.material-icons');
       icon.textContent = n === '1' ? 'cloud_upload' : 'add_circle_outline';
-      document.getElementById('file-soporte-' + n).value = '';
     });
     abrirModal('modal-subir');
   }
@@ -177,8 +178,7 @@
   }
 
   function cargarPago() {
-    const archivo1 = document.getElementById('file-soporte-1').files[0];
-    if (!archivo1) { showToast('Debes subir al menos el Soporte 1', 'error'); return; }
+    if (!soportesCargados[1]) { showToast('Debes subir al menos el Soporte 1', 'error'); return; }
     const c = cargues.find(x => x.id === rowSubirId);
     if (c) c.estado = 'Pagado';
     cerrarModal('modal-subir');

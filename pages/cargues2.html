@@ -71,12 +71,13 @@
     rowSubirId  = id;
     modoSoporte = 'nuevo';
     document.getElementById('modal-subir-titulo').textContent = 'Soportes de pago';
+    soportesCargados[1] = false;
+    soportesCargados[2] = false;
     ['1','2'].forEach(function(n) {
       document.getElementById('nombre-soporte-' + n).textContent = 'Haz clic para subir';
       var slot = document.getElementById('upload-slot-' + n);
       slot.classList.remove('has-file');
       slot.querySelector('.material-icons').textContent = n === '1' ? 'cloud_upload' : 'add_circle_outline';
-      document.getElementById('file-soporte-' + n).value = '';
     });
     abrirModal('modal-subir');
   }
@@ -84,8 +85,7 @@
   /* Fallback: si cargues.html no se cargó antes, cargarPago no existe */
   if (typeof cargarPago !== 'function') {
     window.cargarPago = function() {
-      var archivo1 = document.getElementById('file-soporte-1').files[0];
-      if (!archivo1) { showToast('Debes subir al menos el Soporte 1', 'error'); return; }
+      if (!soportesCargados[1]) { showToast('Debes subir al menos el Soporte 1', 'error'); return; }
       var c = cargues.find(function(x) { return x.id === rowSubirId; });
       if (c) c.estado = 'Pagado';
       cerrarModal('modal-subir');
