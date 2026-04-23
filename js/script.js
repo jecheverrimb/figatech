@@ -83,6 +83,10 @@ function doLogout() {
   document.getElementById('view-app').classList.remove('active');
   document.getElementById('view-login').classList.add('active');
   history.pushState({ page: 'login' }, '', '#login');
+  const cuenta = document.getElementById('inp-cuenta');
+  const pass = document.getElementById('inp-pass');
+  cuenta.value = ''; delete cuenta.dataset.filled; cuenta.setAttribute('readonly', '');
+  pass.value = '';   delete pass.dataset.filled;   pass.setAttribute('readonly', '');
   resetearCargar();
 }
 
