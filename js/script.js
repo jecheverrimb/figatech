@@ -72,6 +72,15 @@ document.querySelectorAll('.overlay').forEach(ov => {
 });
 
 /* ===== AUTH ===== */
+function checkLoginReady() {
+  var cuenta = document.getElementById('inp-cuenta');
+  var pass = document.getElementById('inp-pass');
+  var btn = document.getElementById('btn-login');
+  if (cuenta.dataset.filled && pass.dataset.filled) {
+    btn.disabled = false;
+  }
+}
+
 function doLogin() {
   document.getElementById('view-login').classList.remove('active');
   document.getElementById('view-app').classList.add('active');
@@ -87,6 +96,7 @@ function doLogout() {
   const pass = document.getElementById('inp-pass');
   cuenta.value = ''; delete cuenta.dataset.filled; cuenta.setAttribute('readonly', '');
   pass.value = '';   delete pass.dataset.filled;   pass.setAttribute('readonly', '');
+  document.getElementById('btn-login').disabled = true;
   resetearCargar();
 }
 

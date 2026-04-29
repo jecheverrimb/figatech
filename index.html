@@ -46,14 +46,14 @@
     <div class="login-field">
       <label>Cuenta<span>*</span></label>
       <input type="email" id="inp-cuenta" placeholder="Escriba aquí su correo" value="" autocomplete="off" readonly
-        onfocus="this.removeAttribute('readonly');if(!this.dataset.filled){this.value='coopandes@figatech.com';this.dataset.filled='1'}">
+        onfocus="this.removeAttribute('readonly');if(!this.dataset.filled){this.value='coopandes@figatech.com';this.dataset.filled='1'};checkLoginReady()">
     </div>
     <div class="login-field">
       <label>Contraseña<span>*</span></label>
       <input type="password" id="inp-pass" placeholder="••••••••" value="" autocomplete="off" readonly
-        onfocus="this.removeAttribute('readonly');if(!this.dataset.filled){this.value='password123';this.dataset.filled='1'}">
+        onfocus="this.removeAttribute('readonly');if(!this.dataset.filled){this.value='password123';this.dataset.filled='1'};checkLoginReady()">
     </div>
-    <button class="btn-black" onclick="doLogin()">Ingresar</button>
+    <button class="btn-black" id="btn-login" onclick="doLogin()" disabled>Ingresar</button>
     <div class="login-footer"><a href="#">¿Problemas para iniciar sesión?</a></div>
   </div>
   <div class="login-right">
