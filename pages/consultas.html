@@ -1,3 +1,268 @@
-<div class="breadcrumb"><a href="#" onclick="navTo('inicio');return false">Inicio</a><span class="sep">/</span><span>Consultas</span></div>
-<div class="page-title" style="margin-bottom:1.5rem">Consultas</div>
-<div class="coming-soon"><span class="material-icons">manage_search</span><p>Sección en construcción</p></div>
+<!-- CONSULTA DE TITULARES -->
+<div class="breadcrumb">
+  <a href="#" onclick="navTo('inicio');return false">Inicio</a>
+  <span class="sep">/</span>
+  <span>Consulta de titulares</span>
+</div>
+<div class="page-title" style="margin-bottom:0.3rem">Consulta de Titulares</div>
+<div style="font-size:0.88rem;color:var(--gray-500);margin-bottom:1.5rem">Busque la información detallada del titular por su número de identificación</div>
+
+<!-- Búsqueda -->
+<div class="step-card" style="margin-bottom:1rem">
+  <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem">
+    <span class="material-icons" style="font-size:1.1rem;color:var(--gray-500)">search</span>
+    <span class="consulta-section-title" style="margin-bottom:0">Búsqueda de titular</span>
+  </div>
+  <div style="display:flex;gap:0.75rem;align-items:center">
+    <input type="text" id="inp-doc-titular" placeholder="Ej. 1034567892"
+           style="flex:1;padding:0.72rem 1rem;border:1.5px solid var(--gray-300);border-radius:8px;font-size:0.95rem;font-family:inherit;outline:none;transition:border-color 0.2s"
+           onfocus="this.style.borderColor='var(--black)'" onblur="this.style.borderColor='var(--gray-300)'"
+           onkeydown="if(event.key==='Enter')buscarTitular()">
+    <button class="btn btn-filled" onclick="buscarTitular()" style="height:42px;padding:0 1.4rem;flex-shrink:0;display:flex;align-items:center;gap:0.4rem">
+      <span class="material-icons" style="font-size:17px">search</span> Buscar
+    </button>
+  </div>
+</div>
+
+<!-- Resultados -->
+<div id="res-titular" style="display:none">
+
+  <!-- Fila superior: Información personal + Información del crédito -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+
+    <!-- Card: Información personal -->
+    <div class="step-card">
+      <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.25rem">
+        <span class="material-icons" style="font-size:1.1rem;color:var(--gray-500)">person</span>
+        <span class="consulta-section-title" style="margin-bottom:0">Información personal</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem 1.5rem">
+        <div>
+          <div class="cfield-label" style="margin-bottom:3px">Nombre completo</div>
+          <div id="res-nombre" class="cfield-value"></div>
+        </div>
+        <div>
+          <div class="cfield-label" style="display:flex;align-items:center;gap:0.3rem;margin-bottom:3px">
+            <span class="material-icons" style="font-size:0.85rem">credit_card</span> Documento
+          </div>
+          <div id="res-doc-full" class="cfield-value"></div>
+        </div>
+        <div>
+          <div class="cfield-label" style="display:flex;align-items:center;gap:0.3rem;margin-bottom:3px">
+            <span class="material-icons" style="font-size:0.85rem">phone</span> Teléfono
+          </div>
+          <div id="res-telefono" style="font-size:0.92rem;color:var(--gray-700)"></div>
+        </div>
+        <div>
+          <div class="cfield-label" style="display:flex;align-items:center;gap:0.3rem;margin-bottom:3px">
+            <span class="material-icons" style="font-size:0.85rem">mail</span> Correo
+          </div>
+          <div id="res-correo" style="font-size:0.92rem;color:var(--gray-700)"></div>
+        </div>
+        <div style="grid-column:1/-1">
+          <div class="cfield-label" style="display:flex;align-items:center;gap:0.3rem;margin-bottom:3px">
+            <span class="material-icons" style="font-size:0.85rem">location_on</span> Dirección
+          </div>
+          <div id="res-direccion" style="font-size:0.92rem;color:var(--gray-700)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card: Información del crédito -->
+    <div class="step-card">
+      <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.25rem">
+        <span class="material-icons" style="font-size:1.1rem;color:var(--gray-500)">credit_card</span>
+        <span class="consulta-section-title" style="margin-bottom:0">Información del crédito</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.6rem;margin-bottom:1.25rem">
+        <div style="background:var(--gray-100);border-radius:8px;padding:0.75rem 0.85rem">
+          <div class="cfield-label" style="margin-bottom:4px">Valor desembolsado</div>
+          <div id="res-valor-desembolsado" class="cfield-value"></div>
+        </div>
+        <div style="background:var(--gray-100);border-radius:8px;padding:0.75rem 0.85rem">
+          <div class="cfield-label" style="margin-bottom:4px">Fecha de desembolso</div>
+          <div id="res-fecha-desembolso" class="cfield-value"></div>
+        </div>
+        <div style="background:var(--gray-100);border-radius:8px;padding:0.75rem 0.85rem">
+          <div class="cfield-label" style="margin-bottom:4px">Comisión pagada</div>
+          <div id="res-comision" class="cfield-value"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem">
+        <span class="cfield-label">Cobertura reclamada</span>
+        <span id="res-cobertura-label" style="font-size:0.82rem;font-weight:600;color:var(--gray-700)"></span>
+      </div>
+      <div class="recl-bar-wrap" style="margin-bottom:0.65rem">
+        <div class="recl-bar" id="res-recl-bar" style="width:0%"></div>
+      </div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+        <span id="res-badge-reclamado" class="badge badge-cargado"></span>
+        <span id="res-badge-saldo" class="badge badge-cargado"></span>
+      </div>
+
+      <!-- Documentos (visible sólo si hay cobro total) -->
+      <div id="res-doc-item" style="display:none">
+        <div class="consulta-sep"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem">
+          <div style="display:flex;align-items:center;gap:0.5rem">
+            <div id="res-doc-icono" style="width:32px;height:32px;border-radius:7px;background:var(--gray-100);border:1px solid var(--gray-200);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <span class="material-icons" style="font-size:1rem;color:var(--gray-500)">folder</span>
+            </div>
+            <div>
+              <div class="cfield-label" style="margin-bottom:2px">Documentos</div>
+              <div id="res-doc-sub" style="font-size:0.8rem;color:var(--gray-500)"></div>
+            </div>
+          </div>
+          <span id="res-doc-badge" class="badge" style="flex-shrink:0"></span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- fin grid superior -->
+
+  <!-- Card: Seguimiento de movimientos -->
+  <div class="step-card">
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.25rem">
+      <span class="material-icons" style="font-size:1.1rem;color:var(--gray-500)">article</span>
+      <span class="consulta-section-title" style="margin-bottom:0">Seguimiento de movimientos</span>
+    </div>
+
+    <!-- Cargue inicial -->
+    <div class="movimiento-item">
+      <div class="movimiento-icono">
+        <span class="material-icons">upload</span>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem">
+          <div style="font-size:0.9rem;font-weight:600;color:var(--black)">Cargue inicial</div>
+          <span class="badge badge-completado">Procesado</span>
+        </div>
+        <div style="font-size:0.78rem;color:var(--gray-500);margin-top:3px">
+          ID <span id="res-cargue-id"></span> &middot; <span id="res-cargue-fecha"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reclamos -->
+    <div id="res-reclamos-movimientos"></div>
+
+    <!-- Empty state (sin reclamos) -->
+    <div id="res-movimientos-empty" style="display:none;text-align:center;padding:1.5rem 0;font-size:0.85rem;color:var(--gray-400)">
+      No se han registrado reclamos para este titular
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function formatCOP(n) {
+    return '$ ' + Math.round(n).toLocaleString('es-CO');
+  }
+
+  function buscarTitular() {
+    var numDoc = (document.getElementById('inp-doc-titular').value || '').trim();
+    if (!numDoc) { showToast('Ingresa un número de documento', 'warning'); return; }
+
+    var found = titulares.find(function(t) { return t.numDoc === numDoc; });
+    if (!found) {
+      var idx = numDoc.split('').reduce(function(acc, c) { return acc + c.charCodeAt(0); }, 0) % titulares.length;
+      found = Object.assign({}, titulares[idx], { numDoc: numDoc, documentos: null });
+    }
+
+    renderTitular(found);
+    showToast('Titular encontrado', 'success');
+  }
+
+  function renderTitular(t) {
+    // Información personal
+    document.getElementById('res-nombre').textContent = t.nombre;
+    document.getElementById('res-doc-full').textContent = t.tipoDoc + ' — ' + t.numDoc;
+    document.getElementById('res-telefono').textContent = t.telefono;
+    document.getElementById('res-correo').textContent = t.correo;
+    document.getElementById('res-direccion').textContent = t.direccion + ', ' + t.ciudad;
+
+    // Información del crédito
+    document.getElementById('res-valor-desembolsado').textContent = formatCOP(t.valorDesembolsado);
+    document.getElementById('res-fecha-desembolso').textContent = t.fechaDesembolso;
+    document.getElementById('res-comision').textContent = formatCOP(t.comisionPagada);
+
+    // Cobertura reclamada
+    var totalCobrado = (t.reclamos || []).reduce(function(s, r) { return s + r.valor; }, 0);
+    var saldo = Math.max(0, t.valorDesembolsado - totalCobrado);
+    var pct = t.valorDesembolsado > 0 ? Math.round((totalCobrado / t.valorDesembolsado) * 100) : 0;
+
+    document.getElementById('res-cobertura-label').textContent = formatCOP(totalCobrado) + ' / ' + formatCOP(t.valorDesembolsado);
+    document.getElementById('res-badge-reclamado').textContent = 'Reclamado: ' + formatCOP(totalCobrado);
+    document.getElementById('res-badge-saldo').textContent = 'Saldo disponible: ' + formatCOP(saldo);
+
+    var bar = document.getElementById('res-recl-bar');
+    bar.style.width = '0%';
+    setTimeout(function() { bar.style.width = pct + '%'; }, 80);
+    bar.style.background = pct >= 100 ? '#ef4444' : pct >= 50 ? '#f59e0b' : 'var(--black)';
+
+    // Seguimiento — cargue
+    document.getElementById('res-cargue-id').textContent = t.cargueId;
+    document.getElementById('res-cargue-fecha').textContent = t.cargueFecha;
+
+    // Documentos (dentro de la card de crédito)
+    var docItem = document.getElementById('res-doc-item');
+    if (t.documentos === 'pendiente' || t.documentos === 'enviados') {
+      docItem.style.display = '';
+      var badge = document.getElementById('res-doc-badge');
+      var icono = document.getElementById('res-doc-icono');
+      var sub = document.getElementById('res-doc-sub');
+      if (t.documentos === 'pendiente') {
+        badge.className = 'badge badge-pendiente';
+        badge.textContent = 'Pendiente';
+        icono.style.background = '#fef3c7';
+        icono.querySelector('.material-icons').style.color = '#d97706';
+        sub.textContent = 'Pendiente de envío por parte del intermediario';
+      } else {
+        badge.className = 'badge badge-completado';
+        badge.textContent = 'Enviados';
+        icono.style.background = '#dcfce7';
+        icono.querySelector('.material-icons').style.color = '#16a34a';
+        sub.textContent = 'Documentos recibidos, en proceso de revisión';
+      }
+    } else {
+      docItem.style.display = 'none';
+    }
+
+    // Reclamos en seguimiento
+    var reclamosEl = document.getElementById('res-reclamos-movimientos');
+    var emptyEl = document.getElementById('res-movimientos-empty');
+
+    if (t.reclamos && t.reclamos.length) {
+      emptyEl.style.display = 'none';
+      reclamosEl.innerHTML = t.reclamos.map(function(r) {
+        var badgeClass = {
+          'Reclamo radicado': 'badge-pendiente',
+          'Pago en proceso': 'badge-revision',
+          'Reclamo pagado': 'badge-completado'
+        }[r.estado] || 'badge-cargado';
+        var iconName = r.tipo === 'Total' ? 'warning' : 'remove_circle_outline';
+        return '<div class="movimiento-item">'
+          + '<div class="movimiento-icono"><span class="material-icons">' + iconName + '</span></div>'
+          + '<div style="flex:1;min-width:0">'
+            + '<div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem">'
+              + '<div style="font-size:0.9rem;font-weight:600;color:var(--black)">Cobro ' + r.tipo + '</div>'
+              + '<span class="badge ' + badgeClass + '">' + r.estado + '</span>'
+            + '</div>'
+            + '<div style="font-size:0.78rem;color:var(--gray-500);margin-top:3px">'
+              + 'Reclamo #' + r.reclamoId + ' &middot; ' + formatCOP(r.valor)
+            + '</div>'
+          + '</div>'
+          + '</div>';
+      }).join('');
+    } else {
+      reclamosEl.innerHTML = '';
+      emptyEl.style.display = '';
+    }
+
+    document.getElementById('res-titular').style.display = 'block';
+    document.getElementById('res-titular').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+</script>

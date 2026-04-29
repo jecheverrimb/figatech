@@ -4,141 +4,149 @@
     <div class="page-title">Hola, Intermediario</div>
     <div class="page-subtitle">Última actualización: Jue 22 de Abr &middot; 9:00am</div>
   </div>
-  <div class="dash-filters">
-    <button class="dash-filter active">Último año</button>
-    <button class="dash-filter">Mes anterior</button>
-    <button class="dash-filter">Este mes</button>
-    <button class="dash-filter">Todo los años</button>
-  </div>
 </div>
 
-<!-- Métricas principales -->
-<div class="dash-grid-4">
-  <div class="dash-card dash-metric">
-    <div class="dash-metric-icon"><span class="material-icons">savings</span></div>
-    <div>
-      <div class="dash-metric-label">Saldo de cobertura</div>
-      <div class="dash-metric-value">$ 30.000.000</div>
-    </div>
-  </div>
-  <div class="dash-card dash-metric">
-    <div class="dash-metric-icon"><span class="material-icons">payments</span></div>
-    <div>
-      <div class="dash-metric-label">Cobros realizados</div>
-      <div class="dash-metric-value">$ 8.000.000</div>
-    </div>
-  </div>
-  <div class="dash-card dash-metric">
-    <div class="dash-metric-icon"><span class="material-icons">description</span></div>
-    <div>
-      <div class="dash-metric-label">Créditos reportados</div>
-      <div class="dash-metric-value">21.000</div>
-    </div>
-  </div>
-  <div class="dash-card dash-metric">
-    <div class="dash-metric-icon"><span class="material-icons">currency_exchange</span></div>
-    <div>
-      <div class="dash-metric-label">Créditos reintegrados</div>
-      <div class="dash-metric-value">$ 1.800.000</div>
-    </div>
-  </div>
+<!-- Atajos principales -->
+<div class="dash-shortcuts">
+  <button class="dash-shortcut-card" onclick="navTo('cargar')">
+    <div class="dash-shortcut-icon"><span class="material-icons">upload_file</span></div>
+    <div class="dash-shortcut-label">Cargue de garantías</div>
+    <span class="material-icons dash-shortcut-arrow">arrow_forward</span>
+  </button>
+  <button class="dash-shortcut-card" onclick="navTo('reclamar')">
+    <div class="dash-shortcut-icon"><span class="material-icons">gavel</span></div>
+    <div class="dash-shortcut-label">Reclamo de garantías</div>
+    <span class="material-icons dash-shortcut-arrow">arrow_forward</span>
+  </button>
+  <button class="dash-shortcut-card" onclick="navTo('reintegros')">
+    <div class="dash-shortcut-icon"><span class="material-icons">currency_exchange</span></div>
+    <div class="dash-shortcut-label">Reintegros</div>
+    <span class="material-icons dash-shortcut-arrow">arrow_forward</span>
+  </button>
+  <button class="dash-shortcut-card" onclick="navTo('consultas')">
+    <div class="dash-shortcut-icon"><span class="material-icons">manage_search</span></div>
+    <div class="dash-shortcut-label">Consulta de titulares</div>
+    <span class="material-icons dash-shortcut-arrow">arrow_forward</span>
+  </button>
 </div>
 
-<!-- Gráfica + panel derecho -->
-<div class="dash-grid-2">
-  <!-- Gráfica -->
-  <div class="dash-card">
-    <div class="dash-chart-header">
-      <span class="dash-card-title">Créditos reportados</span>
-      <button class="dash-range-btn"><span class="material-icons" style="font-size:15px">calendar_today</span> Últimos 6 meses</button>
+<!-- Métricas + Gráfica -->
+<div class="dash-main-grid">
+
+  <!-- Panel de métricas -->
+  <div class="dash-card dash-metrics-panel">
+    <div class="dash-metrics-header">
+      <span class="dash-card-title">Resumen de cuenta</span>
+      <span class="dash-metrics-badge">Abr 2026</span>
     </div>
-    <div class="dash-chart-wrap">
+    <div class="dash-metric-sep"></div>
+    <div class="dash-metric-row">
+      <div class="dash-metric">
+        <div class="dash-metric-icon"><span class="material-icons">account_balance_wallet</span></div>
+        <div>
+          <div class="dash-metric-label">Saldo de cobertura total</div>
+          <div class="dash-metric-value">$ 12.000.000</div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-metric-sep"></div>
+    <div class="dash-metric-row">
+      <div class="dash-metric">
+        <div class="dash-metric-icon"><span class="material-icons">receipt_long</span></div>
+        <div>
+          <div class="dash-metric-label">Valor reclamado</div>
+          <div class="dash-metric-value">$ 2.500.000</div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-metric-sep"></div>
+    <div class="dash-metric-row">
+      <div class="dash-metric">
+        <div class="dash-metric-icon"><span class="material-icons">credit_score</span></div>
+        <div>
+          <div class="dash-metric-label">N&ordm; Créditos registrados</div>
+          <div class="dash-metric-value">650</div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-metric-sep"></div>
+    <button class="dash-metrics-link" onclick="navTo('consultas')">
+      Ver detalle completo <span class="material-icons">arrow_forward</span>
+    </button>
+  </div>
+
+  <!-- Gráfica Evolución de Cobertura -->
+  <div class="dash-card dash-perf-card">
+    <div class="dash-perf-header">
+      <div>
+        <span class="dash-card-title">Evolución de Saldo de Cobertura</span>
+        <div class="dash-perf-subtitle">Saldo acumulado &middot; Nov 2025 – Abr 2026</div>
+      </div>
+      <div class="dash-perf-controls">
+        <button class="dash-range-btn">Exportar <span class="material-icons" style="font-size:14px">expand_more</span></button>
+      </div>
+    </div>
+
+    <!-- Leyenda -->
+    <div class="dash-perf-legend">
+      <span class="dash-legend-dot dark"></span><span class="dash-legend-label">Saldo de cobertura</span>
+    </div>
+
+    <!-- Gráfica SVG -->
+    <!--
+      Últimos 6 meses: Nov(8.7M), Dic(9.4M), Ene(10.8M), Feb(11.9M), Mar(11.9M), Abr(12.0M)
+      Escala Y: $8M–$13M → 200px  (1M = 40px)
+      Y(v) = 200 − (v − 8) × 40
+      Guías en: $8M→200  $9M→160  $10M→120  $11M→80  $12M→40
+      X: 6 puntos step=112 → 0, 112, 224, 336, 448, 560
+    -->
+    <div class="dash-perf-chart-wrap">
       <div class="dash-chart-yaxis">
-        <span>400</span><span>300</span><span>200</span><span>100</span><span>0</span>
+        <span>$12M</span><span>$11M</span><span>$10M</span><span>$9M</span><span>$8M</span>
       </div>
       <div class="dash-chart-area">
-        <svg viewBox="0 0 480 180" preserveAspectRatio="none" style="width:100%;height:100%;display:block">
-          <!-- Líneas de guía -->
-          <line x1="0" y1="0"   x2="480" y2="0"   stroke="#e5e7eb" stroke-width="1"/>
-          <line x1="0" y1="45"  x2="480" y2="45"  stroke="#e5e7eb" stroke-width="1"/>
-          <line x1="0" y1="90"  x2="480" y2="90"  stroke="#e5e7eb" stroke-width="1"/>
-          <line x1="0" y1="135" x2="480" y2="135" stroke="#e5e7eb" stroke-width="1"/>
-          <line x1="0" y1="180" x2="480" y2="180" stroke="#e5e7eb" stroke-width="1"/>
-          <!-- Área rellena -->
-          <path d="M 0,135 C 40,115 60,110 96,117 C 132,123 148,128 192,119 C 236,110 252,10 336,5 C 384,2 432,2 480,2 L 480,180 L 0,180 Z"
-                fill="#d1d5db" fill-opacity="0.5"/>
-          <!-- Línea principal -->
-          <path d="M 0,135 C 40,115 60,110 96,117 C 132,123 148,128 192,119 C 236,110 252,10 336,5 C 384,2 432,2 480,2"
-                fill="none" stroke="#374151" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        <svg viewBox="0 0 560 200" preserveAspectRatio="none" style="width:100%;height:100%;display:block;overflow:visible">
+          <!-- Líneas guía -->
+          <line x1="0" y1="40"  x2="560" y2="40"  stroke="#e5e7eb" stroke-width="1"/>
+          <line x1="0" y1="80"  x2="560" y2="80"  stroke="#e5e7eb" stroke-width="1"/>
+          <line x1="0" y1="120" x2="560" y2="120" stroke="#e5e7eb" stroke-width="1"/>
+          <line x1="0" y1="160" x2="560" y2="160" stroke="#e5e7eb" stroke-width="1"/>
+          <line x1="0" y1="200" x2="560" y2="200" stroke="#e5e7eb" stroke-width="1"/>
+
+          <!-- Área rellena (curva) -->
+          <path
+            d="M0,172 C37,163 75,158 112,144 C149,130 187,105 224,88 C261,71 299,51 336,44 C373,37 411,45 448,44 C485,43 523,41 560,40 L560,200 L0,200 Z"
+            fill="#11111109"/>
+
+          <!-- Línea saldo de cobertura (curva) -->
+          <path
+            d="M0,172 C37,163 75,158 112,144 C149,130 187,105 224,88 C261,71 299,51 336,44 C373,37 411,45 448,44 C485,43 523,41 560,40"
+            stroke="#111111" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
           <!-- Puntos -->
-          <circle cx="0"   cy="135" r="4" fill="#374151"/>
-          <circle cx="96"  cy="117" r="4" fill="#374151"/>
-          <circle cx="192" cy="119" r="4" fill="#374151"/>
-          <circle cx="288" cy="45"  r="4" fill="#374151"/>
-          <circle cx="384" cy="5"   r="4" fill="#374151"/>
-          <circle cx="480" cy="2"   r="4" fill="#374151"/>
+          <circle cx="0"   cy="172" r="4.5" fill="white" stroke="#111111" stroke-width="2.5"/>
+          <circle cx="112" cy="144" r="4.5" fill="white" stroke="#111111" stroke-width="2.5"/>
+          <circle cx="224" cy="88"  r="4.5" fill="white" stroke="#111111" stroke-width="2.5"/>
+          <circle cx="336" cy="44"  r="4.5" fill="white" stroke="#111111" stroke-width="2.5"/>
+          <circle cx="448" cy="44"  r="4.5" fill="white" stroke="#111111" stroke-width="2.5"/>
+          <circle cx="560" cy="40"  r="4.5" fill="white" stroke="#111111" stroke-width="2.5"/>
+
+          <!-- Etiquetas de valor sobre cada punto -->
+          <text x="0"   y="160" text-anchor="middle" font-size="11" fill="#6b7280" font-family="Inter,sans-serif">$8.7M</text>
+          <text x="112" y="132" text-anchor="middle" font-size="11" fill="#6b7280" font-family="Inter,sans-serif">$9.4M</text>
+          <text x="224" y="76"  text-anchor="middle" font-size="11" fill="#6b7280" font-family="Inter,sans-serif">$10.8M</text>
+          <text x="336" y="32"  text-anchor="middle" font-size="11" fill="#6b7280" font-family="Inter,sans-serif">$11.9M</text>
+          <text x="448" y="32"  text-anchor="middle" font-size="11" fill="#6b7280" font-family="Inter,sans-serif">$11.9M</text>
+          <text x="553" y="28"  text-anchor="middle" font-size="11" fill="#111111" font-weight="600" font-family="Inter,sans-serif">$12M</text>
         </svg>
       </div>
     </div>
-    <div class="dash-chart-xaxis">
-      <span>Jul</span><span>Ago</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dic</span>
+
+    <!-- Eje X -->
+    <div class="dash-perf-xaxis">
+      <span>Nov 25</span><span>Dic 25</span><span>Ene 26</span>
+      <span>Feb 26</span><span>Mar 26</span><span>Abr 26</span>
     </div>
   </div>
 
-  <!-- Panel derecho -->
-  <div style="display:flex;flex-direction:column;gap:1rem">
-    <!-- Atajos -->
-    <div class="dash-card">
-      <div class="dash-card-title" style="margin-bottom:0.85rem">Atajos</div>
-      <div class="dash-atajos">
-        <button class="dash-atajo" onclick="navTo('cargar')">
-          <span class="material-icons">upload_file</span> Subir Garantías
-        </button>
-        <button class="dash-atajo" onclick="navTo('reclamar')">
-          <span class="material-icons">gavel</span> Cobrar
-        </button>
-        <button class="dash-atajo" onclick="navTo('reintegros')">
-          <span class="material-icons">currency_exchange</span> Reintegrar saldo
-        </button>
-      </div>
-    </div>
-
-    <!-- Procesos pendientes -->
-    <div class="dash-card">
-      <div class="dash-card-title" style="margin-bottom:0.85rem">Procesos pendientes</div>
-      <div class="dash-proceso">
-        <div class="dash-proceso-titulo">Cargue de garantías ID 0000</div>
-        <div class="dash-proceso-track">
-          <div class="dash-track-step done">
-            <div class="dash-track-dot filled"></div>
-            <span>Cargado</span>
-          </div>
-          <div class="dash-track-line half"></div>
-          <div class="dash-track-step">
-            <div class="dash-track-dot"></div>
-            <span>Pagado</span>
-          </div>
-          <div class="dash-track-line"></div>
-          <div class="dash-track-step muted">
-            <div class="dash-track-dot"></div>
-            <span>Aprobado</span>
-          </div>
-        </div>
-      </div>
-      <div class="dash-proceso" style="margin-top:1rem">
-        <div class="dash-proceso-titulo">Cobro de garantías ID 0000</div>
-        <div class="dash-proceso-track">
-          <div class="dash-track-step done">
-            <div class="dash-track-dot filled"></div>
-            <span>Solicitado</span>
-          </div>
-          <div class="dash-track-line"></div>
-          <div class="dash-track-step muted">
-            <div class="dash-track-dot"></div>
-            <span>Completado</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>

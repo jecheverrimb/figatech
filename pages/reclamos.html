@@ -10,114 +10,182 @@
     <div class="page-subtitle">Consulte, reclame y verifique el estado de sus reclamos</div>
   </div>
   <div class="page-actions">
-    <button class="btn btn-filled" onclick="navTo('reclamar')">Reclamar</button>
+    <button class="btn btn-outline" onclick="navTo('compromiso-docs')">
+      <span class="material-icons">folder_shared</span> Compromiso de documentos
+    </button>
   </div>
 </div>
 
-<div class="table-card">
-  <div class="toolbar">
-    <div class="search-box">
-      <span class="material-icons">search</span>
-      <input type="text" id="buscador-reclamos" placeholder="Buscador" oninput="renderReclamos()">
-    </div>
-    <div class="pills" id="pills-reclamos">
-      <button class="pill active" onclick="filtrarReclamos('Todo',this)">Todo <span class="material-icons">close</span></button>
-      <button class="pill" onclick="filtrarReclamos('Solicitado',this)">Solicitado</button>
-      <button class="pill" onclick="filtrarReclamos('En proceso',this)">En proceso</button>
-      <button class="pill" onclick="filtrarReclamos('Reclamado',this)">Reclamado</button>
-    </div>
+<div class="cargues-search-bar">
+  <div class="search-box">
+    <span class="material-icons">search</span>
+    <input type="text" id="buscador-reclamos" placeholder="Buscar por ID o periodo" oninput="renderReclamos()">
   </div>
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Fecha de reclamo</th>
-        <th>Cobro parcial</th>
-        <th>
-          Cobro total
-          <span class="tooltip-wrap" style="margin-left:4px">
-            <button class="tooltip-icon-btn" type="button" tabindex="-1"><span class="material-icons">info</span></button>
-            <span class="tooltip-box">Recuerda enviar los documentos de cobro total.</span>
-          </span>
-        </th>
-        <th>Valor a reclamar</th>
-        <th>Estado</th>
-        <th>Opciones</th>
-      </tr>
-    </thead>
-    <tbody id="tbody-reclamos"></tbody>
-  </table>
+</div>
+
+<!-- Sección: En proceso -->
+<div class="section-group">
+  <div class="section-group-header">
+    <span class="section-group-title">En proceso</span>
+    <span class="section-group-count" id="count-r-proceso">0</span>
+    <button id="btn-reclamar-proceso" class="btn btn-filled" onclick="navTo('reclamar')" style="display:none;margin-left:auto">
+      <span class="material-icons">gavel</span> Reclamar
+    </button>
+  </div>
+  <div class="table-card">
+    <div id="r-proceso-empty" class="section-empty-state">
+      <span class="material-icons" style="font-size:2.5rem;color:var(--gray-300)">gavel</span>
+      <span style="font-weight:600;color:var(--gray-500)">No hay reclamos en proceso</span>
+      <span style="font-size:0.82rem;color:var(--gray-400);margin-bottom:0.5rem">Radique un nuevo reclamo para comenzar el proceso</span>
+      <button class="btn btn-filled" onclick="navTo('reclamar')" style="margin-top:0.25rem">
+        <span class="material-icons" style="font-size:17px">gavel</span> Reclamar
+      </button>
+    </div>
+    <table id="r-tabla-proceso" style="display:none">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha de reclamo</th>
+          <th>Cobro parcial</th>
+          <th>
+            Cobro total
+            <span class="tooltip-wrap" style="margin-left:4px">
+              <button class="tooltip-icon-btn" type="button" tabindex="-1"><span class="material-icons">info</span></button>
+              <span class="tooltip-box">Recuerda enviar los documentos de cobro total.</span>
+            </span>
+          </th>
+          <th>Valor a reclamar</th>
+          <th>Estado</th>
+          <th>Opciones</th>
+        </tr>
+      </thead>
+      <tbody id="r-tbody-proceso"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Sección: Reclamos pagados -->
+<div class="section-group">
+  <div class="section-group-header">
+    <span class="section-group-title">Reclamos pagados</span>
+    <span class="section-group-count" id="count-r-pagados">0</span>
+  </div>
+  <div class="table-card">
+    <div id="r-pagados-empty" class="section-empty-state" style="display:none">
+      <span class="material-icons">inbox</span>
+      <span>No hay reclamos pagados</span>
+    </div>
+    <table id="r-tabla-pagados">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha de reclamo</th>
+          <th>Cobro parcial</th>
+          <th>Cobro total</th>
+          <th>Valor a reclamar</th>
+          <th>Estado</th>
+          <th>Opciones</th>
+        </tr>
+      </thead>
+      <tbody id="r-tbody-pagados"></tbody>
+    </table>
+  </div>
 </div>
 
 <script>
+  var BADGE_RECLAMO = {
+    'Reclamo radicado': 'badge-pendiente',
+    'Pago en proceso':  'badge-revision',
+    'Reclamo pagado':   'badge-completado'
+  };
+
+  function buildReclamoRow(r, dotsPrefix) {
+    var badgeClass = BADGE_RECLAMO[r.estado] || 'badge-pendiente';
+
+    var btnPrincipal = '';
+    if (r.estado === 'Reclamo radicado') {
+      btnPrincipal = '<button class="btn-accion" onclick="solicitarEliminarReclamo(\'' + r.id + '\')">'
+        + '<span class="material-icons">delete</span> Eliminar</button>';
+    } else {
+      btnPrincipal = '<button class="btn-accion btn-accion-descargar" onclick="descargarReclamo(\'' + r.id + '\')">'
+        + '<span class="material-icons">download</span> Descargar reclamo</button>';
+    }
+
+    var dotsItems = '<button onclick="closeMenus()"><span class="material-icons">visibility</span> Ver detalle</button>';
+    if (r.estado === 'Reclamo radicado') {
+      dotsItems += '<div class="dots-divider"></div>'
+        + '<button class="danger" onclick="solicitarEliminarReclamo(\'' + r.id + '\')">'
+        + '<span class="material-icons">delete</span> Eliminar</button>';
+    } else {
+      dotsItems += '<button onclick="descargarReclamo(\'' + r.id + '\')">'
+        + '<span class="material-icons">download</span> Descargar reclamo</button>';
+    }
+
+    var iconCobro = r.estado === 'Reclamo pagado'
+      ? '<span class="material-icons" style="font-size:14px;color:#15803d">check_circle</span>'
+      : '<span class="material-icons" style="font-size:13px;color:var(--gray-400)">info</span>';
+    var tipCobro = r.estado === 'Reclamo pagado' ? 'Documentos verificados.' : 'Recuerda enviar los documentos de cobro total.';
+    var cobroTotalCell = r.total
+      + '<span class="tooltip-wrap" style="margin-left:4px">'
+      + '<button class="tooltip-icon-btn" type="button" tabindex="-1">' + iconCobro + '</button>'
+      + '<span class="tooltip-box">' + tipCobro + '</span></span>';
+
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td><span class="td-id">' + r.id + '</span></td>'
+      + '<td>' + r.fecha + '</td>'
+      + '<td style="text-align:center">' + r.parcial + '</td>'
+      + '<td style="text-align:center">' + cobroTotalCell + '</td>'
+      + '<td><strong>' + r.valor + '</strong></td>'
+      + '<td><span class="badge ' + badgeClass + '">' + r.estado + '</span></td>'
+      + '<td><div class="td-actions">'
+        + btnPrincipal
+        + '<div style="position:relative">'
+          + '<button class="btn-dots" onclick="toggleDotsMenu(\'' + dotsPrefix + r.id + '\',event)">···</button>'
+          + '<div class="dots-menu" id="' + dotsPrefix + r.id + '">' + dotsItems + '</div>'
+        + '</div>'
+      + '</div></td>';
+    return tr;
+  }
+
   function renderReclamos() {
-    const tbody = document.getElementById('tbody-reclamos');
-    const query = (document.getElementById('buscador-reclamos').value || '').toLowerCase();
-    tbody.innerHTML = '';
+    var q = (document.getElementById('buscador-reclamos') ? document.getElementById('buscador-reclamos').value : '').toLowerCase();
 
-    reclamos.forEach(r => {
-      const ok = (filtroReclamos === 'Todo' || r.estado === filtroReclamos)
-                && (r.id.includes(query) || r.fecha.toLowerCase().includes(query));
-      if (!ok) return;
-
-      const badgeClass = { Solicitado: 'badge-cargado', 'En proceso': 'badge-pagado', Reclamado: 'badge-aprobado' }[r.estado] || 'badge-cargado';
-
-      let btnPrincipal = '';
-      if (r.estado === 'Solicitado') {
-        btnPrincipal = `<button class="btn-accion" onclick="anularReclamo('${r.id}')"><span class="material-icons">cancel</span> Anular</button>`;
-      } else if (r.estado === 'En proceso') {
-        btnPrincipal = `<button class="btn-accion" onclick="closeMenus()"><span class="material-icons">visibility</span> Ver cobros</button>`;
-      } else if (r.estado === 'Reclamado') {
-        btnPrincipal = `<button class="btn-accion" onclick="closeMenus()"><span class="material-icons">download</span> Descargar soporte</button>`;
-      }
-
-      let dotsItems = `<button onclick="closeMenus()"><span class="material-icons">visibility</span> Ver detalle</button>`;
-      if (r.estado === 'Solicitado') {
-        dotsItems += `<div class="dots-divider"></div><button class="danger" onclick="anularReclamo('${r.id}')"><span class="material-icons">cancel</span> Anular</button>`;
-      } else {
-        dotsItems += `<button onclick="closeMenus()"><span class="material-icons">download</span> Descargar</button>`;
-      }
-
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><span class="td-id">${r.id}</span></td>
-        <td>${r.fecha}</td>
-        <td style="text-align:center">${r.parcial}</td>
-        <td style="text-align:center">${r.total} ${r.estado === 'Reclamado'
-          ? `<span class="tooltip-wrap" style="margin-left:2px"><button class="tooltip-icon-btn" type="button" tabindex="-1"><span class="material-icons" style="font-size:14px;color:#15803d">check_circle</span></button><span class="tooltip-box">Documentos verificados.</span></span>`
-          : `<span class="tooltip-wrap" style="margin-left:2px"><button class="tooltip-icon-btn" type="button" tabindex="-1"><span class="material-icons" style="font-size:13px;color:var(--gray-400)">info</span></button><span class="tooltip-box">Recuerda enviar los documentos de cobro total.</span></span>`
-        }</td>
-        <td><strong>${r.valor}</strong></td>
-        <td><span class="badge ${badgeClass}">${r.estado}</span></td>
-        <td>
-          <div class="td-actions">
-            ${btnPrincipal}
-            <div style="position:relative">
-              <button class="btn-dots" onclick="toggleDotsMenu('rdots-${r.id}',event)">···</button>
-              <div class="dots-menu" id="rdots-${r.id}">${dotsItems}</div>
-            </div>
-          </div>
-        </td>`;
-      tbody.appendChild(tr);
+    var enProceso = reclamos.filter(function(r) {
+      return (r.estado === 'Reclamo radicado' || r.estado === 'Pago en proceso')
+        && (r.id.toLowerCase().includes(q) || r.fecha.toLowerCase().includes(q));
+    });
+    var pagados = reclamos.filter(function(r) {
+      return r.estado === 'Reclamo pagado'
+        && (r.id.toLowerCase().includes(q) || r.fecha.toLowerCase().includes(q));
     });
 
-    if (!tbody.children.length) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--gray-400)">No se encontraron resultados</td></tr>`;
+    var tbodyP = document.getElementById('r-tbody-proceso');
+    if (tbodyP) {
+      tbodyP.innerHTML = '';
+      enProceso.forEach(function(r) { tbodyP.appendChild(buildReclamoRow(r, 'rp-')); });
     }
+    var emptyP = document.getElementById('r-proceso-empty');
+    if (emptyP) emptyP.style.display = enProceso.length ? 'none' : 'flex';
+    var tablaP = document.getElementById('r-tabla-proceso');
+    if (tablaP) tablaP.style.display = enProceso.length ? '' : 'none';
+    var cntP = document.getElementById('count-r-proceso');
+    if (cntP) cntP.textContent = enProceso.length;
+    var btnR = document.getElementById('btn-reclamar-proceso');
+    if (btnR) btnR.style.display = enProceso.length ? '' : 'none';
+
+    var tbodyPag = document.getElementById('r-tbody-pagados');
+    if (tbodyPag) {
+      tbodyPag.innerHTML = '';
+      pagados.forEach(function(r) { tbodyPag.appendChild(buildReclamoRow(r, 'rpag-')); });
+    }
+    var emptyPag = document.getElementById('r-pagados-empty');
+    if (emptyPag) emptyPag.style.display = pagados.length ? 'none' : 'flex';
+    var tablaPag = document.getElementById('r-tabla-pagados');
+    if (tablaPag) tablaPag.style.display = pagados.length ? '' : 'none';
+    var cntPag = document.getElementById('count-r-pagados');
+    if (cntPag) cntPag.textContent = pagados.length;
   }
 
-  function filtrarReclamos(estado, btn) {
-    filtroReclamos = estado;
-    document.querySelectorAll('#pills-reclamos .pill').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    renderReclamos();
-  }
 
-  function anularReclamo(id) {
-    const idx = reclamos.findIndex(r => r.id === id);
-    if (idx !== -1) reclamos.splice(idx, 1);
-    closeMenus();
-    renderReclamos();
-    showToast('Reclamo #' + id + ' anulado', 'info');
-  }
 </script>

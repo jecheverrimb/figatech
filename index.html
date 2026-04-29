@@ -121,22 +121,35 @@
                 <div class="nav-dd-desc">Cesión de garantías</div>
               </div>
             </a>
+            <a class="nav-dd-item" href="#" onclick="navTo('consultas');closeMenus();return false">
+              <div class="nav-dd-icon"><span class="material-icons">manage_search</span></div>
+              <div>
+                <div class="nav-dd-title">Consulta de titulares</div>
+                <div class="nav-dd-desc">Busca titulares</div>
+              </div>
+            </a>
           </div>
         </div>
       </div>
 
-      <!-- Consultas -->
+      <!-- Gestión de cartera -->
       <div class="nav-item">
-        <span class="nav-link" id="nl-consultas" onclick="navTo('consultas');closeMenus()">Consultas</span>
+        <span class="nav-link" id="nl-gestion-cartera" onclick="closeMenus()">Gestión de cartera</span>
+      </div>
+
+      <!-- Usuarios -->
+      <div class="nav-item">
+        <span class="nav-link" id="nl-usuarios" onclick="closeMenus()">Usuarios</span>
+      </div>
+
+      <!-- Documentos -->
+      <div class="nav-item">
+        <span class="nav-link" id="nl-documentos" onclick="closeMenus()">Documentos</span>
       </div>
     </div>
 
-    <!-- Derecha: cobertura + campana + usuario -->
+    <!-- Derecha: campana + usuario -->
     <div class="nav-right">
-      <div class="nav-cobertura">
-        <span class="nav-cob-label">Valor de cobertura</span>
-        <span class="nav-cob-amount">$12.200.000</span>
-      </div>
       <button class="nav-bell" onclick="toggleMenu('dd-notifs',event)" title="Notificaciones">
         <span class="material-icons">notifications</span>
         <span class="bell-badge">3</span>
@@ -177,6 +190,7 @@
     <div id="sec-reestructuraciones" class="section"></div>
     <div id="sec-venta-cartera" class="section"></div>
     <div id="sec-novedades" class="section"></div>
+    <div id="sec-compromiso-docs" class="section"></div>
   </div><!-- /app-body -->
 </div><!-- /view-app -->
 
@@ -234,7 +248,10 @@
   const navToOriginal = navTo;
   window.navTo = function(id) {
     history.pushState({ page: id }, '', '#' + id);
-    cargarPagina(id).then(() => navToOriginal(id));
+    cargarPagina(id).then(() => {
+      navToOriginal(id);
+      if (id === 'cargar') initCargar();
+    });
   };
 
   // Inicializar al cargar

@@ -10,23 +10,39 @@
 </div>
 <div class="page-title" style="margin-bottom:1.5rem">Cargue de créditos afianzados</div>
 
-<!-- Paso 1 -->
-<div class="step-card">
-  <div class="step-label">
-    1. Para empezar diligencie los siguientes datos:
-    <a onclick="descargarPlantilla()">Plantilla de cargue</a>
+<!-- Wizard progress bar -->
+<div class="wizard-bar">
+  <div class="wizard-step active" id="ws-1">
+    <div class="wizard-circle" id="wc-1">1</div>
+    <span>Registro de información</span>
   </div>
-  <div class="form-row">
-    <div class="fgroup">
+  <div class="wizard-line" id="wl-1"></div>
+  <div class="wizard-step" id="ws-2">
+    <div class="wizard-circle" id="wc-2">2</div>
+    <span>Verificación de datos</span>
+  </div>
+  <div class="wizard-line" id="wl-2"></div>
+  <div class="wizard-step" id="ws-3">
+    <div class="wizard-circle" id="wc-3">3</div>
+    <span>Documento informativo</span>
+  </div>
+</div>
+
+<!-- Paso 1: Datos de cargue -->
+<div class="step-card" id="paso1">
+  <div class="step-label">Datos de cargue</div>
+
+  <div class="form-row" style="margin-bottom:1.5rem">
+    <div class="fgroup" style="flex:1;min-width:200px">
       <label>Tipo de comisión</label>
-      <select id="sel-comision">
+      <select id="sel-comision" onchange="verificarBtnSiguiente()">
         <option value="">Seleccione la comisión</option>
         <option value="unico">Único 3.6%</option>
         <option value="mensual">Mensual 0.3%</option>
       </select>
     </div>
 
-    <div class="fgroup">
+    <div class="fgroup" style="flex:1;min-width:200px">
       <label>
         Fecha de reporte
         <span class="tooltip-wrap">
@@ -38,150 +54,176 @@
           </span>
         </span>
       </label>
-      <div class="file-btn" id="fecha-btn" onclick="document.getElementById('sel-fecha').showPicker ? document.getElementById('sel-fecha').showPicker() : document.getElementById('sel-fecha').click()" style="position:relative;cursor:pointer;justify-content:flex-start;gap:0.5rem">
-        <span class="material-icons" style="color:var(--gray-400);font-size:1.1rem">calendar_month</span>
-        <span id="fecha-display" style="color:var(--gray-400)">Seleccione el mes</span>
-        <input type="month" id="sel-fecha" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;border:none" onchange="onFechaChange(this)">
+      <div class="fgroup-month-wrap">
+        <span class="material-icons fgroup-month-icon">calendar_month</span>
+        <input type="month" id="sel-fecha" class="fgroup-month-input sin-valor"
+               onchange="verificarBtnSiguiente();actualizarFechaPlaceholder()"
+               onclick="try{this.showPicker()}catch(e){}">
+        <span class="fgroup-month-placeholder" id="fecha-placeholder">Seleccionar periodo</span>
       </div>
     </div>
+  </div>
 
-    <div class="fgroup">
-      <label>
-        Archivo a cargar
-        <span class="tooltip-wrap">
-          <button class="tooltip-icon-btn" type="button" tabindex="-1">
-            <span class="material-icons">info</span>
-          </button>
-          <span class="tooltip-box">
-            ¿No tienes el archivo?<br>
-            <span style="color:#93c5fd;text-decoration:underline;cursor:pointer" onclick="descargarPlantilla()">Descárgalo aquí</span>
-          </span>
-        </span>
-      </label>
-      <input type="file" id="file-input-real" accept=".xlsx,.xls" style="display:none" onchange="handleFileSelect(this)">
-      <div class="file-btn" id="file-btn" onclick="simularArchivoCargar()">
-        <span class="material-icons">attach_file</span>
-        <span id="file-nombre">Seleccione el archivo (.xlsx)</span>
+  <!-- Área de carga visual -->
+  <div class="upload-drop-zone" id="upload-zone" onclick="simularArchivoCargar()">
+
+    <!-- Estado vacío -->
+    <div id="udz-empty" style="display:flex;flex-direction:column;align-items:center;width:100%;gap:0.4rem">
+      <div class="udz-icon-wrap">
+        <span class="material-icons" style="font-size:2.2rem;color:var(--gray-400)">table_chart</span>
       </div>
+      <div class="udz-title">Sube el archivo Excel con el detalle de los créditos afianzados</div>
+      <div class="udz-sub">Formato permitido: .xlsx · Tamaño máximo: 10 MB</div>
+      <span class="btn btn-outline btn-sm" style="margin-top:0.9rem;pointer-events:none">
+        <span class="material-icons">upload_file</span> Seleccionar archivo
+      </span>
     </div>
 
-    <div class="fgroup">
-      <label style="visibility:hidden">Acción</label>
-      <button class="btn btn-filled" id="btn-validar" onclick="validarCargue()">
-        <span class="material-icons">analytics</span>
-        <span id="txt-validar">Analizar</span>
+    <!-- Estado con archivo -->
+    <div id="udz-selected" style="display:none" class="udz-selected-content">
+      <span class="material-icons" style="font-size:2rem;color:#16a34a">check_circle</span>
+      <div style="flex:1;min-width:0">
+        <div class="udz-file-name" id="udz-file-name"></div>
+        <div class="udz-sub" style="color:#16a34a;margin-top:2px">Archivo listo para analizar</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" type="button" data-quitar
+              onclick="event.stopPropagation();quitarArchivo()"
+              style="flex-shrink:0">
+        <span class="material-icons" style="font-size:15px">close</span> Quitar
       </button>
     </div>
   </div>
-</div>
 
-<!-- Paso 2 (oculto hasta analizar) -->
-<div class="step-card" id="paso2" style="display:none">
-  <div class="step-label">
-    2. Identifica que la información sea correcta para aprobar el cargue
+  <div class="udz-template-row">
+    <span class="material-icons" style="font-size:15px;color:var(--gray-400)">info</span>
+    ¿No tienes la plantilla del archivo?
+    <a onclick="descargarPlantilla()">Descárgala aquí</a>
   </div>
-  <table class="step2-table">
-    <thead>
-      <tr>
-        <th>N° Identificación</th>
-        <th>Nombre del titular</th>
-        <th>N° Crédito</th>
-        <th>Cobertura</th>
-        <th>Administración</th>
-        <th>IVA</th>
-        <th>Comisión total</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td>1023456789</td><td>Andrés Felipe Gómez Herrera</td><td>0101</td><td>$ 25.000</td><td>$ 5.000</td><td>$ 3.000</td><td>$ 28.000</td></tr>
-      <tr><td>1045678901</td><td>María Camila Rodríguez Ospina</td><td>0203</td><td>$ 18.000</td><td>$ 3.600</td><td>$ 2.160</td><td>$ 20.160</td></tr>
-      <tr><td>1067890123</td><td>Luis Carlos Martínez Vega</td><td>0305</td><td>$ 32.000</td><td>$ 6.400</td><td>$ 3.840</td><td>$ 35.840</td></tr>
-      <tr><td>1089012345</td><td>Sandra Patricia López Jiménez</td><td>0407</td><td>$ 22.500</td><td>$ 4.500</td><td>$ 2.700</td><td>$ 25.200</td></tr>
-      <tr><td>1012345678</td><td>Carlos Alberto Pérez Molina</td><td>0509</td><td>$ 41.000</td><td>$ 8.200</td><td>$ 4.920</td><td>$ 45.920</td></tr>
-    </tbody>
-  </table>
+
+  <!-- Botones paso 1 -->
+  <div class="step-card-footer">
+    <button class="btn btn-ghost" onclick="navTo('cargues')">Cancelar</button>
+    <div class="btn-sig-wrap" id="btn-sig-wrap">
+      <button class="btn btn-filled" id="btn-siguiente" onclick="wizardSiguiente()" disabled>
+        <span class="material-icons" style="font-size:16px">arrow_forward</span>
+        <span id="btn-sig-txt">Analizar</span>
+      </button>
+      <div class="btn-sig-tip" id="btn-sig-tip"></div>
+    </div>
+  </div>
 </div>
 
-<div class="form-bottom">
-  <button class="btn btn-ghost" onclick="navTo('cargues')">Cancelar</button>
-  <button class="btn btn-filled" id="btn-cargar" onclick="abrirConfirmar()" disabled style="opacity:0.4;cursor:not-allowed">
-    <span class="material-icons">cloud_upload</span> Cargar
-  </button>
+<!-- Cargando (animación entre pasos) -->
+<div class="step-card paso-loading-card" id="paso-loading" style="display:none">
+  <span class="material-icons loading-spin-icon">autorenew</span>
+  <div class="loading-title" id="loading-title">Analizando archivo...</div>
+  <div class="loading-sub" id="loading-sub">Verificando registros y formato del archivo</div>
+  <div class="loading-bar-wrap">
+    <div class="loading-bar" id="loading-bar"></div>
+  </div>
 </div>
 
-<script>
-  function onFechaChange(inp) {
-    var parts = inp.value.split('-');
-    if (parts.length < 2) return;
-    var meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-    var texto = meses[parseInt(parts[1], 10) - 1] + ' / ' + parts[0];
-    var display = document.getElementById('fecha-display');
-    display.textContent = texto;
-    display.style.color = '#111827';
-  }
+<!-- Paso 2: Validación -->
+<div class="step-card" id="paso2" style="display:none">
 
-  function handleFileSelect(input) {
-    if (input.files && input.files[0]) {
-      archivoSimulado = true;
-      document.getElementById('file-nombre').textContent = input.files[0].name;
-      document.getElementById('file-btn').classList.add('has-file');
-    }
-  }
+  <div class="val-banner">
+    <span class="material-icons" style="font-size:1.6rem;color:#16a34a;flex-shrink:0">check_circle</span>
+    <div>
+      <div class="val-banner-title">Archivo validado correctamente</div>
+      <div class="val-banner-sub">No se detectaron errores. Puedes <span class="val-banner-link">continuar</span> para generar la cuenta de cobro.</div>
+    </div>
+  </div>
 
-  function simularArchivoCargar() {
-    archivoSimulado = true;
-    document.getElementById('file-nombre').textContent = 'archivo_cargue.xlsx';
-    document.getElementById('file-btn').classList.add('has-file');
-  }
+  <div class="val-commission-table">
+    <div class="vct-header">
+      <span>Concepto</span>
+      <span>Valor</span>
+    </div>
+    <div class="vct-row">
+      <span>Cobertura</span>
+      <span id="val-cobertura">—</span>
+    </div>
+    <div class="vct-row">
+      <span>Administración</span>
+      <span id="val-admin" class="vct-admin">—</span>
+    </div>
+    <div class="vct-row">
+      <span>IVA</span>
+      <span id="val-iva" class="vct-iva">—</span>
+    </div>
+    <div class="vct-row vct-total">
+      <span>Comisión total</span>
+      <span id="val-total">—</span>
+    </div>
+  </div>
 
-  function validarCargue() {
-    const comision = document.getElementById('sel-comision').value;
-    const fecha    = document.getElementById('sel-fecha').value;
-    if (!comision) { showToast('Selecciona el tipo de comisión', 'warning'); return; }
-    if (!fecha)    { showToast('Selecciona la fecha de reporte', 'warning'); return; }
-    if (!archivoSimulado) { showToast('Selecciona un archivo .xlsx para cargar', 'warning'); return; }
-    document.getElementById('paso2').style.display = 'block';
-    document.getElementById('txt-validar').textContent = 'Re-analizar';
-    const btnCargar = document.getElementById('btn-cargar');
-    btnCargar.disabled = false;
-    btnCargar.style.opacity = '1';
-    btnCargar.style.cursor = 'pointer';
-    document.getElementById('paso2').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    showToast('Archivo analizado correctamente', 'success');
-  }
+  <div class="val-meta-row">
+    <div>
+      <div class="val-meta-label">Registros</div>
+      <div class="val-meta-value" id="val-registros">—</div>
+    </div>
+    <div>
+      <div class="val-meta-label">Periodo</div>
+      <div class="val-meta-value val-meta-periodo" id="val-periodo">—</div>
+    </div>
+  </div>
 
-  function abrirConfirmar() { abrirModal('modal-confirmar'); }
+  <!-- Botones paso 2 -->
+  <div class="step-card-footer">
+    <button class="btn btn-ghost" onclick="wizardAnterior()">
+      <span class="material-icons" style="font-size:16px">arrow_back</span> Atrás
+    </button>
+    <button class="btn btn-filled" onclick="wizardSiguiente()">
+      Generar documento informativo
+    </button>
+  </div>
+</div>
 
-  function procesarCargue() {
-    cerrarModal('modal-confirmar');
-    abrirModal('modal-exito');
-  }
+<!-- Paso 3: Documento informativo -->
+<div class="step-card" id="paso3" style="display:none">
 
-  function finalizarCargue() {
-    cerrarModal('modal-exito');
-    const nuevoId = String(Number(cargues[0].id) + 1).padStart(2,'0');
-    const fechaEl = document.getElementById('sel-fecha');
-    const [año, mes] = fechaEl.value ? fechaEl.value.split('-') : ['2026','04'];
-    const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-    const fechaTexto = (meses[parseInt(mes,10)-1] || 'Abril') + ' / ' + año;
-    cargues.unshift({ id: nuevoId, fecha: fechaTexto, cobertura: '$25.000', admin: '$4.000', iva: '$2.000', total: '$31.000', estado: 'Cargado' });
-    resetearCargar();
-    navTo('cargues2');
-    showToast('Garantías cargadas exitosamente. Recuerda subir el soporte de pago.', 'success');
-  }
+  <div class="doc-success-header">
+    <div class="doc-success-icon">
+      <span class="material-icons" style="font-size:1.6rem;color:#16a34a">task_alt</span>
+    </div>
+    <div>
+      <div class="doc-success-title">Documento informativo generado</div>
+      <div class="doc-success-sub">Descarga el documento informativo generado por el sistema</div>
+    </div>
+  </div>
 
-  function resetearCargar() {
-    archivoSimulado = false;
-    document.getElementById('file-nombre').textContent = 'Seleccione el archivo (.xlsx)';
-    document.getElementById('file-btn').classList.remove('has-file');
-    document.getElementById('file-input-real').value = '';
-    document.getElementById('sel-comision').value = '';
-    initMonthInput();
-    document.getElementById('txt-validar').textContent = 'Analizar';
-    document.getElementById('paso2').style.display = 'none';
-    const btnCargar = document.getElementById('btn-cargar');
-    btnCargar.disabled = true; btnCargar.style.opacity = '0.4'; btnCargar.style.cursor = 'not-allowed';
-  }
+  <div class="doc-card">
+    <div class="doc-card-icon">
+      <span class="material-icons" style="font-size:1.5rem;color:#2563eb">description</span>
+    </div>
+    <div class="doc-card-info">
+      <div class="doc-card-name" id="doc-nombre">Cuenta de cobro CC-2026-0422.pdf</div>
+      <div class="doc-card-meta">Generado el <span id="doc-fecha-gen"></span> · 2 páginas</div>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="descargarDocumento()" style="flex-shrink:0">
+      <span class="material-icons">download</span> Descargar
+    </button>
+  </div>
 
-  initMonthInput();
-</script>
+  <div class="doc-validity-note">
+    <span class="material-icons" style="font-size:1rem;flex-shrink:0">verified</span>
+    Este documento es válido para realizar el pago de las garantías afianzadas correspondientes al periodo seleccionado.
+  </div>
+
+  <div class="doc-next-step">
+    <span class="material-icons" style="font-size:1.3rem;color:var(--gray-500);flex-shrink:0;margin-top:2px">credit_card</span>
+    <div>
+      <div class="doc-next-title">Siguiente paso</div>
+      <div class="doc-next-desc">Una vez realices el pago, adjunta el soporte correspondiente para completar el proceso.</div>
+    </div>
+  </div>
+
+  <!-- Botones paso 3 -->
+  <div class="step-card-footer" style="justify-content:flex-end">
+    <button class="btn btn-filled" onclick="guardarYPagar()">
+      <span class="material-icons">save</span> Guardar y pagar después
+    </button>
+  </div>
+</div>
+
+<script>initCargar();</script>

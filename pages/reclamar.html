@@ -8,36 +8,96 @@
   <span class="sep">/</span>
   <span>Reclamar</span>
 </div>
-<div class="page-title" style="margin-bottom:1.5rem">Cargue de créditos afianzados</div>
+<div class="page-title" style="margin-bottom:1.5rem">Reclamo de créditos afianzados</div>
 
-<div class="step-card">
-  <div class="step-label">1. Para empezar diligencie los siguientes datos:</div>
-  <div class="form-row" style="align-items:flex-end;gap:1rem">
-    <div class="fgroup" style="flex:1;max-width:420px">
-      <label>Archivo a cargar
-        <span class="tooltip-wrap">
-          <button class="tooltip-icon-btn" type="button" tabindex="-1"><span class="material-icons">info</span></button>
-          <span class="tooltip-box">¿No tienes el archivo?<br><span style="color:#93c5fd;text-decoration:underline;cursor:pointer" onclick="alert('Descargando plantilla...')">Descárgalo aquí</span></span>
-        </span>
-      </label>
-      <input type="file" id="file-reclamo-real" accept=".xlsx,.xls" style="display:none" onchange="handleReclamoFile(this)">
-      <div class="file-btn" id="file-btn-reclamo" onclick="simularArchivoReclamo()">
-        <span class="material-icons">attach_file</span>
-        <span id="file-nombre-reclamo">Seleccione el archivo (.xlsx)</span>
+<!-- Wizard progress bar -->
+<div class="wizard-bar">
+  <div class="wizard-step active" id="ws-r-1">
+    <div class="wizard-circle" id="wc-r-1">1</div>
+    <span>Cargue de documento</span>
+  </div>
+  <div class="wizard-line" id="wl-r-1"></div>
+  <div class="wizard-step" id="ws-r-2">
+    <div class="wizard-circle" id="wc-r-2">2</div>
+    <span>Validación de datos</span>
+  </div>
+  <div class="wizard-line" id="wl-r-2"></div>
+  <div class="wizard-step" id="ws-r-3">
+    <div class="wizard-circle" id="wc-r-3">3</div>
+    <span>Compromiso de envío</span>
+  </div>
+</div>
+
+<!-- Paso 1: Cargue de documento -->
+<div class="step-card" id="paso-r-1">
+  <div class="step-label">Datos del reclamo</div>
+
+  <div class="upload-drop-zone" id="upload-zone-r" onclick="simularArchivoReclamo()">
+    <div id="udz-r-empty" style="display:flex;flex-direction:column;align-items:center;width:100%;gap:0.4rem">
+      <div class="udz-icon-wrap">
+        <span class="material-icons" style="font-size:2.2rem;color:var(--gray-400)">table_chart</span>
       </div>
+      <div class="udz-title">Sube el archivo Excel con el detalle de los créditos a reclamar</div>
+      <div class="udz-sub">Formato permitido: .xlsx · Tamaño máximo: 10 MB</div>
+      <span class="btn btn-outline btn-sm" style="margin-top:0.9rem;pointer-events:none">
+        <span class="material-icons">upload_file</span> Seleccionar archivo
+      </span>
     </div>
-    <div class="fgroup">
-      <label style="visibility:hidden">Acción</label>
-      <button class="btn btn-filled" onclick="analizarReclamo()">
-        <span class="material-icons">analytics</span> Analizar
+    <div id="udz-r-selected" style="display:none" class="udz-selected-content">
+      <span class="material-icons" style="font-size:2rem;color:#16a34a">check_circle</span>
+      <div style="flex:1;min-width:0">
+        <div class="udz-file-name" id="udz-r-file-name"></div>
+        <div class="udz-sub" style="color:#16a34a;margin-top:2px">Archivo listo para analizar</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" type="button" data-quitar
+              onclick="event.stopPropagation();quitarArchivoReclamo()"
+              style="flex-shrink:0">
+        <span class="material-icons" style="font-size:15px">close</span> Quitar
       </button>
+    </div>
+  </div>
+
+  <div class="udz-template-row">
+    <span class="material-icons" style="font-size:15px;color:var(--gray-400)">info</span>
+    ¿No tienes la plantilla del archivo?
+    <a onclick="descargarPlantilla()">Descárgala aquí</a>
+  </div>
+
+  <!-- Botones paso 1 -->
+  <div class="step-card-footer">
+    <button class="btn btn-ghost" onclick="navTo('reclamos')">Cancelar</button>
+    <div class="btn-sig-wrap" id="btn-r-sig-wrap">
+      <button class="btn btn-filled" id="btn-r-siguiente" onclick="wizardReclamoSiguiente()" disabled>
+        <span class="material-icons" style="font-size:16px">arrow_forward</span>
+        Analizar
+      </button>
+      <div class="btn-sig-tip" id="btn-r-sig-tip">Selecciona un archivo .xlsx para continuar</div>
     </div>
   </div>
 </div>
 
-<div class="step-card" id="paso2-reclamo" style="display:none">
-  <div class="step-label">2. Identifica que la información sea correcta para aprobar el cargue</div>
-  <table class="step2-table">
+<!-- Cargando (animación entre pasos) -->
+<div class="step-card paso-loading-card" id="paso-r-loading" style="display:none">
+  <span class="material-icons loading-spin-icon">autorenew</span>
+  <div class="loading-title" id="r-loading-title">Analizando archivo...</div>
+  <div class="loading-sub" id="r-loading-sub">Verificando registros y formato del archivo</div>
+  <div class="loading-bar-wrap">
+    <div class="loading-bar" id="r-loading-bar"></div>
+  </div>
+</div>
+
+<!-- Paso 2: Validación de datos -->
+<div class="step-card" id="paso-r-2" style="display:none">
+
+  <div class="val-banner">
+    <span class="material-icons" style="font-size:1.6rem;color:#16a34a;flex-shrink:0">check_circle</span>
+    <div>
+      <div class="val-banner-title">Archivo validado correctamente</div>
+      <div class="val-banner-sub">Se encontraron <strong>2 créditos</strong> para reclamar. Verifica que la información sea correcta antes de continuar.</div>
+    </div>
+  </div>
+
+  <table class="step2-table" style="margin-top:1.25rem">
     <thead>
       <tr>
         <th>Nº de documento</th>
@@ -48,74 +108,129 @@
       </tr>
     </thead>
     <tbody>
-      <tr><td>1034567892</td><td>Juan Pablo Herrera Quintero</td><td>1205</td><td>Total</td><td>$800.000</td></tr>
-      <tr><td>1056789012</td><td>Valentina Castro Moreno</td><td>1258</td><td>Parcial</td><td>$500.000</td></tr>
+      <tr>
+        <td>1034567892</td>
+        <td>Juan Pablo Herrera Quintero</td>
+        <td>1205</td>
+        <td><span class="badge badge-revision">Total</span></td>
+        <td><strong>$800.000</strong></td>
+      </tr>
+      <tr>
+        <td>1056789012</td>
+        <td>Valentina Castro Moreno</td>
+        <td>1258</td>
+        <td><span class="badge badge-pendiente">Parcial</span></td>
+        <td><strong>$500.000</strong></td>
+      </tr>
     </tbody>
   </table>
+
+  <div class="val-meta-row" style="margin-top:1.25rem">
+    <div>
+      <div class="val-meta-label">Registros encontrados</div>
+      <div class="val-meta-value">2 créditos</div>
+    </div>
+    <div>
+      <div class="val-meta-label">Valor total a reclamar</div>
+      <div class="val-meta-value">$ 1.300.000</div>
+    </div>
+    <div>
+      <div class="val-meta-label">Cobros totales</div>
+      <div class="val-meta-value">1</div>
+    </div>
+    <div>
+      <div class="val-meta-label">Cobros parciales</div>
+      <div class="val-meta-value">1</div>
+    </div>
+  </div>
+
+  <!-- Botones paso 2 -->
+  <div class="step-card-footer">
+    <button class="btn btn-ghost" onclick="wizardReclamoAnterior()">
+      <span class="material-icons" style="font-size:16px">arrow_back</span> Atrás
+    </button>
+    <button class="btn btn-filled" onclick="wizardReclamoSiguiente()">
+      Continuar <span class="material-icons" style="font-size:16px">arrow_forward</span>
+    </button>
+  </div>
 </div>
 
-<div class="form-bottom">
-  <button class="btn btn-ghost" style="min-width:160px;justify-content:center" onclick="navTo('reclamos')">Cancelar</button>
-  <button class="btn btn-filled" id="btn-guardar-reclamo" style="min-width:160px;justify-content:center;opacity:0.4;cursor:not-allowed" disabled onclick="abrirCompromisoModal()">Guardar</button>
+<!-- Paso 3: Compromiso de envío -->
+<div class="step-card" id="paso-r-3" style="display:none">
+
+  <!-- Encabezado -->
+  <div class="doc-success-header">
+    <div class="doc-success-icon">
+      <span class="material-icons" style="font-size:1.6rem;color:#2563eb">bolt</span>
+    </div>
+    <div>
+      <div class="doc-success-title">Tu pago se procesa en las próximas horas</div>
+      <div class="doc-success-sub">Ya no necesitas documentos para recibir el pago. Solo aplica un compromiso de envío posterior para los créditos con cobro total.</div>
+    </div>
+  </div>
+
+  <!-- Resumen del reclamo -->
+  <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;font-size:0.82rem;color:var(--gray-500)">
+    <span>Tu reclamo incluye</span>
+    <span style="background:#fef9c3;color:#854d0e;border-radius:20px;padding:2px 10px;font-weight:600">1 cobro total</span>
+    <span>y</span>
+    <span style="background:var(--gray-100);color:var(--gray-600);border-radius:20px;padding:2px 10px;font-weight:600">1 cobro parcial</span>
+    <span>— el compromiso aplica solo al cobro total.</span>
+  </div>
+
+  <!-- Documentos requeridos (cobro total) -->
+  <div style="background:var(--gray-100);border-radius:9px;padding:1rem 1.25rem;margin-bottom:1rem">
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.65rem">
+      <span class="material-icons" style="font-size:1rem;color:var(--gray-500)">folder_open</span>
+      <span style="font-size:0.82rem;font-weight:700;color:var(--black)">Documentos del cobro total</span>
+    </div>
+    <ul style="margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:5px 1.5rem">
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:5px"><span style="color:var(--gray-400);flex-shrink:0">·</span>Fotocopia de cédula del deudor</li>
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:5px"><span style="color:var(--gray-400);flex-shrink:0">·</span>Copia de carta de instrucciones</li>
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:5px"><span style="color:var(--gray-400);flex-shrink:0">·</span>Estado de cuenta</li>
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:5px"><span style="color:var(--gray-400);flex-shrink:0">·</span>Cert. de reporte a centrales de riesgo</li>
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:5px"><span style="color:var(--gray-400);flex-shrink:0">·</span>Copia de pagaré</li>
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:5px"><span style="color:var(--gray-400);flex-shrink:0">·</span>Formato de aceptación de fianza</li>
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:5px"><span style="color:var(--gray-400);flex-shrink:0">·</span>Formato de endoso</li>
+    </ul>
+  </div>
+
+  <!-- Instrucciones de envío — 2 columnas -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem">
+    <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:9px;padding:0.8rem 1rem;display:flex;align-items:flex-start;gap:0.6rem;font-size:0.83rem;color:#0c4a6e">
+      <span class="material-icons" style="font-size:1.1rem;flex-shrink:0;margin-top:1px">home_work</span>
+      <div>
+        <div style="font-weight:700;margin-bottom:2px">Presencial</div>
+        <div>CC Comercial Chipichape, Cali</div>
+      </div>
+    </div>
+    <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:9px;padding:0.8rem 1rem;display:flex;align-items:flex-start;gap:0.6rem;font-size:0.83rem;color:#0c4a6e">
+      <span class="material-icons" style="font-size:1.1rem;flex-shrink:0;margin-top:1px">email</span>
+      <div>
+        <div style="font-weight:700;margin-bottom:2px">Correo electrónico</div>
+        <div>gaf@figarantias.com</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkbox de compromiso -->
+  <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:0.88rem;font-weight:500;padding:0.85rem 1rem;border:1.5px solid var(--gray-200);border-radius:9px;transition:border-color 0.15s;margin-bottom:0.25rem;line-height:1.5" id="label-r-compromiso">
+    <input type="checkbox" id="chk-r-compromiso" onchange="toggleBtnRadicar()"
+           style="width:16px;height:16px;cursor:pointer;accent-color:var(--black);flex-shrink:0;margin-top:2px">
+    <span>Me comprometo a enviar los documentos del cobro total una vez sea procesado el reclamo.</span>
+  </label>
+
+  <!-- Botones paso 3 -->
+  <div class="step-card-footer">
+    <button class="btn btn-ghost" onclick="wizardReclamoAnterior()">
+      <span class="material-icons" style="font-size:16px">arrow_back</span> Atrás
+    </button>
+    <button class="btn btn-filled" id="btn-r-radicar"
+            style="opacity:0.4;cursor:not-allowed" disabled
+            onclick="procesarReclamo()">
+      <span class="material-icons">gavel</span> Solicitar reclamo
+    </button>
+  </div>
 </div>
 
-<script>
-  function handleReclamoFile(input) {
-    if (input.files && input.files[0]) {
-      archivoReclamo = true;
-      document.getElementById('file-nombre-reclamo').textContent = input.files[0].name;
-      document.getElementById('file-btn-reclamo').classList.add('has-file');
-    }
-  }
-
-  function simularArchivoReclamo() {
-    archivoReclamo = true;
-    document.getElementById('file-nombre-reclamo').textContent = 'archivo_reclamo.xlsx';
-    document.getElementById('file-btn-reclamo').classList.add('has-file');
-  }
-
-  function analizarReclamo() {
-    if (!archivoReclamo) { showToast('Selecciona un archivo .xlsx para continuar', 'warning'); return; }
-    document.getElementById('paso2-reclamo').style.display = 'block';
-    const btn = document.getElementById('btn-guardar-reclamo');
-    btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer';
-    document.getElementById('paso2-reclamo').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    showToast('Archivo analizado correctamente', 'success');
-  }
-
-  function abrirCompromisoModal() {
-    abrirModal('modal-confirmar-reclamo');
-  }
-
-  function toggleBtnReclamar() {
-    const checked = document.getElementById('chk-compromiso').checked;
-    const btn = document.getElementById('btn-reclamar-modal');
-    btn.disabled = !checked;
-    btn.style.opacity = checked ? '1' : '0.4';
-    btn.style.cursor = checked ? 'pointer' : 'not-allowed';
-    document.getElementById('label-compromiso').style.borderColor = checked ? 'var(--black)' : 'var(--gray-200)';
-  }
-
-  function abrirConfirmarReclamo() {
-    cerrarModal('modal-confirmar-reclamo');
-    document.getElementById('chk-compromiso').checked = false;
-    const btnR = document.getElementById('btn-reclamar-modal');
-    btnR.disabled = true; btnR.style.opacity = '0.4'; btnR.style.cursor = 'not-allowed';
-    document.getElementById('label-compromiso').style.borderColor = 'var(--gray-200)';
-    abrirModal('modal-compromiso');
-  }
-
-  function procesarReclamo() {
-    cerrarModal('modal-compromiso');
-    const nuevoId = String(Number(reclamos[0].id) + 1).padStart(2, '0');
-    reclamos.unshift({ id: nuevoId, fecha: 'Abril / 2026', parcial: 1, total: 1, valor: '$1.500.000', estado: 'Solicitado' });
-    archivoReclamo = false;
-    document.getElementById('file-nombre-reclamo').textContent = 'Seleccione el archivo (.xlsx)';
-    document.getElementById('file-btn-reclamo').classList.remove('has-file');
-    document.getElementById('file-reclamo-real').value = '';
-    document.getElementById('paso2-reclamo').style.display = 'none';
-    const btn = document.getElementById('btn-guardar-reclamo');
-    btn.disabled = true; btn.style.opacity = '0.4'; btn.style.cursor = 'not-allowed';
-    navTo('confirmacion-reclamo');
-  }
-</script>
+<script>initReclamar();</script>

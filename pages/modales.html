@@ -158,6 +158,24 @@
   </div>
 </div>
 
+<!-- Modal: Eliminar reclamo -->
+<div class="overlay" id="modal-eliminar-reclamo">
+  <div class="modal" style="max-width:420px">
+    <button class="modal-close" onclick="cerrarModal('modal-eliminar-reclamo')"><span class="material-icons">close</span></button>
+    <div style="text-align:center;padding:0.5rem 0">
+      <span class="material-icons modal-danger-icon">delete_forever</span>
+      <h2>Eliminar reclamo</h2>
+      <p class="modal-desc">¿Estás seguro de que deseas eliminar el reclamo <strong id="eliminar-reclamo-id-txt">#00</strong>? Esta acción no se puede deshacer.</p>
+    </div>
+    <div class="modal-actions end">
+      <button class="btn btn-ghost" onclick="cerrarModal('modal-eliminar-reclamo')">Cancelar</button>
+      <button class="btn btn-danger" onclick="confirmarEliminarReclamo()">
+        <span class="material-icons">delete</span> Eliminar
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal: Reclamo exitoso -->
 <div class="overlay" id="modal-exito-reclamo">
   <div class="modal" style="max-width:460px">
