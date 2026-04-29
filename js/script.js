@@ -247,18 +247,28 @@ function mostrarCargando(titulo, sub, callback) {
   if (tEl) tEl.textContent = titulo;
   if (sEl) sEl.textContent = sub;
 
+  var pctEl = document.getElementById('loading-pct');
   bar.style.transition = 'none';
   bar.style.width = '0%';
+  if (pctEl) pctEl.textContent = '0%';
   pl.style.display = 'block';
+
+  var DURATION = 1200;
+  var pct = 0;
+  var interval = setInterval(function() {
+    pct = Math.min(pct + 1, 100);
+    if (pctEl) pctEl.textContent = pct + '%';
+    if (pct >= 100) clearInterval(interval);
+  }, DURATION / 100);
 
   requestAnimationFrame(function() {
     requestAnimationFrame(function() {
-      bar.style.transition = 'width 2.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      bar.style.transition = 'width ' + (DURATION / 1000) + 's cubic-bezier(0.4, 0, 0.2, 1)';
       bar.style.width = '100%';
     });
   });
 
-  setTimeout(callback, 2500);
+  setTimeout(callback, DURATION + 200);
 }
 
 function wizardSiguiente() {
@@ -576,16 +586,27 @@ function mostrarCargandoReclamo(titulo, sub, callback) {
   if (!pl || !bar) { callback(); return; }
   if (tEl) tEl.textContent = titulo;
   if (sEl) sEl.textContent = sub;
+  var pctEl = document.getElementById('r-loading-pct');
   bar.style.transition = 'none';
   bar.style.width = '0%';
+  if (pctEl) pctEl.textContent = '0%';
   pl.style.display = 'block';
+
+  var DURATION = 1200;
+  var pct = 0;
+  var interval = setInterval(function() {
+    pct = Math.min(pct + 1, 100);
+    if (pctEl) pctEl.textContent = pct + '%';
+    if (pct >= 100) clearInterval(interval);
+  }, DURATION / 100);
+
   requestAnimationFrame(function() {
     requestAnimationFrame(function() {
-      bar.style.transition = 'width 2.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      bar.style.transition = 'width ' + (DURATION / 1000) + 's cubic-bezier(0.4, 0, 0.2, 1)';
       bar.style.width = '100%';
     });
   });
-  setTimeout(callback, 2500);
+  setTimeout(callback, DURATION + 200);
 }
 
 function wizardReclamoSiguiente() {
