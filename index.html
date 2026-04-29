@@ -137,9 +137,23 @@
         <span class="nav-link" id="nl-gestion-cartera" onclick="closeMenus()">Gestión de cartera</span>
       </div>
 
-      <!-- Usuarios -->
+      <!-- Configuraciones -->
       <div class="nav-item">
-        <span class="nav-link" id="nl-usuarios" onclick="closeMenus()">Usuarios</span>
+        <span class="nav-link" id="nl-configuraciones" onclick="toggleMenu('dd-configuraciones',event)">
+          Configuraciones <span class="material-icons">expand_more</span>
+        </span>
+        <div class="nav-dropdown" id="dd-configuraciones" style="min-width:280px">
+          <div class="nav-dd-section">Administración</div>
+          <div class="nav-dd-grid" style="grid-template-columns:repeat(1, minmax(0, 1fr))">
+            <a class="nav-dd-item" href="#" onclick="navTo('usuarios');closeMenus();return false">
+              <div class="nav-dd-icon"><span class="material-icons">manage_accounts</span></div>
+              <div>
+                <div class="nav-dd-title">Gestión de usuarios</div>
+                <div class="nav-dd-desc">Administra los usuarios</div>
+              </div>
+            </a>
+          </div>
+        </div>
       </div>
 
       <!-- Documentos -->
