@@ -349,6 +349,19 @@ function initCargar() {
   actualizarFechaPlaceholder();
 }
 
+function actualizarBtnCargarPago() {
+  var txt  = document.getElementById('btn-cargar-pago-txt');
+  var icon = document.getElementById('btn-cargar-pago-icon');
+  if (!txt || !icon) return;
+  if (soportesCargados[1]) {
+    txt.textContent  = 'Cargar soporte';
+    icon.textContent = 'upload_file';
+  } else {
+    txt.textContent  = 'Cargar pago';
+    icon.textContent = 'payments';
+  }
+}
+
 function simularSoporte(n) {
   const nombres = {1: 'soporte_pago_1.pdf', 2: 'soporte_pago_2.pdf'};
   soportesCargados[n] = true;
@@ -357,6 +370,7 @@ function simularSoporte(n) {
   slot.classList.add('has-file');
   slot.querySelector('.material-icons').textContent = 'check_circle';
   document.getElementById('nombre-soporte-' + n).textContent = nombres[n];
+  actualizarBtnCargarPago();
 }
 
 /* ===== CARGUES — FUNCIONES COMPARTIDAS ===== */
@@ -430,6 +444,7 @@ function abrirSubirSoporte(id, modo) {
     slot.classList.remove('has-file');
     slot.querySelector('.material-icons').textContent = n === '1' ? 'cloud_upload' : 'add_circle_outline';
   });
+  actualizarBtnCargarPago();
   abrirModal('modal-subir');
 }
 
@@ -440,6 +455,7 @@ function handleSoporteFile(n, input) {
     slot.classList.add('has-file');
     slot.querySelector('.material-icons').textContent = 'check_circle';
     document.getElementById('nombre-soporte-' + n).textContent = input.files[0].name;
+    actualizarBtnCargarPago();
   }
 }
 
@@ -455,6 +471,7 @@ function abrirSubirSoporteReclamo(id) {
     slot.classList.remove('has-file');
     slot.querySelector('.material-icons').textContent = n === '1' ? 'cloud_upload' : 'add_circle_outline';
   });
+  actualizarBtnCargarPago();
   abrirModal('modal-subir');
 }
 
@@ -473,10 +490,9 @@ function cargarPago() {
   var c = cargues.find(function(x) { return x.id === rowSubirId; });
   if (c) c.estado = 'Pago en revisión';
   cerrarModal('modal-subir');
-  var msg = modoSoporte === 'cambiar' ? 'Soporte de pago actualizado' : 'Soporte de pago cargado correctamente';
   if (typeof renderTabla === 'function') renderTabla();
   if (typeof renderTablaCargues2 === 'function') renderTablaCargues2();
-  showToast(msg, 'success');
+  navTo('confirmacion-pago');
 }
 
 function descargarGarantias(id) {
