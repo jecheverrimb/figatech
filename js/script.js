@@ -1,5 +1,5 @@
 /* ===== NAVEGACIÓN ===== */
-const secciones = ['inicio','cargues','cargues2','cargar','confirmacion-pago','reclamos','reclamos2','reclamar','confirmacion-reclamo','reintegros','consultas','reestructuraciones','venta-cartera','novedades','compromiso-docs'];
+const secciones = ['inicio','cargues','cargues2','cargar','confirmacion-pago','reclamos','reclamos2','reclamar','confirmacion-reclamo','reintegros','consultas','reestructuraciones','venta-cartera','novedades','compromiso-docs','docs-reclamo'];
 
 window.addEventListener('popstate', function(e) {
   const page = (e.state && e.state.page) || location.hash.replace('#', '') || 'login';
@@ -22,7 +22,7 @@ function navTo(id) {
 
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
   if (id === 'inicio') document.getElementById('nl-inicio').classList.add('active');
-  else if (['cargues','cargar','reclamos','reclamar','reintegros','reestructuraciones','venta-cartera','novedades'].includes(id))
+  else if (['cargues','cargar','reclamos','reclamar','reintegros','reestructuraciones','venta-cartera','novedades','docs-reclamo'].includes(id))
     document.getElementById('nl-garantias').classList.add('active');
   else if (id === 'consultas') document.getElementById('nl-consultas').classList.add('active');
 
@@ -30,6 +30,7 @@ function navTo(id) {
   if (id === 'cargues2') typeof renderTablaCargues2 === 'function' && renderTablaCargues2();
   if (id === 'reclamos') renderReclamos();
   if (id === 'reclamos2') typeof renderTablaReclamos2 === 'function' && renderTablaReclamos2();
+  if (id === 'docs-reclamo') typeof renderDocsReclamo === 'function' && renderDocsReclamo();
   window.scrollTo(0,0);
 }
 
@@ -698,4 +699,9 @@ function descargarReclamo(id) {
 function finalizarReclamo() {
   cerrarModal('modal-exito-reclamo');
   navTo('reclamos');
+}
+
+function verDocsReclamo(id) {
+  window._reclamoDocsActivo = id;
+  navTo('docs-reclamo');
 }

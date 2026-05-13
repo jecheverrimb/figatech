@@ -13,7 +13,7 @@
   </div>
   <div class="page-actions">
     <button class="btn btn-outline" onclick="navTo('compromiso-docs')">
-      <span class="material-icons">folder_shared</span> Compromiso de documentos
+      <span class="material-icons">assignment_late</span> Documentos pendientes
     </button>
     <button class="btn btn-filled" onclick="navTo('reclamar')">
       <span class="material-icons">gavel</span> Reclamar
@@ -53,16 +53,10 @@
         <tr>
           <th>ID</th>
           <th>Fecha de reclamo</th>
-          <th>Cobro parcial</th>
-          <th>
-            Cobro total
-            <span class="tooltip-wrap" style="margin-left:4px">
-              <button class="tooltip-icon-btn" type="button" tabindex="-1"><span class="material-icons">info</span></button>
-              <span class="tooltip-box">Recuerda enviar los documentos de cobro total.</span>
-            </span>
-          </th>
-          <th>Valor a reclamar</th>
+          <th>Registros</th>
+          <th>Valor reclamado</th>
           <th>Estado</th>
+          <th>Documentación</th>
           <th>Opciones</th>
         </tr>
       </thead>
@@ -87,10 +81,10 @@
         <tr>
           <th>ID</th>
           <th>Fecha de reclamo</th>
-          <th>Cobro parcial</th>
-          <th>Cobro total</th>
-          <th>Valor a reclamar</th>
+          <th>Registros</th>
+          <th>Valor reclamado</th>
           <th>Estado</th>
+          <th>Documentación</th>
           <th>Opciones</th>
         </tr>
       </thead>
@@ -100,17 +94,24 @@
 </div>
 
 <script>
-  var BADGE_RECLAMO2 = {
-    'Reclamo radicado': 'badge-pendiente',
-    'Pago en proceso':  'badge-revision',
-    'Reclamo pagado':   'badge-completado'
+  var BADGE_ESTADO_RECLAMO2 = {
+    'En revisión': 'badge-pendiente',
+    'En proceso':  'badge-revision',
+    'Pagado':      'badge-completado'
+  };
+  var BADGE_DOC_RECLAMO2 = {
+    'Pendiente':       'badge-pendiente',
+    'Faltan soportes': 'badge-alerta',
+    'Recibida':        'badge-completado',
+    'No requiere':     'badge-neutral'
   };
 
   function buildReclamoRow2(r, dotsPrefix, highlight) {
-    var badgeClass = BADGE_RECLAMO2[r.estado] || 'badge-pendiente';
+    var badgeEstado = BADGE_ESTADO_RECLAMO2[r.estado] || 'badge-pendiente';
+    var badgeDoc    = BADGE_DOC_RECLAMO2[r.documentacion] || 'badge-pendiente';
 
     var btnPrincipal = '';
-    if (r.estado === 'Reclamo radicado') {
+    if (r.estado === 'En revisión') {
       btnPrincipal = '<button class="btn-accion btn-accion-pago" onclick="abrirSubirSoporteReclamo(\'' + r.id + '\')">'
         + '<span class="material-icons">upload</span> Subir soporte</button>';
     } else {
@@ -119,7 +120,7 @@
     }
 
     var dotsItems = '<button onclick="closeMenus()"><span class="material-icons">visibility</span> Ver detalle</button>';
-    if (r.estado === 'Reclamo radicado') {
+    if (r.estado === 'En revisión') {
       dotsItems += '<button onclick="abrirSubirSoporteReclamo(\'' + r.id + '\')">'
         + '<span class="material-icons">upload</span> Subir soporte</button>'
         + '<div class="dots-divider"></div>'
@@ -130,24 +131,17 @@
         + '<span class="material-icons">download</span> Descargar reclamo</button>';
     }
 
-    var iconCobro = r.estado === 'Reclamo pagado'
-      ? '<span class="material-icons" style="font-size:14px;color:#15803d">check_circle</span>'
-      : '<span class="material-icons" style="font-size:13px;color:var(--gray-400)">info</span>';
-    var tipCobro = r.estado === 'Reclamo pagado' ? 'Documentos verificados.' : 'Recuerda enviar los documentos de cobro total.';
-    var cobroTotalCell = r.total
-      + '<span class="tooltip-wrap" style="margin-left:4px">'
-      + '<button class="tooltip-icon-btn" type="button" tabindex="-1">' + iconCobro + '</button>'
-      + '<span class="tooltip-box">' + tipCobro + '</span></span>';
-
     var tr = document.createElement('tr');
     if (highlight) tr.style.background = '#f0fdf4';
     tr.innerHTML =
       '<td><span class="td-id">' + r.id + '</span></td>'
       + '<td>' + r.fecha + '</td>'
-      + '<td style="text-align:center">' + r.parcial + '</td>'
-      + '<td style="text-align:center">' + cobroTotalCell + '</td>'
+      + '<td style="text-align:center">' + r.registros + '</td>'
       + '<td><strong>' + r.valor + '</strong></td>'
-      + '<td><span class="badge ' + badgeClass + '">' + r.estado + '</span></td>'
+      + '<td><span class="badge ' + badgeEstado + '">' + r.estado + '</span></td>'
+      + '<td><button class="btn-doc-link" onclick="verDocsReclamo(\'' + r.id + '\')">'
+        + '<span class="material-icons" style="font-size:13px">description</span>'
+        + r.documentacion + '</button></td>'
       + '<td><div class="td-actions">'
         + btnPrincipal
         + '<div style="position:relative">'
@@ -162,11 +156,12 @@
     var q = (document.getElementById('buscador-reclamos2') ? document.getElementById('buscador-reclamos2').value : '').toLowerCase();
 
     var enProceso = reclamos.filter(function(r) {
-      return (r.estado === 'Reclamo radicado' || r.estado === 'Pago en proceso')
+      return (r.estado === 'En revisión' || r.estado === 'En proceso')
         && (r.id.toLowerCase().includes(q) || r.fecha.toLowerCase().includes(q));
     });
     var pagados = reclamos.filter(function(r) {
-      return r.estado === 'Reclamo pagado'
+      return r.estado === 'Pagado'
+        && (r.documentacion === 'Recibida' || r.documentacion === 'No requiere')
         && (r.id.toLowerCase().includes(q) || r.fecha.toLowerCase().includes(q));
     });
 

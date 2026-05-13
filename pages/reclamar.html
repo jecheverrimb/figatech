@@ -162,55 +162,61 @@
   <!-- Encabezado -->
   <div class="doc-success-header">
     <div class="doc-success-icon">
-      <span class="material-icons" style="font-size:1.6rem;color:#2563eb">bolt</span>
+      <span class="material-icons" style="font-size:1.6rem;color:#2563eb">payments</span>
     </div>
     <div>
-      <div class="doc-success-title">Tu pago se procesa en las próximas horas</div>
-      <div class="doc-success-sub">Ya no necesitas documentos para recibir el pago. Solo aplica un compromiso de envío posterior para los créditos con cobro total.</div>
+      <div class="doc-success-title">Ya estamos procesando tu pago</div>
+      <div class="doc-success-sub">Para los créditos con <strong>cobro total</strong> debes enviar los documentos de soporte después de que el reclamo sea procesado.</div>
     </div>
   </div>
 
-  <!-- Resumen del reclamo -->
-  <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;font-size:0.82rem;color:var(--gray-500)">
-    <span>Tu reclamo incluye</span>
-    <span style="background:#fef9c3;color:#854d0e;border-radius:20px;padding:2px 10px;font-weight:600">1 cobro total</span>
-    <span>y</span>
-    <span style="background:var(--gray-100);color:var(--gray-600);border-radius:20px;padding:2px 10px;font-weight:600">1 cobro parcial</span>
-    <span>— el compromiso aplica solo al cobro total.</span>
-  </div>
+  <!-- H2: Documentos requeridos -->
+  <h2 style="font-size:0.95rem;font-weight:700;color:var(--black);margin:1.25rem 0 0.65rem">Documentos requeridos para cobros totales</h2>
 
-  <!-- Documentos requeridos (cobro total) -->
-  <div style="background:var(--gray-100);border-radius:9px;padding:1rem 1.25rem;margin-bottom:1rem">
-    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.65rem">
-      <span class="material-icons" style="font-size:1rem;color:var(--gray-500)">folder_open</span>
-      <span style="font-size:0.82rem;font-weight:700;color:var(--black)">Documentos del cobro total</span>
-    </div>
-    <ul style="margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:5px 1.5rem">
-      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:5px"><span style="color:var(--gray-400);flex-shrink:0">·</span>Fotocopia de cédula del deudor</li>
-      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:5px"><span style="color:var(--gray-400);flex-shrink:0">·</span>Copia de carta de instrucciones</li>
-      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:5px"><span style="color:var(--gray-400);flex-shrink:0">·</span>Estado de cuenta</li>
-      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:5px"><span style="color:var(--gray-400);flex-shrink:0">·</span>Cert. de reporte a centrales de riesgo</li>
-      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:5px"><span style="color:var(--gray-400);flex-shrink:0">·</span>Copia de pagaré</li>
-      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:5px"><span style="color:var(--gray-400);flex-shrink:0">·</span>Formato de aceptación de fianza</li>
-      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:5px"><span style="color:var(--gray-400);flex-shrink:0">·</span>Formato de endoso</li>
+  <!-- Lista de documentos -->
+  <div style="background:var(--gray-100);border-radius:9px;padding:1rem 1.25rem;margin-bottom:1.25rem">
+    <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px">
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-icons" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Fotocopia de cédula del deudor</li>
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-icons" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Copia de carta de instrucciones</li>
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-icons" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Estado de cuenta</li>
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-icons" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Certificado de reporte a centrales de riesgo</li>
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-icons" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Copia de pagaré</li>
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-icons" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Formato de aceptación de fianza</li>
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-icons" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Formato de endoso</li>
     </ul>
   </div>
 
-  <!-- Instrucciones de envío — 2 columnas -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem">
-    <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:9px;padding:0.8rem 1rem;display:flex;align-items:flex-start;gap:0.6rem;font-size:0.83rem;color:#0c4a6e">
-      <span class="material-icons" style="font-size:1.1rem;flex-shrink:0;margin-top:1px">home_work</span>
-      <div>
-        <div style="font-weight:700;margin-bottom:2px">Presencial</div>
-        <div>CC Comercial Chipichape, Cali</div>
+  <!-- H2: Tipo de firma + enlace dudas -->
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:0 0 0.65rem;flex-wrap:wrap">
+    <h2 style="font-size:0.95rem;font-weight:700;color:var(--black);margin:0">¿Cómo debes enviar los documentos según el tipo de firma?</h2>
+    <a href="https://wa.me/573001234567" target="_blank"
+       style="display:inline-flex;align-items:center;gap:0.35rem;font-size:0.78rem;font-weight:600;color:var(--gray-500);text-decoration:none;white-space:nowrap;border:1px solid var(--gray-200);border-radius:20px;padding:3px 10px;transition:color 0.15s,border-color 0.15s"
+       onmouseenter="this.style.color='var(--black)';this.style.borderColor='var(--gray-400)'"
+       onmouseleave="this.style.color='var(--gray-500)';this.style.borderColor='var(--gray-200)'">
+      <span class="material-icons" style="font-size:0.85rem">chat_bubble_outline</span>
+      ¿Dudas? Escríbenos
+    </a>
+  </div>
+
+  <!-- 2 columnas: firma física | firma electrónica -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.25rem">
+    <!-- Firma física -->
+    <div style="background:white;border:1.5px solid var(--gray-200);border-radius:9px;padding:1rem 1.1rem;font-size:0.83rem;color:var(--gray-700)">
+      <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+        <span class="material-icons" style="font-size:1.1rem;color:var(--gray-500)">draw</span>
+        <span style="font-weight:700;color:var(--black)">Firma física (a mano)</span>
       </div>
+      <div style="margin-bottom:0.4rem;color:var(--gray-500);font-size:0.8rem">Envía los documentos físicos originales a:</div>
+      <div style="font-weight:600;color:var(--gray-800);line-height:1.45">Cl. 38 Nte. #6 N&nbsp;-&nbsp;45<br>Local 303, Bodega 6<br>Cali, Valle del Cauca</div>
     </div>
-    <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:9px;padding:0.8rem 1rem;display:flex;align-items:flex-start;gap:0.6rem;font-size:0.83rem;color:#0c4a6e">
-      <span class="material-icons" style="font-size:1.1rem;flex-shrink:0;margin-top:1px">email</span>
-      <div>
-        <div style="font-weight:700;margin-bottom:2px">Correo electrónico</div>
-        <div>gaf@figarantias.com</div>
+    <!-- Firma electrónica o digital -->
+    <div style="background:white;border:1.5px solid var(--gray-200);border-radius:9px;padding:1rem 1.1rem;font-size:0.83rem;color:var(--gray-700)">
+      <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+        <span class="material-icons" style="font-size:1.1rem;color:var(--gray-500)">verified</span>
+        <span style="font-weight:700;color:var(--black)">Firma electrónica o digital</span>
       </div>
+      <div style="margin-bottom:0.4rem;color:var(--gray-500);font-size:0.8rem">Envía los documentos al correo:</div>
+      <div style="font-weight:600;color:var(--gray-800)">gaf@figarantias.com</div>
     </div>
   </div>
 
@@ -233,5 +239,6 @@
     </button>
   </div>
 </div>
+
 
 <script>initReclamar();</script>

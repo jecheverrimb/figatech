@@ -176,6 +176,30 @@
   </div>
 </div>
 
+<!-- Modal: Documentos comprometidos por titular -->
+<div class="overlay" id="modal-docs-titular">
+  <div class="modal" style="max-width:500px">
+    <button class="modal-close" onclick="cerrarModal('modal-docs-titular')"><span class="material-icons">close</span></button>
+    <h2>Documentos comprometidos</h2>
+    <p class="modal-desc" id="modal-docs-titular-nombre" style="margin-bottom:0.5rem"></p>
+    <ul id="modal-docs-titular-lista" style="margin:0;padding:0;list-style:none"></ul>
+    <div style="display:flex;align-items:center;gap:1.25rem;margin-top:1rem;padding-top:0.85rem;border-top:1px solid var(--gray-100);font-size:0.78rem;color:var(--gray-500);flex-wrap:wrap">
+      <span style="display:flex;align-items:center;gap:4px">
+        <span class="material-icons" style="font-size:1.1rem;color:#16a34a">check_circle</span> Recibido
+      </span>
+      <span style="display:flex;align-items:center;gap:4px">
+        <span class="material-icons" style="font-size:1.1rem;color:#dc2626">cancel</span> No recibido
+      </span>
+      <span style="display:flex;align-items:center;gap:4px">
+        <span class="material-icons" style="font-size:1.1rem;color:#d97706">warning</span> Faltante / no corresponde
+      </span>
+    </div>
+    <div class="modal-actions end" style="margin-top:1.25rem">
+      <button class="btn btn-filled" onclick="cerrarModal('modal-docs-titular')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal: Reclamo exitoso -->
 <div class="overlay" id="modal-exito-reclamo">
   <div class="modal" style="max-width:460px">

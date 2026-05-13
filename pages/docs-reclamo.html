@@ -1,0 +1,130 @@
+<!-- DOCUMENTOS PENDIENTES DE RECLAMO -->
+<div class="breadcrumb">
+  <a href="#" onclick="navTo('reclamos');return false">Reclamos</a>
+  <span class="sep">/</span>
+  <span id="breadcrumb-docs-reclamo">Documentos pendientes</span>
+</div>
+<div class="page-header">
+  <div>
+    <div class="page-title" id="title-docs-reclamo">Documentos pendientes</div>
+    <div class="page-subtitle">Créditos con cobro total solicitados en este reclamo que requieren envío de documentos</div>
+  </div>
+</div>
+
+<!-- Buscador -->
+<div class="cargues-search-bar">
+  <div class="search-box">
+    <span class="material-icons">search</span>
+    <input type="text" id="buscador-docs-reclamo" placeholder="Buscar por nombre o cédula" oninput="renderDocsReclamo()">
+  </div>
+</div>
+
+<!-- Tabla -->
+<div class="table-card">
+  <div id="docs-reclamo-empty" class="section-empty-state" style="display:none">
+    <span class="material-icons" style="font-size:2.5rem;color:var(--gray-300)">folder_off</span>
+    <span style="font-weight:600;color:var(--gray-500)">No hay créditos que coincidan</span>
+  </div>
+  <table id="tabla-docs-reclamo" style="display:none">
+    <thead>
+      <tr>
+        <th>Nombre del titular</th>
+        <th>Cédula</th>
+        <th>N.° Pagaré</th>
+        <th>Estado de documentos</th>
+        <th>Opciones</th>
+      </tr>
+    </thead>
+    <tbody id="tbody-docs-reclamo"></tbody>
+  </table>
+</div>
+
+<script>
+  var BADGE_DOC_DR = {
+    'Pendiente':           'badge-pendiente',
+    'Con observaciones':   'badge-alerta',
+    'Recibido y verificado': 'badge-completado'
+  };
+
+  function renderDocsReclamo() {
+    var id = window._reclamoDocsActivo || '';
+    var creditos = (typeof reclamosDetalle !== 'undefined' && reclamosDetalle[id]) ? reclamosDetalle[id] : [];
+    var q = ((document.getElementById('buscador-docs-reclamo') || {}).value || '').toLowerCase();
+
+    var titleEl = document.getElementById('title-docs-reclamo');
+    var breadEl = document.getElementById('breadcrumb-docs-reclamo');
+    if (titleEl) titleEl.textContent = 'Documentos pendientes — Reclamo #' + id;
+    if (breadEl) breadEl.textContent = 'Reclamo #' + id;
+
+    var filtrados = creditos.filter(function(c) {
+      return !q || c.nombre.toLowerCase().includes(q) || c.cedula.includes(q);
+    });
+
+    window._creditosDocsActivos = creditos;
+
+    var tbody = document.getElementById('tbody-docs-reclamo');
+    var empty = document.getElementById('docs-reclamo-empty');
+    var tabla = document.getElementById('tabla-docs-reclamo');
+
+    if (!filtrados.length) {
+      if (tbody) tbody.innerHTML = '';
+      if (empty) empty.style.display = 'flex';
+      if (tabla) tabla.style.display = 'none';
+      return;
+    }
+
+    if (empty) empty.style.display = 'none';
+    if (tabla) tabla.style.display = '';
+
+    if (tbody) tbody.innerHTML = filtrados.map(function(c) {
+      var idx = creditos.indexOf(c);
+      var badgeClass = BADGE_DOC_DR[c.docEstado] || 'badge-pendiente';
+      return '<tr>'
+        + '<td><strong>' + c.nombre + '</strong></td>'
+        + '<td>' + c.cedula + '</td>'
+        + '<td style="font-family:monospace;font-size:0.85rem">' + c.pagare + '</td>'
+        + '<td><span class="badge ' + badgeClass + '">' + c.docEstado + '</span></td>'
+        + '<td><button class="btn btn-outline btn-sm" onclick="abrirDocsTitular(' + idx + ')">'
+          + '<span class="material-icons" style="font-size:15px">visibility</span> Ver'
+          + '</button></td>'
+        + '</tr>';
+    }).join('');
+  }
+
+  function abrirDocsTitular(idx) {
+    var creditos = window._creditosDocsActivos || [];
+    var c = creditos[idx];
+    if (!c) return;
+
+    var NOMBRES = typeof DOCS_LISTA !== 'undefined' ? DOCS_LISTA : [
+      'Fotocopia de cédula del deudor',
+      'Copia de carta de instrucciones',
+      'Estado de cuenta',
+      'Cert. de reporte a centrales de riesgo',
+      'Copia de pagaré',
+      'Formato de aceptación de fianza',
+      'Formato de endoso'
+    ];
+
+    var nombreEl = document.getElementById('modal-docs-titular-nombre');
+    if (nombreEl) nombreEl.textContent = c.nombre + ' · C.C. ' + c.cedula;
+
+    var lista = document.getElementById('modal-docs-titular-lista');
+    if (lista) {
+      lista.innerHTML = c.docs.map(function(estado, i) {
+        var icon, color;
+        if (estado === 'recibido')    { icon = 'check_circle'; color = '#16a34a'; }
+        else if (estado === 'observacion') { icon = 'warning'; color = '#d97706'; }
+        else                          { icon = 'cancel';       color = '#dc2626'; }
+        return '<li style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0;border-bottom:1px solid var(--gray-100);font-size:0.9rem;color:var(--gray-700)">'
+          + '<span class="material-icons" style="font-size:1.4rem;color:' + color + ';flex-shrink:0">' + icon + '</span>'
+          + NOMBRES[i]
+          + '</li>';
+      }).join('');
+    }
+
+    abrirModal('modal-docs-titular');
+  }
+
+  renderDocsReclamo();
+</script>

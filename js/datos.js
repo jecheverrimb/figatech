@@ -9,10 +9,57 @@ const cargues = [
 
 // Reclamos
 const reclamos = [
-  { id: '11', fecha: 'Abril / 2026',  parcial: 1, total: 1, valor: '$1.500.000', estado: 'Reclamo pagado' },
-  { id: '10', fecha: 'Marzo / 2026',  parcial: 4, total: 2, valor: '$800.000',   estado: 'Reclamo pagado' },
-  { id: '09', fecha: 'Enero / 2026',  parcial: 1, total: 1, valor: '$500.000',   estado: 'Reclamo pagado' },
+  { id: '14', fecha: 'Mayo / 2026',      registros: 3, valor: '$2.100.000', estado: 'En revisión',  documentacion: 'Pendiente'       },
+  { id: '13', fecha: 'Abril / 2026',     registros: 5, valor: '$3.200.000', estado: 'En proceso',   documentacion: 'Faltan soportes' },
+  { id: '12', fecha: 'Marzo / 2026',     registros: 2, valor: '$1.500.000', estado: 'En proceso',   documentacion: 'Recibida'        },
+  { id: '11', fecha: 'Febrero / 2026',   registros: 4, valor: '$800.000',   estado: 'Pagado',       documentacion: 'Recibida'        },
+  { id: '10', fecha: 'Enero / 2026',     registros: 6, valor: '$4.500.000', estado: 'Pagado',       documentacion: 'No requiere'     },
+  { id: '09', fecha: 'Diciembre / 2025', registros: 1, valor: '$500.000',   estado: 'Pagado',       documentacion: 'Recibida'        },
 ];
+
+const DOCS_LISTA = [
+  'Fotocopia de cédula del deudor',
+  'Copia de carta de instrucciones',
+  'Estado de cuenta',
+  'Cert. de reporte a centrales de riesgo',
+  'Copia de pagaré',
+  'Formato de aceptación de fianza',
+  'Formato de endoso'
+];
+
+const reclamosDetalle = {
+  '14': [
+    { nombre: 'Carlos Ruiz Mendoza',      cedula: '1098765432', pagare: 'PG-2210', docEstado: 'Pendiente',           docs: ['pendiente','pendiente','pendiente','pendiente','pendiente','pendiente','pendiente'] },
+    { nombre: 'Luisa Fernanda Ospina',    cedula: '1087654321', pagare: 'PG-2211', docEstado: 'Con observaciones',   docs: ['recibido','observacion','recibido','pendiente','recibido','observacion','pendiente'] },
+    { nombre: 'Mario Alberto Vásquez',    cedula: '1076543210', pagare: 'PG-2212', docEstado: 'Pendiente',           docs: ['pendiente','pendiente','pendiente','pendiente','pendiente','pendiente','pendiente'] },
+  ],
+  '13': [
+    { nombre: 'Ana María López Torres',   cedula: '1065432109', pagare: 'PG-2205', docEstado: 'Con observaciones',   docs: ['recibido','observacion','recibido','observacion','recibido','pendiente','recibido'] },
+    { nombre: 'Héctor Javier Reyes',      cedula: '1054321098', pagare: 'PG-2206', docEstado: 'Pendiente',           docs: ['pendiente','pendiente','pendiente','pendiente','pendiente','pendiente','pendiente'] },
+    { nombre: 'Sandra Milena Cárdenas',   cedula: '1043210987', pagare: 'PG-2207', docEstado: 'Pendiente',           docs: ['pendiente','pendiente','pendiente','pendiente','pendiente','pendiente','pendiente'] },
+    { nombre: 'Rodrigo Andrés Morales',   cedula: '1032109876', pagare: 'PG-2208', docEstado: 'Con observaciones',   docs: ['recibido','recibido','observacion','recibido','pendiente','observacion','recibido'] },
+    { nombre: 'Patricia Isabel Gómez',    cedula: '1021098765', pagare: 'PG-2209', docEstado: 'Pendiente',           docs: ['pendiente','pendiente','pendiente','pendiente','pendiente','pendiente','pendiente'] },
+  ],
+  '12': [
+    { nombre: 'Juan Pablo Herrera Quintero', cedula: '1034567892', pagare: 'PG-2190', docEstado: 'Recibido y verificado', docs: ['recibido','recibido','recibido','recibido','recibido','recibido','recibido'] },
+    { nombre: 'Valentina Castro Moreno',     cedula: '1056789012', pagare: 'PG-2191', docEstado: 'Recibido y verificado', docs: ['recibido','recibido','recibido','recibido','recibido','recibido','recibido'] },
+  ],
+  '11': [
+    { nombre: 'Roberto Carlos Peña',    cedula: '1023456789', pagare: 'PG-2180', docEstado: 'Recibido y verificado', docs: ['recibido','recibido','recibido','recibido','recibido','recibido','recibido'] },
+    { nombre: 'Gloria Inés Ramírez',    cedula: '1034567890', pagare: 'PG-2181', docEstado: 'Recibido y verificado', docs: ['recibido','recibido','recibido','recibido','recibido','recibido','recibido'] },
+    { nombre: 'Felipe Andrés Torres',   cedula: '1045678901', pagare: 'PG-2182', docEstado: 'Recibido y verificado', docs: ['recibido','recibido','recibido','recibido','recibido','recibido','recibido'] },
+    { nombre: 'María del Carmen Silva', cedula: '1056789012', pagare: 'PG-2183', docEstado: 'Recibido y verificado', docs: ['recibido','recibido','recibido','recibido','recibido','recibido','recibido'] },
+  ],
+  '10': [
+    { nombre: 'Andrés Felipe Martínez', cedula: '1078901234', pagare: 'PG-2170', docEstado: 'Recibido y verificado', docs: ['recibido','recibido','recibido','recibido','recibido','recibido','recibido'] },
+    { nombre: 'Claudia Patricia Niño',  cedula: '1089012345', pagare: 'PG-2171', docEstado: 'Recibido y verificado', docs: ['recibido','recibido','recibido','recibido','recibido','recibido','recibido'] },
+    { nombre: 'Jairo Augusto Díaz',     cedula: '1090123456', pagare: 'PG-2172', docEstado: 'Recibido y verificado', docs: ['recibido','recibido','recibido','recibido','recibido','recibido','recibido'] },
+    { nombre: 'Marta Cecilia Vargas',   cedula: '1123456789', pagare: 'PG-2175', docEstado: 'Recibido y verificado', docs: ['recibido','recibido','recibido','recibido','recibido','recibido','recibido'] },
+  ],
+  '09': [
+    { nombre: 'Diego Alejandro Ruiz',   cedula: '1145678901', pagare: 'PG-2160', docEstado: 'Recibido y verificado', docs: ['recibido','recibido','recibido','recibido','recibido','recibido','recibido'] },
+  ],
+};
 
 // Titulares
 const titulares = [
