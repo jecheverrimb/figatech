@@ -35,16 +35,16 @@
   <div class="upload-drop-zone" id="upload-zone-r" onclick="simularArchivoReclamo()">
     <div id="udz-r-empty" style="display:flex;flex-direction:column;align-items:center;width:100%;gap:0.4rem">
       <div class="udz-icon-wrap">
-        <span class="material-icons" style="font-size:2.2rem;color:var(--gray-400)">table_chart</span>
+        <span class="material-symbols-rounded" style="font-size:2.2rem;color:var(--gray-400)">table_chart</span>
       </div>
       <div class="udz-title">Sube el archivo Excel con el detalle de los créditos a reclamar</div>
       <div class="udz-sub">Formato permitido: .xlsx · Tamaño máximo: 10 MB</div>
       <span class="btn btn-outline btn-sm" style="margin-top:0.9rem;pointer-events:none">
-        <span class="material-icons">upload_file</span> Seleccionar archivo
+        <span class="material-symbols-rounded">upload_file</span> Seleccionar archivo
       </span>
     </div>
     <div id="udz-r-selected" style="display:none" class="udz-selected-content">
-      <span class="material-icons" style="font-size:2rem;color:#16a34a">check_circle</span>
+      <span class="material-symbols-rounded" style="font-size:2rem;color:#16a34a">check_circle</span>
       <div style="flex:1;min-width:0">
         <div class="udz-file-name" id="udz-r-file-name"></div>
         <div class="udz-sub" style="color:#16a34a;margin-top:2px">Archivo listo para analizar</div>
@@ -52,13 +52,13 @@
       <button class="btn btn-ghost btn-sm" type="button" data-quitar
               onclick="event.stopPropagation();quitarArchivoReclamo()"
               style="flex-shrink:0">
-        <span class="material-icons" style="font-size:15px">close</span> Quitar
+        <span class="material-symbols-rounded" style="font-size:15px">close</span> Quitar
       </button>
     </div>
   </div>
 
   <div class="udz-template-row">
-    <span class="material-icons" style="font-size:15px;color:var(--gray-400)">info</span>
+    <span class="material-symbols-rounded" style="font-size:15px;color:var(--gray-400)">info</span>
     ¿No tienes la plantilla del archivo?
     <a onclick="descargarPlantilla()">Descárgala aquí</a>
   </div>
@@ -68,7 +68,7 @@
     <button class="btn btn-ghost" onclick="navTo('reclamos')">Cancelar</button>
     <div class="btn-sig-wrap" id="btn-r-sig-wrap">
       <button class="btn btn-filled" id="btn-r-siguiente" onclick="wizardReclamoSiguiente()" disabled>
-        <span class="material-icons" style="font-size:16px">arrow_forward</span>
+        <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span>
         Analizar
       </button>
       <div class="btn-sig-tip" id="btn-r-sig-tip">Selecciona un archivo .xlsx para continuar</div>
@@ -78,7 +78,7 @@
 
 <!-- Cargando (animación entre pasos) -->
 <div class="step-card paso-loading-card" id="paso-r-loading" style="display:none">
-  <span class="material-icons loading-spin-icon">autorenew</span>
+  <span class="material-symbols-rounded loading-spin-icon">autorenew</span>
   <div class="loading-title" id="r-loading-title">Analizando archivo...</div>
   <div class="loading-sub" id="r-loading-sub">Verificando registros y formato del archivo</div>
   <div class="loading-bar-wrap">
@@ -91,7 +91,7 @@
 <div class="step-card" id="paso-r-2" style="display:none">
 
   <div class="val-banner">
-    <span class="material-icons" style="font-size:1.6rem;color:#16a34a;flex-shrink:0">check_circle</span>
+    <span class="material-symbols-rounded" style="font-size:1.6rem;color:#16a34a;flex-shrink:0">check_circle</span>
     <div>
       <div class="val-banner-title">Archivo validado correctamente</div>
       <div class="val-banner-sub">Se encontraron <strong>2 créditos</strong> para reclamar. Verifica que la información sea correcta antes de continuar.</div>
@@ -148,10 +148,10 @@
   <!-- Botones paso 2 -->
   <div class="step-card-footer">
     <button class="btn btn-ghost" onclick="wizardReclamoAnterior()">
-      <span class="material-icons" style="font-size:16px">arrow_back</span> Atrás
+      <span class="material-symbols-rounded" style="font-size:16px">arrow_back</span> Atrás
     </button>
     <button class="btn btn-filled" onclick="wizardReclamoSiguiente()">
-      Continuar <span class="material-icons" style="font-size:16px">arrow_forward</span>
+      Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span>
     </button>
   </div>
 </div>
@@ -162,7 +162,7 @@
   <!-- Encabezado -->
   <div class="doc-success-header">
     <div class="doc-success-icon">
-      <span class="material-icons" style="font-size:1.6rem;color:#2563eb">payments</span>
+      <span class="material-symbols-rounded" style="font-size:1.6rem;color:#2563eb">payments</span>
     </div>
     <div>
       <div class="doc-success-title">Ya estamos procesando tu pago</div>
@@ -176,13 +176,13 @@
   <!-- Lista de documentos -->
   <div style="background:var(--gray-100);border-radius:9px;padding:1rem 1.25rem;margin-bottom:1.25rem">
     <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px">
-      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-icons" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Fotocopia de cédula del deudor</li>
-      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-icons" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Copia de carta de instrucciones</li>
-      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-icons" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Estado de cuenta</li>
-      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-icons" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Certificado de reporte a centrales de riesgo</li>
-      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-icons" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Copia de pagaré</li>
-      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-icons" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Formato de aceptación de fianza</li>
-      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-icons" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Formato de endoso</li>
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-symbols-rounded" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Fotocopia de cédula del deudor</li>
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-symbols-rounded" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Copia de carta de instrucciones</li>
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-symbols-rounded" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Estado de cuenta</li>
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-symbols-rounded" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Certificado de reporte a centrales de riesgo</li>
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-symbols-rounded" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Copia de pagaré</li>
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-symbols-rounded" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Formato de aceptación de fianza</li>
+      <li style="font-size:0.83rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:6px"><span class="material-symbols-rounded" style="font-size:0.9rem;color:var(--gray-400);flex-shrink:0;margin-top:1px">chevron_right</span>Formato de endoso</li>
     </ul>
   </div>
 
@@ -193,7 +193,7 @@
        style="display:inline-flex;align-items:center;gap:0.35rem;font-size:0.78rem;font-weight:600;color:var(--gray-500);text-decoration:none;white-space:nowrap;border:1px solid var(--gray-200);border-radius:20px;padding:3px 10px;transition:color 0.15s,border-color 0.15s"
        onmouseenter="this.style.color='var(--black)';this.style.borderColor='var(--gray-400)'"
        onmouseleave="this.style.color='var(--gray-500)';this.style.borderColor='var(--gray-200)'">
-      <span class="material-icons" style="font-size:0.85rem">chat_bubble_outline</span>
+      <span class="material-symbols-rounded" style="font-size:0.85rem">chat_bubble_outline</span>
       ¿Dudas? Escríbenos
     </a>
   </div>
@@ -203,7 +203,7 @@
     <!-- Firma física -->
     <div style="background:white;border:1.5px solid var(--gray-200);border-radius:9px;padding:1rem 1.1rem;font-size:0.83rem;color:var(--gray-700)">
       <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
-        <span class="material-icons" style="font-size:1.1rem;color:var(--gray-500)">draw</span>
+        <span class="material-symbols-rounded" style="font-size:1.1rem;color:var(--gray-500)">draw</span>
         <span style="font-weight:700;color:var(--black)">Firma física (a mano)</span>
       </div>
       <div style="margin-bottom:0.4rem;color:var(--gray-500);font-size:0.8rem">Envía los documentos físicos originales a:</div>
@@ -212,7 +212,7 @@
     <!-- Firma electrónica o digital -->
     <div style="background:white;border:1.5px solid var(--gray-200);border-radius:9px;padding:1rem 1.1rem;font-size:0.83rem;color:var(--gray-700)">
       <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
-        <span class="material-icons" style="font-size:1.1rem;color:var(--gray-500)">verified</span>
+        <span class="material-symbols-rounded" style="font-size:1.1rem;color:var(--gray-500)">verified</span>
         <span style="font-weight:700;color:var(--black)">Firma electrónica o digital</span>
       </div>
       <div style="margin-bottom:0.4rem;color:var(--gray-500);font-size:0.8rem">Envía los documentos al correo:</div>
@@ -230,12 +230,12 @@
   <!-- Botones paso 3 -->
   <div class="step-card-footer">
     <button class="btn btn-ghost" onclick="wizardReclamoAnterior()">
-      <span class="material-icons" style="font-size:16px">arrow_back</span> Atrás
+      <span class="material-symbols-rounded" style="font-size:16px">arrow_back</span> Atrás
     </button>
     <button class="btn btn-filled" id="btn-r-radicar"
             style="opacity:0.4;cursor:not-allowed" disabled
             onclick="procesarReclamo()">
-      <span class="material-icons">gavel</span> Solicitar reclamo
+      <span class="material-symbols-rounded">gavel</span> Solicitar reclamo
     </button>
   </div>
 </div>

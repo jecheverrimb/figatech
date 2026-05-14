@@ -1,0 +1,199 @@
+<!-- INFORMACIÓN DEL TITULAR -->
+<div class="breadcrumb">
+  <a href="#" onclick="navTo('inicio');return false">Garantías</a>
+  <span class="sep">/</span>
+  <a href="#" onclick="navTo('reclamos');return false">Reclamos</a>
+  <span class="sep">/</span>
+  <a href="#" id="bread-docs-reclamo" onclick="navTo('docs-reclamo');return false">Documentos pendientes</a>
+  <span class="sep">/</span>
+  <span>Información del titular</span>
+</div>
+
+<div class="page-header-row">
+  <button class="btn-back" onclick="navTo('docs-reclamo')">
+    <span class="material-symbols-rounded">chevron_left</span>
+  </button>
+  <div class="page-title" style="margin-bottom:0">Información del titular</div>
+</div>
+
+<div id="info-titular-body">
+
+  <!-- Fila superior: Información personal + Información del crédito -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+
+    <!-- Card: Información personal -->
+    <div class="step-card">
+      <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.25rem">
+        <span class="material-symbols-rounded" style="font-size:1.1rem;color:var(--gray-500)">person</span>
+        <span class="consulta-section-title" style="margin-bottom:0">Información personal</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem 1.5rem">
+        <div>
+          <div class="cfield-label" style="margin-bottom:3px">Nombre completo</div>
+          <div id="it-nombre" class="cfield-value"></div>
+        </div>
+        <div>
+          <div class="cfield-label" style="display:flex;align-items:center;gap:0.3rem;margin-bottom:3px">
+            <span class="material-symbols-rounded" style="font-size:0.85rem">credit_card</span> Documento
+          </div>
+          <div id="it-doc-full" class="cfield-value"></div>
+        </div>
+        <div>
+          <div class="cfield-label" style="display:flex;align-items:center;gap:0.3rem;margin-bottom:3px">
+            <span class="material-symbols-rounded" style="font-size:0.85rem">phone</span> Teléfono
+          </div>
+          <div id="it-telefono" style="font-size:0.92rem;color:var(--gray-700)"></div>
+        </div>
+        <div>
+          <div class="cfield-label" style="display:flex;align-items:center;gap:0.3rem;margin-bottom:3px">
+            <span class="material-symbols-rounded" style="font-size:0.85rem">mail</span> Correo
+          </div>
+          <div id="it-correo" style="font-size:0.92rem;color:var(--gray-700)"></div>
+        </div>
+        <div style="grid-column:1/-1">
+          <div class="cfield-label" style="display:flex;align-items:center;gap:0.3rem;margin-bottom:3px">
+            <span class="material-symbols-rounded" style="font-size:0.85rem">location_on</span> Dirección
+          </div>
+          <div id="it-direccion" style="font-size:0.92rem;color:var(--gray-700)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card: Información del crédito -->
+    <div class="step-card">
+      <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.25rem">
+        <span class="material-symbols-rounded" style="font-size:1.1rem;color:var(--gray-500)">credit_card</span>
+        <span class="consulta-section-title" style="margin-bottom:0">Información del crédito</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1.25rem">
+        <div style="background:var(--gray-100);border-radius:8px;padding:0.75rem 0.85rem">
+          <div class="cfield-label" style="margin-bottom:4px">Valor desembolsado</div>
+          <div id="it-valor-desembolsado" class="cfield-value"></div>
+        </div>
+        <div style="background:var(--gray-100);border-radius:8px;padding:0.75rem 0.85rem">
+          <div class="cfield-label" style="margin-bottom:4px">Fecha de desembolso</div>
+          <div id="it-fecha-desembolso" class="cfield-value"></div>
+        </div>
+        <div style="background:var(--gray-100);border-radius:8px;padding:0.75rem 0.85rem">
+          <div class="cfield-label" style="margin-bottom:4px">Comisión pagada</div>
+          <div id="it-comision" class="cfield-value"></div>
+        </div>
+        <div style="background:var(--gray-100);border-radius:8px;padding:0.75rem 0.85rem">
+          <div class="cfield-label" style="margin-bottom:4px">N.° Pagaré</div>
+          <div id="it-num-pagare" class="cfield-value"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem">
+        <span class="cfield-label">Cobertura reclamada</span>
+        <span id="it-cobertura-label" style="font-size:0.82rem;font-weight:600;color:var(--gray-700)"></span>
+      </div>
+      <div class="recl-bar-wrap" style="margin-bottom:0.65rem">
+        <div class="recl-bar" id="it-recl-bar" style="width:0%"></div>
+      </div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+        <span id="it-badge-reclamado" class="badge badge-cargado"></span>
+        <span id="it-badge-saldo" class="badge badge-cargado"></span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Card: Seguimiento de movimientos -->
+  <div class="step-card">
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.25rem">
+      <span class="material-symbols-rounded" style="font-size:1.1rem;color:var(--gray-500)">article</span>
+      <span class="consulta-section-title" style="margin-bottom:0">Seguimiento de movimientos</span>
+    </div>
+    <div class="movimiento-item">
+      <div class="movimiento-icono">
+        <span class="material-symbols-rounded">upload</span>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem">
+          <div style="font-size:0.9rem;font-weight:600;color:var(--black)">Cargue inicial</div>
+          <span class="badge badge-completado">Procesado</span>
+        </div>
+        <div style="font-size:0.78rem;color:var(--gray-500);margin-top:3px">
+          ID <span id="it-cargue-id"></span> &middot; <span id="it-cargue-fecha"></span>
+        </div>
+      </div>
+    </div>
+    <div id="it-reclamos-movimientos"></div>
+    <div id="it-movimientos-empty" style="display:none;text-align:center;padding:1.5rem 0;font-size:0.85rem;color:var(--gray-400)">
+      No se han registrado reclamos para este titular
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function formatCOPit(n) {
+    return n ? '$ ' + Math.round(n).toLocaleString('es-CO') : '—';
+  }
+
+  function renderInfoTitular() {
+    var t = window._titularActivo;
+    if (!t) return;
+
+    var reclamoId = window._reclamoDocsActivo || '';
+    var breadEl = document.getElementById('bread-docs-reclamo');
+    if (breadEl) breadEl.textContent = 'Documentos pendientes - Reclamo ' + reclamoId;
+
+    document.getElementById('it-nombre').textContent = t.nombre;
+    document.getElementById('it-doc-full').textContent = (t.tipoDoc || 'C.C.') + ' — ' + t.numDoc;
+    document.getElementById('it-telefono').textContent = t.telefono || '—';
+    document.getElementById('it-correo').textContent = t.correo || '—';
+    document.getElementById('it-direccion').textContent = t.direccion ? (t.direccion + (t.ciudad ? ', ' + t.ciudad : '')) : '—';
+
+    document.getElementById('it-valor-desembolsado').textContent = formatCOPit(t.valorDesembolsado);
+    document.getElementById('it-fecha-desembolso').textContent = t.fechaDesembolso || '—';
+    document.getElementById('it-comision').textContent = formatCOPit(t.comisionPagada);
+    document.getElementById('it-num-pagare').textContent = t.numPagare || '—';
+
+    var totalCobrado = (t.reclamos || []).reduce(function(s, r) { return s + r.valor; }, 0);
+    var saldo = Math.max(0, (t.valorDesembolsado || 0) - totalCobrado);
+    var pct = t.valorDesembolsado > 0 ? Math.round((totalCobrado / t.valorDesembolsado) * 100) : 0;
+
+    document.getElementById('it-cobertura-label').textContent = formatCOPit(totalCobrado) + ' / ' + formatCOPit(t.valorDesembolsado);
+    document.getElementById('it-badge-reclamado').textContent = 'Reclamado: ' + formatCOPit(totalCobrado);
+    document.getElementById('it-badge-saldo').textContent = 'Saldo disponible: ' + formatCOPit(saldo);
+
+    var bar = document.getElementById('it-recl-bar');
+    bar.style.width = '0%';
+    setTimeout(function() { bar.style.width = pct + '%'; }, 80);
+    bar.style.background = pct >= 100 ? '#ef4444' : pct >= 50 ? '#f59e0b' : 'var(--black)';
+
+    document.getElementById('it-cargue-id').textContent = t.cargueId || '—';
+    document.getElementById('it-cargue-fecha').textContent = t.cargueFecha || '—';
+
+    var reclamosEl = document.getElementById('it-reclamos-movimientos');
+    var emptyEl = document.getElementById('it-movimientos-empty');
+    if (t.reclamos && t.reclamos.length) {
+      emptyEl.style.display = 'none';
+      reclamosEl.innerHTML = t.reclamos.map(function(r) {
+        var badgeClass = {
+          'Reclamo radicado': 'badge-pendiente',
+          'Pago en proceso':  'badge-revision',
+          'Reclamo pagado':   'badge-completado'
+        }[r.estado] || 'badge-cargado';
+        var iconName = r.tipo === 'Total' ? 'warning' : 'remove_circle_outline';
+        return '<div class="movimiento-item">'
+          + '<div class="movimiento-icono"><span class="material-symbols-rounded">' + iconName + '</span></div>'
+          + '<div style="flex:1;min-width:0">'
+            + '<div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem">'
+              + '<div style="font-size:0.9rem;font-weight:600;color:var(--black)">Cobro ' + r.tipo + '</div>'
+              + '<span class="badge ' + badgeClass + '">' + r.estado + '</span>'
+            + '</div>'
+            + '<div style="font-size:0.78rem;color:var(--gray-500);margin-top:3px">'
+              + 'Reclamo #' + r.reclamoId + ' &middot; ' + formatCOPit(r.valor)
+            + '</div>'
+          + '</div>'
+          + '</div>';
+      }).join('');
+    } else {
+      reclamosEl.innerHTML = '';
+      emptyEl.style.display = '';
+    }
+  }
+</script>

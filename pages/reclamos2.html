@@ -9,146 +9,130 @@
 <div class="page-header">
   <div>
     <div class="page-title">Reclamos de garantías</div>
-    <div class="page-subtitle">Consulte, reclame y verifique el estado de sus reclamos</div>
-  </div>
-  <div class="page-actions">
-    <button class="btn btn-outline" onclick="navTo('compromiso-docs')">
-      <span class="material-icons">assignment_late</span> Documentos pendientes
-    </button>
-    <button class="btn btn-filled" onclick="navTo('reclamar')">
-      <span class="material-icons">gavel</span> Reclamar
-    </button>
   </div>
 </div>
 
 <!-- Banner de éxito post-reclamo -->
 <div style="background:#d1fae5;border:1.5px solid #6ee7b7;border-radius:10px;padding:1rem 1.5rem;display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem">
-  <span class="material-icons" style="color:#059669;font-size:1.5rem">check_circle</span>
+  <span class="material-symbols-rounded" style="color:#059669;font-size:1.5rem">check_circle</span>
   <div>
     <strong style="color:#065f46">¡Reclamo radicado exitosamente!</strong>
     <span style="color:#065f46"> Recuerda enviar los documentos comprometidos para completar el proceso.</span>
   </div>
 </div>
 
-<div class="cargues-search-bar">
-  <div class="search-box">
-    <span class="material-icons">search</span>
-    <input type="text" id="buscador-reclamos2" placeholder="Buscar por ID o periodo" oninput="renderTablaReclamos2()">
-  </div>
-</div>
-
 <!-- Sección: En proceso -->
-<div class="section-group">
-  <div class="section-group-header">
-    <span class="section-group-title">En proceso</span>
-    <span class="section-group-count" id="count-r2-proceso">0</span>
-  </div>
-  <div class="table-card">
-    <div id="r2-proceso-empty" class="section-empty-state" style="display:none">
-      <span class="material-icons">inbox</span>
-      <span>No hay reclamos en proceso</span>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.75rem;">
+  <span style="font-size:1.05rem;font-weight:700;color:var(--md-on-surface)">En proceso</span>
+  <div style="display:flex;align-items:center;gap:0.625rem;flex-wrap:wrap;">
+    <div class="search-box">
+      <span class="material-symbols-rounded">search</span>
+      <input type="text" id="buscador-reclamos2" placeholder="Buscar por ID o estado" oninput="renderTablaReclamos2()">
     </div>
-    <table id="r2-tabla-proceso">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Fecha de reclamo</th>
-          <th>Registros</th>
-          <th>Valor reclamado</th>
-          <th>Estado</th>
-          <th>Documentación</th>
-          <th>Opciones</th>
-        </tr>
-      </thead>
-      <tbody id="r2-tbody-proceso"></tbody>
-    </table>
+    <button class="btn btn-outline">
+      Filtro <span class="material-symbols-rounded" style="font-size:16px">filter_list</span>
+    </button>
+    <button class="btn btn-outline" onclick="navTo('compromiso-docs')">
+      <span class="material-symbols-rounded">assignment_late</span> Documentos pendientes
+      <span class="docs-pending-badge" id="badge-docs-pendientes2">0</span>
+    </button>
+    <button class="btn btn-filled" onclick="navTo('reclamar')">
+      <span class="material-symbols-rounded">gavel</span> Reclamar
+    </button>
   </div>
 </div>
 
-<!-- Sección: Reclamos pagados -->
-<div class="section-group">
-  <div class="section-group-header">
-    <span class="section-group-title">Reclamos pagados</span>
-    <span class="section-group-count" id="count-r2-pagados">0</span>
+<div class="rec-card" style="margin-bottom:1.5rem">
+  <div id="r2-proceso-empty" class="section-empty-state" style="display:none">
+    <span class="material-symbols-rounded">inbox</span>
+    <span>No hay reclamos en proceso</span>
   </div>
-  <div class="table-card">
-    <div id="r2-pagados-empty" class="section-empty-state" style="display:none">
-      <span class="material-icons">inbox</span>
-      <span>No hay reclamos pagados</span>
-    </div>
-    <table id="r2-tabla-pagados">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Fecha de reclamo</th>
-          <th>Registros</th>
-          <th>Valor reclamado</th>
-          <th>Estado</th>
-          <th>Documentación</th>
-          <th>Opciones</th>
-        </tr>
-      </thead>
-      <tbody id="r2-tbody-pagados"></tbody>
-    </table>
+  <table id="r2-tabla-proceso">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Fecha</th>
+        <th>Registros</th>
+        <th>Valor del reclamo</th>
+        <th>Estado</th>
+        <th>Documentación</th>
+        <th>Opciones</th>
+      </tr>
+    </thead>
+    <tbody id="r2-tbody-proceso"></tbody>
+  </table>
+</div>
+
+<!-- Sección: Finalizado -->
+<span style="display:block;font-size:1.05rem;font-weight:700;color:var(--md-on-surface);margin-bottom:0.75rem">Finalizado</span>
+
+<div class="rec-card">
+  <div id="r2-pagados-empty" class="section-empty-state" style="display:none">
+    <span class="material-symbols-rounded">inbox</span>
+    <span>No hay reclamos finalizados</span>
   </div>
+  <table id="r2-tabla-pagados" style="display:none">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Fecha</th>
+        <th>Registros</th>
+        <th>Valor del reclamo</th>
+        <th>Estado</th>
+        <th>Documentación</th>
+        <th>Opciones</th>
+      </tr>
+    </thead>
+    <tbody id="r2-tbody-pagados"></tbody>
+  </table>
 </div>
 
 <script>
   var BADGE_ESTADO_RECLAMO2 = {
-    'En revisión': 'badge-pendiente',
-    'En proceso':  'badge-revision',
-    'Pagado':      'badge-completado'
+    'En revisión': { clase: 'badge-pendiente', texto: 'En proceso' },
+    'En proceso':  { clase: 'badge-pendiente', texto: 'En proceso' },
+    'Pagado':      { clase: 'badge-completado', texto: 'Pagado' }
   };
-  var BADGE_DOC_RECLAMO2 = {
-    'Pendiente':       'badge-pendiente',
-    'Faltan soportes': 'badge-alerta',
-    'Recibida':        'badge-completado',
-    'No requiere':     'badge-neutral'
+  var DOC_DISPLAY_RECLAMO2 = {
+    'Recibida':        { label: 'Recibida',    tipo: 'recibido' },
+    'No requiere':     { label: 'No requiere', tipo: 'recibido' },
+    'Pendiente':       { label: 'Pendiente',   tipo: 'pendiente' },
+    'Faltan soportes': { label: 'Pendiente',   tipo: 'pendiente' }
   };
 
   function buildReclamoRow2(r, dotsPrefix, highlight) {
-    var badgeEstado = BADGE_ESTADO_RECLAMO2[r.estado] || 'badge-pendiente';
-    var badgeDoc    = BADGE_DOC_RECLAMO2[r.documentacion] || 'badge-pendiente';
+    var badgeInfo = BADGE_ESTADO_RECLAMO2[r.estado] || { clase: 'badge-pendiente', texto: r.estado };
+    var docInfo   = DOC_DISPLAY_RECLAMO2[r.documentacion] || { label: r.documentacion, tipo: 'pendiente' };
 
-    var btnPrincipal = '';
-    if (r.estado === 'En revisión') {
-      btnPrincipal = '<button class="btn-accion btn-accion-pago" onclick="abrirSubirSoporteReclamo(\'' + r.id + '\')">'
-        + '<span class="material-icons">upload</span> Subir soporte</button>';
-    } else {
-      btnPrincipal = '<button class="btn-accion btn-accion-descargar" onclick="descargarReclamo(\'' + r.id + '\')">'
-        + '<span class="material-icons">download</span> Descargar reclamo</button>';
-    }
+    var docCell = docInfo.tipo === 'recibido'
+      ? '<button class="doc-pill doc-pill-received" onclick="verDocsReclamo(\'' + r.id + '\')">' + docInfo.label + '<span class="material-symbols-rounded">check_circle</span></button>'
+      : '<button class="doc-pill doc-pill-pending" onclick="verDocsReclamo(\'' + r.id + '\')">' + docInfo.label + '<span class="material-symbols-rounded">warning</span></button>';
 
-    var dotsItems = '<button onclick="closeMenus()"><span class="material-icons">visibility</span> Ver detalle</button>';
-    if (r.estado === 'En revisión') {
-      dotsItems += '<button onclick="abrirSubirSoporteReclamo(\'' + r.id + '\')">'
-        + '<span class="material-icons">upload</span> Subir soporte</button>'
-        + '<div class="dots-divider"></div>'
-        + '<button class="danger" onclick="solicitarEliminarReclamo(\'' + r.id + '\')">'
-        + '<span class="material-icons">delete</span> Eliminar</button>';
-    } else {
-      dotsItems += '<button onclick="descargarReclamo(\'' + r.id + '\')">'
-        + '<span class="material-icons">download</span> Descargar reclamo</button>';
-    }
+    var btnPrincipal = r.estado === 'En revisión'
+      ? '<button class="btn-accion" onclick="solicitarEliminarReclamo(\'' + r.id + '\')">'
+          + '<span class="material-symbols-rounded">delete</span> Eliminar</button>'
+      : '<button class="btn-accion btn-accion-descargar" onclick="descargarReclamo(\'' + r.id + '\')">'
+          + '<span class="material-symbols-rounded">download</span> Descargar</button>';
+
+    var dotsItems = '<button onclick="closeMenus()"><span class="material-symbols-rounded">visibility</span> Ver detalle</button>'
+      + '<button onclick="descargarReclamo(\'' + r.id + '\')">'
+      + '<span class="material-symbols-rounded">download</span> Descargar reclamo</button>';
+    var opcionesHtml = '<div class="td-actions">' + btnPrincipal
+      + '<div style="position:relative">'
+        + '<button class="btn-dots" onclick="toggleDotsMenu(\'' + dotsPrefix + r.id + '\',event)">···</button>'
+        + '<div class="dots-menu" id="' + dotsPrefix + r.id + '">' + dotsItems + '</div>'
+      + '</div></div>';
 
     var tr = document.createElement('tr');
     if (highlight) tr.style.background = '#f0fdf4';
     tr.innerHTML =
       '<td><span class="td-id">' + r.id + '</span></td>'
       + '<td>' + r.fecha + '</td>'
-      + '<td style="text-align:center">' + r.registros + '</td>'
+      + '<td>' + r.registros + '</td>'
       + '<td><strong>' + r.valor + '</strong></td>'
-      + '<td><span class="badge ' + badgeEstado + '">' + r.estado + '</span></td>'
-      + '<td><button class="btn-doc-link" onclick="verDocsReclamo(\'' + r.id + '\')">'
-        + '<span class="material-icons" style="font-size:13px">description</span>'
-        + r.documentacion + '</button></td>'
-      + '<td><div class="td-actions">'
-        + btnPrincipal
-        + '<div style="position:relative">'
-          + '<button class="btn-dots" onclick="toggleDotsMenu(\'' + dotsPrefix + r.id + '\',event)">···</button>'
-          + '<div class="dots-menu" id="' + dotsPrefix + r.id + '">' + dotsItems + '</div>'
-        + '</div>'
-      + '</div></td>';
+      + '<td><span class="badge ' + badgeInfo.clase + '">' + badgeInfo.texto + '</span></td>'
+      + '<td>' + docCell + '</td>'
+      + '<td>' + opcionesHtml + '</td>';
     return tr;
   }
 
@@ -156,8 +140,10 @@
     var q = (document.getElementById('buscador-reclamos2') ? document.getElementById('buscador-reclamos2').value : '').toLowerCase();
 
     var enProceso = reclamos.filter(function(r) {
-      return (r.estado === 'En revisión' || r.estado === 'En proceso')
-        && (r.id.toLowerCase().includes(q) || r.fecha.toLowerCase().includes(q));
+      var matchQ = r.id.toLowerCase().includes(q) || r.fecha.toLowerCase().includes(q);
+      var enCurso = r.estado === 'En revisión' || r.estado === 'En proceso';
+      var pagadoSinDocs = r.estado === 'Pagado' && r.documentacion !== 'Recibida' && r.documentacion !== 'No requiere';
+      return (enCurso || pagadoSinDocs) && matchQ;
     });
     var pagados = reclamos.filter(function(r) {
       return r.estado === 'Pagado'
@@ -174,8 +160,6 @@
     if (emptyP) emptyP.style.display = enProceso.length ? 'none' : 'flex';
     var tablaP = document.getElementById('r2-tabla-proceso');
     if (tablaP) tablaP.style.display = enProceso.length ? '' : 'none';
-    var cntP = document.getElementById('count-r2-proceso');
-    if (cntP) cntP.textContent = enProceso.length;
 
     var tbodyPag = document.getElementById('r2-tbody-pagados');
     if (tbodyPag) {
@@ -186,8 +170,12 @@
     if (emptyPag) emptyPag.style.display = pagados.length ? 'none' : 'flex';
     var tablaPag = document.getElementById('r2-tabla-pagados');
     if (tablaPag) tablaPag.style.display = pagados.length ? '' : 'none';
-    var cntPag = document.getElementById('count-r2-pagados');
-    if (cntPag) cntPag.textContent = pagados.length;
+
+    var pendientesCount = reclamos
+      .filter(function(r) { return r.documentacion === 'Pendiente' || r.documentacion === 'Faltan soportes'; })
+      .reduce(function(sum, r) { return sum + r.registros; }, 0);
+    var badge = document.getElementById('badge-docs-pendientes2');
+    if (badge) badge.textContent = pendientesCount;
   }
 
   renderTablaReclamos2();

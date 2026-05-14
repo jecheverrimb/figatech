@@ -1,60 +1,73 @@
-<!-- DOCUMENTOS PENDIENTES DE RECLAMO -->
+<!-- CRÉDITOS DE RECLAMO -->
 <div class="breadcrumb">
+  <a href="#" onclick="navTo('inicio');return false">Garantías</a>
+  <span class="sep">/</span>
   <a href="#" onclick="navTo('reclamos');return false">Reclamos</a>
   <span class="sep">/</span>
   <span id="breadcrumb-docs-reclamo">Documentos pendientes</span>
 </div>
-<div class="page-header">
-  <div>
-    <div class="page-title" id="title-docs-reclamo">Documentos pendientes</div>
-    <div class="page-subtitle">Créditos con cobro total solicitados en este reclamo que requieren envío de documentos</div>
-  </div>
+
+<div class="page-header-row">
+  <button class="btn-back" onclick="navTo('reclamos')">
+    <span class="material-symbols-rounded">chevron_left</span>
+  </button>
+  <div class="page-title" id="title-docs-reclamo" style="margin-bottom:0">Documentos pendientes</div>
 </div>
 
-<!-- Buscador -->
-<div class="cargues-search-bar">
+<!-- Barra de controles -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem;">
   <div class="search-box">
-    <span class="material-icons">search</span>
+    <span class="material-symbols-rounded">search</span>
     <input type="text" id="buscador-docs-reclamo" placeholder="Buscar por nombre o cédula" oninput="renderDocsReclamo()">
+  </div>
+  <div style="display:flex;gap:0.625rem;">
+    <button class="btn btn-outline">
+      Filtro <span class="material-symbols-rounded" style="font-size:16px">filter_list</span>
+    </button>
+    <button class="btn btn-outline">
+      <span class="material-symbols-rounded">download</span> Descargar
+    </button>
   </div>
 </div>
 
 <!-- Tabla -->
-<div class="table-card">
-  <div id="docs-reclamo-empty" class="section-empty-state" style="display:none">
-    <span class="material-icons" style="font-size:2.5rem;color:var(--gray-300)">folder_off</span>
-    <span style="font-weight:600;color:var(--gray-500)">No hay créditos que coincidan</span>
-  </div>
-  <table id="tabla-docs-reclamo" style="display:none">
-    <thead>
-      <tr>
-        <th>Nombre del titular</th>
-        <th>Cédula</th>
-        <th>N.° Pagaré</th>
-        <th>Estado de documentos</th>
-        <th>Opciones</th>
-      </tr>
-    </thead>
-    <tbody id="tbody-docs-reclamo"></tbody>
-  </table>
+<div id="docs-reclamo-empty" class="section-empty-state" style="display:none">
+  <span class="material-symbols-rounded" style="font-size:2.5rem;color:var(--gray-300)">folder_off</span>
+  <span style="font-weight:600;color:var(--gray-500)">No hay créditos que coincidan</span>
 </div>
+<table class="card-rows-table" id="tabla-docs-reclamo" style="display:none">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>No. Documento</th>
+      <th>Pagaré</th>
+      <th>Fecha del reclamo</th>
+      <th>Documentos</th>
+      <th>Opciones</th>
+    </tr>
+  </thead>
+  <tbody id="tbody-docs-reclamo"></tbody>
+</table>
 
 <script>
-  var BADGE_DOC_DR = {
-    'Pendiente':           'badge-pendiente',
-    'Con observaciones':   'badge-alerta',
-    'Recibido y verificado': 'badge-completado'
+  var DOC_BADGE_DR = {
+    'Pendiente':              { clase: 'badge-pendiente', icon: 'schedule',     label: 'Pendientes'   },
+    'Con observaciones':      { clase: 'badge-alerta',    icon: 'warning',      label: 'Observaciones'},
+    'Recibido y verificado':  { clase: 'badge-completado',icon: 'check_circle', label: 'Recibida'     }
   };
 
   function renderDocsReclamo() {
     var id = window._reclamoDocsActivo || '';
     var creditos = (typeof reclamosDetalle !== 'undefined' && reclamosDetalle[id]) ? reclamosDetalle[id] : [];
+    var reclamo  = (typeof reclamos !== 'undefined') ? reclamos.find(function(r){ return r.id === id; }) : null;
+    var fechaReclamo = reclamo ? reclamo.fecha : '—';
     var q = ((document.getElementById('buscador-docs-reclamo') || {}).value || '').toLowerCase();
 
+    var label = 'Documentos pendientes - Reclamo ' + id;
     var titleEl = document.getElementById('title-docs-reclamo');
     var breadEl = document.getElementById('breadcrumb-docs-reclamo');
-    if (titleEl) titleEl.textContent = 'Documentos pendientes — Reclamo #' + id;
-    if (breadEl) breadEl.textContent = 'Reclamo #' + id;
+    if (titleEl) titleEl.textContent = label;
+    if (breadEl) breadEl.textContent = label;
 
     var filtrados = creditos.filter(function(c) {
       return !q || c.nombre.toLowerCase().includes(q) || c.cedula.includes(q);
@@ -78,15 +91,23 @@
 
     if (tbody) tbody.innerHTML = filtrados.map(function(c) {
       var idx = creditos.indexOf(c);
-      var badgeClass = BADGE_DOC_DR[c.docEstado] || 'badge-pendiente';
+      var pagareCorto = c.pagare ? c.pagare.replace('PG-', '') : '—';
+      var badgeInfo = DOC_BADGE_DR[c.docEstado] || { clase: 'badge-pendiente', icon: 'schedule', label: 'Pendientes' };
       return '<tr>'
-        + '<td><strong>' + c.nombre + '</strong></td>'
+        + '<td><button class="col-nombre" onclick="verInfoTitular(\'' + (window._reclamoDocsActivo||'') + '\',' + idx + ')" style="background:none;border:none;cursor:pointer;padding:0;text-align:left;font-family:\'Roboto\',sans-serif">'
+        +   '<span class="material-symbols-rounded">account_circle</span>'
+        +   '<span class="nombre-text" style="text-decoration:underline;text-underline-offset:3px">' + c.nombre + '</span>'
+        + '</button></td>'
         + '<td>' + c.cedula + '</td>'
-        + '<td style="font-family:monospace;font-size:0.85rem">' + c.pagare + '</td>'
-        + '<td><span class="badge ' + badgeClass + '">' + c.docEstado + '</span></td>'
-        + '<td><button class="btn btn-outline btn-sm" onclick="abrirDocsTitular(' + idx + ')">'
-          + '<span class="material-icons" style="font-size:15px">visibility</span> Ver'
-          + '</button></td>'
+        + '<td>' + pagareCorto + '</td>'
+        + '<td>' + fechaReclamo + '</td>'
+        + '<td><span class="badge ' + badgeInfo.clase + '" style="gap:5px">'
+        +   '<span class="material-symbols-rounded" style="font-size:13px">' + badgeInfo.icon + '</span>'
+        +   badgeInfo.label
+        + '</span></td>'
+        + '<td><button class="btn-accion" onclick="abrirDocsTitular(' + idx + ')">'
+        +   '<span class="material-symbols-rounded">visibility</span> Ver'
+        + '</button></td>'
         + '</tr>';
     }).join('');
   }
@@ -96,16 +117,6 @@
     var c = creditos[idx];
     if (!c) return;
 
-    var NOMBRES = typeof DOCS_LISTA !== 'undefined' ? DOCS_LISTA : [
-      'Fotocopia de cédula del deudor',
-      'Copia de carta de instrucciones',
-      'Estado de cuenta',
-      'Cert. de reporte a centrales de riesgo',
-      'Copia de pagaré',
-      'Formato de aceptación de fianza',
-      'Formato de endoso'
-    ];
-
     var nombreEl = document.getElementById('modal-docs-titular-nombre');
     if (nombreEl) nombreEl.textContent = c.nombre + ' · C.C. ' + c.cedula;
 
@@ -113,12 +124,12 @@
     if (lista) {
       lista.innerHTML = c.docs.map(function(estado, i) {
         var icon, color;
-        if (estado === 'recibido')    { icon = 'check_circle'; color = '#16a34a'; }
-        else if (estado === 'observacion') { icon = 'warning'; color = '#d97706'; }
-        else                          { icon = 'cancel';       color = '#dc2626'; }
+        if (estado === 'recibido')         { icon = 'check_circle'; color = '#16a34a'; }
+        else if (estado === 'observacion') { icon = 'warning';      color = '#d97706'; }
+        else                               { icon = 'cancel';       color = '#dc2626'; }
         return '<li style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0;border-bottom:1px solid var(--gray-100);font-size:0.9rem;color:var(--gray-700)">'
-          + '<span class="material-icons" style="font-size:1.4rem;color:' + color + ';flex-shrink:0">' + icon + '</span>'
-          + NOMBRES[i]
+          + '<span class="material-symbols-rounded" style="font-size:1.4rem;color:' + color + ';flex-shrink:0">' + icon + '</span>'
+          + DOCS_LISTA[i]
           + '</li>';
       }).join('');
     }

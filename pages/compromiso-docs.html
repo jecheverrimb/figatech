@@ -1,127 +1,113 @@
-<!-- COMPROMISO DE DOCUMENTOS -->
+<!-- DOCUMENTOS PENDIENTES -->
 <div class="breadcrumb">
+  <a href="#" onclick="navTo('inicio');return false">Garantías</a>
+  <span class="sep">/</span>
   <a href="#" onclick="navTo('reclamos');return false">Reclamos</a>
   <span class="sep">/</span>
-  <span>Compromiso de documentos</span>
+  <span>Documentos pendientes</span>
 </div>
-<div class="page-header">
-  <div>
-    <div class="page-title">Compromiso de documentos</div>
-    <div class="page-subtitle">Titulares con cobro total que requieren entrega de documentos de cartera</div>
+
+<div class="page-header-row">
+  <button class="btn-back" onclick="navTo('reclamos')">
+    <span class="material-symbols-rounded">chevron_left</span>
+  </button>
+  <div class="page-title" style="margin-bottom:0">Documentos pendientes</div>
+</div>
+
+<!-- Barra de controles -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem;">
+  <div class="search-box">
+    <span class="material-symbols-rounded">search</span>
+    <input type="text" id="buscador-docs-pendientes" placeholder="Buscar por ID o estado" oninput="renderDocsPendientes()">
+  </div>
+  <div style="display:flex;gap:0.625rem;">
+    <button class="btn btn-outline">
+      Filtro <span class="material-symbols-rounded" style="font-size:16px">filter_list</span>
+    </button>
+    <button class="btn btn-outline">
+      <span class="material-symbols-rounded">download</span> Descargar
+    </button>
   </div>
 </div>
 
-<!-- Filtros rápidos -->
-<div style="display:flex;gap:0.5rem;margin-bottom:1.25rem;flex-wrap:wrap">
-  <button class="pill active" id="filtro-todos" onclick="filtrarDocs('todos',this)">
-    Todos <span id="count-todos" style="font-size:0.75rem;opacity:0.7"></span>
-  </button>
-  <button class="pill" id="filtro-pendiente" onclick="filtrarDocs('pendiente',this)">
-    <span class="material-icons" style="font-size:13px;color:#d97706">schedule</span>
-    Pendiente de envío <span id="count-pendiente" style="font-size:0.75rem;opacity:0.7"></span>
-  </button>
-  <button class="pill" id="filtro-enviados" onclick="filtrarDocs('enviados',this)">
-    <span class="material-icons" style="font-size:13px;color:#16a34a">check_circle</span>
-    Documentos recibidos <span id="count-enviados" style="font-size:0.75rem;opacity:0.7"></span>
-  </button>
-</div>
+<!-- Tabla de filas tipo card -->
+<table class="card-rows-table" id="tabla-docs-pendientes">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>No. Documento</th>
+      <th>Pagaré</th>
+      <th>Fecha del reclamo</th>
+      <th>Documentos</th>
+      <th>Opciones</th>
+    </tr>
+  </thead>
+  <tbody id="tbody-docs-pendientes"></tbody>
+</table>
 
-<!-- Tabla -->
-<div class="table-card">
-  <table id="tabla-docs">
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Cédula</th>
-        <th>N.° Pagaré</th>
-        <th>Valor desembolsado</th>
-        <th>Valor reclamado</th>
-        <th>Fecha del reclamo</th>
-        <th>Estado documentos</th>
-      </tr>
-    </thead>
-    <tbody id="tbody-docs"></tbody>
-  </table>
-  <div id="docs-empty" class="section-empty-state" style="display:none">
-    <span class="material-icons">folder_off</span>
-    <span>No hay titulares en este estado</span>
-  </div>
+<div id="docs-pendientes-empty" class="section-empty-state" style="display:none">
+  <span class="material-symbols-rounded" style="font-size:2.5rem;color:var(--gray-300)">folder_off</span>
+  <span style="font-weight:600;color:var(--gray-500)">No hay documentos pendientes</span>
 </div>
 
 <script>
-  var _filtroDocsActivo = 'todos';
+  function renderDocsPendientes() {
+    var q = (document.getElementById('buscador-docs-pendientes')
+      ? document.getElementById('buscador-docs-pendientes').value : '').toLowerCase();
 
-  function formatCOP2(n) {
-    return '$ ' + Math.round(n).toLocaleString('es-CO');
-  }
-
-  function getTitularesConCobroTotal() {
-    return titulares.filter(function(t) {
-      return (t.reclamos || []).some(function(r) { return r.tipo === 'Total'; });
-    }).map(function(t) {
-      var reclamoTotal = t.reclamos.find(function(r) { return r.tipo === 'Total'; });
-      return {
-        nombre: t.nombre,
-        numDoc: t.numDoc,
-        numPagare: t.numPagare || '—',
-        valorDesembolsado: t.valorDesembolsado,
-        valorReclamado: reclamoTotal ? reclamoTotal.valor : 0,
-        fechaReclamo: reclamoTotal ? (reclamoTotal.fecha || '—') : '—',
-        docEstado: t.documentos === 'enviados' ? 'enviados' : 'pendiente'
-      };
+    var filas = [];
+    reclamos.forEach(function(r) {
+      if (r.documentacion !== 'Pendiente' && r.documentacion !== 'Faltan soportes') return;
+      var detalle = reclamosDetalle[r.id] || [];
+      detalle.forEach(function(p, idx) {
+        var pagareCorto = p.pagare ? p.pagare.replace('PG-', '') : '—';
+        if (q && !p.nombre.toLowerCase().includes(q) && !p.cedula.includes(q) && !r.id.includes(q)) return;
+        filas.push({
+          nombre:     p.nombre,
+          cedula:     p.cedula,
+          pagare:     pagareCorto,
+          fecha:      r.fecha,
+          reclamoId:  r.id,
+          detalleIdx: idx
+        });
+      });
     });
-  }
 
-  function renderDocs() {
-    var todos = getTitularesConCobroTotal();
+    var tbody = document.getElementById('tbody-docs-pendientes');
+    var empty = document.getElementById('docs-pendientes-empty');
+    var tabla = document.getElementById('tabla-docs-pendientes');
 
-    var pendienteCount = todos.filter(function(t) { return t.docEstado === 'pendiente'; }).length;
-    var enviadosCount  = todos.filter(function(t) { return t.docEstado === 'enviados';  }).length;
-
-    document.getElementById('count-todos').textContent     = '(' + todos.length + ')';
-    document.getElementById('count-pendiente').textContent = '(' + pendienteCount + ')';
-    document.getElementById('count-enviados').textContent  = '(' + enviadosCount + ')';
-
-    var lista = _filtroDocsActivo === 'pendiente' ? todos.filter(function(t) { return t.docEstado === 'pendiente'; })
-              : _filtroDocsActivo === 'enviados'  ? todos.filter(function(t) { return t.docEstado === 'enviados'; })
-              : todos;
-
-    var tbody = document.getElementById('tbody-docs');
-    var empty = document.getElementById('docs-empty');
-    var tabla = document.getElementById('tabla-docs');
-
-    if (!lista.length) {
-      tbody.innerHTML = '';
-      empty.style.display = 'flex';
-      tabla.style.display = 'none';
+    if (!filas.length) {
+      if (tbody) tbody.innerHTML = '';
+      if (empty) empty.style.display = 'flex';
+      if (tabla) tabla.style.display = 'none';
       return;
     }
 
-    empty.style.display = 'none';
-    tabla.style.display = '';
-    tbody.innerHTML = lista.map(function(t) {
-      var esPendiente = t.docEstado === 'pendiente';
-      var badgeHtml = esPendiente
-        ? '<span class="badge badge-pendiente"><span class="material-icons" style="font-size:13px">schedule</span> Pendiente de envío</span>'
-        : '<span class="badge badge-completado"><span class="material-icons" style="font-size:13px">check_circle</span> Documentos recibidos</span>';
-      return '<tr>'
-        + '<td><strong>' + t.nombre + '</strong></td>'
-        + '<td>' + t.numDoc + '</td>'
-        + '<td style="font-family:monospace;font-size:0.85rem">' + t.numPagare + '</td>'
-        + '<td><strong>' + formatCOP2(t.valorDesembolsado) + '</strong></td>'
-        + '<td>' + formatCOP2(t.valorReclamado) + '</td>'
-        + '<td>' + t.fechaReclamo + '</td>'
-        + '<td>' + badgeHtml + '</td>'
-        + '</tr>';
-    }).join('');
+    if (empty) empty.style.display = 'none';
+    if (tabla) tabla.style.display = '';
+
+    if (tbody) {
+      tbody.innerHTML = filas.map(function(f) {
+        return '<tr>'
+          + '<td><button class="col-nombre" onclick="verInfoTitular(\'' + f.reclamoId + '\',' + f.detalleIdx + ')" style="background:none;border:none;cursor:pointer;padding:0;text-align:left;font-family:\'Roboto\',sans-serif">'
+          +   '<span class="material-symbols-rounded">account_circle</span>'
+          +   '<span class="nombre-text" style="text-decoration:underline;text-underline-offset:3px">' + f.nombre + '</span>'
+          + '</button></td>'
+          + '<td>' + f.cedula + '</td>'
+          + '<td>' + f.pagare + '</td>'
+          + '<td>' + f.fecha + '</td>'
+          + '<td><span class="badge badge-pendiente" style="gap:5px">'
+          +   '<span class="material-symbols-rounded" style="font-size:13px">schedule</span>'
+          +   'Pendientes'
+          + '</span></td>'
+          + '<td><button class="btn-accion" onclick="abrirModalDocsTitular(\'' + f.reclamoId + '\',' + f.detalleIdx + ')">'
+          +   '<span class="material-symbols-rounded">visibility</span> Ver'
+          + '</button></td>'
+          + '</tr>';
+      }).join('');
+    }
   }
 
-  function filtrarDocs(filtro, btn) {
-    _filtroDocsActivo = filtro;
-    document.querySelectorAll('#sec-compromiso-docs .pill').forEach(function(p) { p.classList.remove('active'); });
-    if (btn) btn.classList.add('active');
-    renderDocs();
-  }
-
-  renderDocs();
+  renderDocsPendientes();
 </script>

@@ -1,5 +1,5 @@
 /* ===== NAVEGACIÓN ===== */
-const secciones = ['inicio','cargues','cargues2','cargar','confirmacion-pago','reclamos','reclamos2','reclamar','confirmacion-reclamo','reintegros','consultas','reestructuraciones','venta-cartera','novedades','compromiso-docs','docs-reclamo'];
+const secciones = ['inicio','cargues','cargues2','cargar','confirmacion-pago','reclamos','reclamos2','reclamar','confirmacion-reclamo','reintegros','consultas','reestructuraciones','venta-cartera','novedades','compromiso-docs','docs-reclamo','gestion-cartera','certificados','info-titular'];
 
 window.addEventListener('popstate', function(e) {
   const page = (e.state && e.state.page) || location.hash.replace('#', '') || 'login';
@@ -31,6 +31,7 @@ function navTo(id) {
   if (id === 'reclamos') renderReclamos();
   if (id === 'reclamos2') typeof renderTablaReclamos2 === 'function' && renderTablaReclamos2();
   if (id === 'docs-reclamo') typeof renderDocsReclamo === 'function' && renderDocsReclamo();
+  if (id === 'info-titular') typeof renderInfoTitular === 'function' && renderInfoTitular();
   window.scrollTo(0,0);
 }
 
@@ -48,7 +49,13 @@ function toggleDotsMenu(id, e) {
   const el = document.getElementById(id);
   const isOpen = el.classList.contains('open');
   closeMenus();
-  if (!isOpen) el.classList.add('open');
+  if (!isOpen) {
+    const btn = e.currentTarget;
+    const rect = btn.getBoundingClientRect();
+    el.style.top = (rect.bottom + 4) + 'px';
+    el.style.right = (window.innerWidth - rect.right) + 'px';
+    el.classList.add('open');
+  }
 }
 
 function closeMenus() {
@@ -107,7 +114,7 @@ function showToast(msg, type) {
   const icons = { success: 'check_circle', info: 'info', warning: 'warning', error: 'error' };
   const toast = document.createElement('div');
   toast.className = 'toast toast-' + type;
-  toast.innerHTML = `<span class="material-icons">${icons[type] || 'info'}</span><span>${msg}</span>`;
+  toast.innerHTML = `<span class="material-symbols-rounded">${icons[type] || 'info'}</span><span>${msg}</span>`;
   document.getElementById('toast-container').appendChild(toast);
   setTimeout(() => {
     toast.style.animation = 'toast-out 0.25s ease forwards';
@@ -379,7 +386,7 @@ function simularSoporte(n) {
   const slot = document.getElementById('upload-slot-' + n);
   if (!slot) return;
   slot.classList.add('has-file');
-  slot.querySelector('.material-icons').textContent = 'check_circle';
+  slot.querySelector('.material-symbols-rounded').textContent = 'check_circle';
   document.getElementById('nombre-soporte-' + n).textContent = nombres[n];
   actualizarBtnCargarPago();
 }
@@ -398,28 +405,28 @@ function buildCargueRow(c, dotsPrefix) {
   var btnPrincipal = '';
   if (c.estado === 'Pendiente de pago') {
     btnPrincipal = '<button class="btn-accion btn-accion-pago" onclick="abrirSubirSoporte(\'' + c.id + '\',\'nuevo\')">'
-      + '<span class="material-icons">upload</span> Subir pago</button>';
+      + '<span class="material-symbols-rounded">upload</span> Subir pago</button>';
   } else if (c.estado === 'Pago en revisión') {
     btnPrincipal = '<button class="btn-accion btn-accion-descargar" onclick="descargarGarantias(\'' + c.id + '\')">'
-      + '<span class="material-icons">download</span> Descargar soporte</button>';
+      + '<span class="material-symbols-rounded">download</span> Descargar soporte</button>';
   } else if (c.estado === 'Cargue completado') {
     btnPrincipal = '<button class="btn-accion btn-accion-descargar" onclick="descargarGarantias(\'' + c.id + '\')">'
-      + '<span class="material-icons">download</span> Descargar garantías</button>';
+      + '<span class="material-symbols-rounded">download</span> Descargar garantías</button>';
   }
 
-  var dotsItems = '<button onclick="closeMenus()"><span class="material-icons">visibility</span> Ver detalle</button>';
+  var dotsItems = '<button onclick="closeMenus()"><span class="material-symbols-rounded">visibility</span> Ver detalle</button>';
   if (c.estado === 'Pendiente de pago') {
-    dotsItems += '<button onclick="closeMenus()"><span class="material-icons">download</span> Descargar</button>'
+    dotsItems += '<button onclick="closeMenus()"><span class="material-symbols-rounded">download</span> Descargar</button>'
       + '<div class="dots-divider"></div>'
-      + '<button class="danger" onclick="solicitarEliminar(\'' + c.id + '\')"><span class="material-icons">delete</span> Eliminar</button>';
+      + '<button class="danger" onclick="solicitarEliminar(\'' + c.id + '\')"><span class="material-symbols-rounded">delete</span> Eliminar</button>';
   } else if (c.estado === 'Pago en revisión') {
-    dotsItems += '<button onclick="abrirSubirSoporte(\'' + c.id + '\',\'cambiar\')"><span class="material-icons">swap_horiz</span> Cambiar soporte</button>'
+    dotsItems += '<button onclick="abrirSubirSoporte(\'' + c.id + '\',\'cambiar\')"><span class="material-symbols-rounded">swap_horiz</span> Cambiar soporte</button>'
       + '<div class="dots-divider"></div>'
-      + '<button class="danger" onclick="solicitarEliminar(\'' + c.id + '\')"><span class="material-icons">delete</span> Eliminar</button>';
+      + '<button class="danger" onclick="solicitarEliminar(\'' + c.id + '\')"><span class="material-symbols-rounded">delete</span> Eliminar</button>';
   } else if (c.estado === 'Cargue completado') {
-    dotsItems += '<button onclick="descargarGarantias(\'' + c.id + '\')"><span class="material-icons">download</span> Descargar garantías</button>'
+    dotsItems += '<button onclick="descargarGarantias(\'' + c.id + '\')"><span class="material-symbols-rounded">download</span> Descargar garantías</button>'
       + '<div class="dots-divider"></div>'
-      + '<button class="danger" onclick="solicitarEliminar(\'' + c.id + '\')"><span class="material-icons">delete</span> Eliminar</button>';
+      + '<button class="danger" onclick="solicitarEliminar(\'' + c.id + '\')"><span class="material-symbols-rounded">delete</span> Eliminar</button>';
   }
 
   var tr = document.createElement('tr');
@@ -453,7 +460,7 @@ function abrirSubirSoporte(id, modo) {
     document.getElementById('nombre-soporte-' + n).textContent = 'Haz clic para subir';
     var slot = document.getElementById('upload-slot-' + n);
     slot.classList.remove('has-file');
-    slot.querySelector('.material-icons').textContent = n === '1' ? 'cloud_upload' : 'add_circle_outline';
+    slot.querySelector('.material-symbols-rounded').textContent = n === '1' ? 'cloud_upload' : 'add_circle_outline';
   });
   actualizarBtnCargarPago();
   abrirModal('modal-subir');
@@ -464,7 +471,7 @@ function handleSoporteFile(n, input) {
     soportesCargados[n] = true;
     var slot = document.getElementById('upload-slot-' + n);
     slot.classList.add('has-file');
-    slot.querySelector('.material-icons').textContent = 'check_circle';
+    slot.querySelector('.material-symbols-rounded').textContent = 'check_circle';
     document.getElementById('nombre-soporte-' + n).textContent = input.files[0].name;
     actualizarBtnCargarPago();
   }
@@ -480,7 +487,7 @@ function abrirSubirSoporteReclamo(id) {
     document.getElementById('nombre-soporte-' + n).textContent = 'Haz clic para subir';
     var slot = document.getElementById('upload-slot-' + n);
     slot.classList.remove('has-file');
-    slot.querySelector('.material-icons').textContent = n === '1' ? 'cloud_upload' : 'add_circle_outline';
+    slot.querySelector('.material-symbols-rounded').textContent = n === '1' ? 'cloud_upload' : 'add_circle_outline';
   });
   actualizarBtnCargarPago();
   abrirModal('modal-subir');
@@ -669,7 +676,7 @@ function toggleBtnRadicar() {
 
 function procesarReclamo() {
   var nuevoId = String(Number(reclamos[0].id) + 1).padStart(2, '0');
-  reclamos.unshift({ id: nuevoId, fecha: 'Abril / 2026', parcial: 1, total: 1, valor: '$ 1.300.000', estado: 'Reclamo radicado' });
+  reclamos.unshift({ id: nuevoId, fecha: 'Mayo / 2026', registros: 2, valor: '$1.300.000', estado: 'En revisión', documentacion: 'Pendiente' });
   initReclamar();
   navTo('confirmacion-reclamo');
 }
@@ -704,4 +711,52 @@ function finalizarReclamo() {
 function verDocsReclamo(id) {
   window._reclamoDocsActivo = id;
   navTo('docs-reclamo');
+}
+
+function verInfoTitular(reclamoId, idx) {
+  var creditos = (typeof reclamosDetalle !== 'undefined' && reclamosDetalle[reclamoId]) ? reclamosDetalle[reclamoId] : [];
+  var c = creditos[idx];
+  if (!c) return;
+  var t = (typeof titulares !== 'undefined') ? titulares.find(function(x) { return x.numDoc === c.cedula; }) : null;
+  window._titularActivo = t || {
+    nombre: c.nombre,
+    tipoDoc: 'Cédula de Ciudadanía',
+    numDoc: c.cedula,
+    numPagare: c.pagare ? c.pagare.replace('PG-', '') : '—',
+    telefono: '—',
+    correo: '—',
+    direccion: '—',
+    ciudad: '',
+    valorDesembolsado: 0,
+    fechaDesembolso: '—',
+    comisionPagada: 0,
+    reclamos: [],
+    documentos: null
+  };
+  navTo('info-titular');
+}
+
+function abrirModalDocsTitular(reclamoId, idx) {
+  var creditos = (typeof reclamosDetalle !== 'undefined' && reclamosDetalle[reclamoId]) ? reclamosDetalle[reclamoId] : [];
+  var c = creditos[idx];
+  if (!c) return;
+
+  var nombreEl = document.getElementById('modal-docs-titular-nombre');
+  if (nombreEl) nombreEl.textContent = c.nombre + ' · C.C. ' + c.cedula;
+
+  var lista = document.getElementById('modal-docs-titular-lista');
+  if (lista) {
+    lista.innerHTML = c.docs.map(function(estado, i) {
+      var icon, color;
+      if (estado === 'recibido')         { icon = 'check_circle'; color = '#16a34a'; }
+      else if (estado === 'observacion') { icon = 'warning';      color = '#d97706'; }
+      else                               { icon = 'cancel';       color = '#dc2626'; }
+      return '<li style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0;border-bottom:1px solid var(--gray-100);font-size:0.9rem;color:var(--gray-700)">'
+        + '<span class="material-symbols-rounded" style="font-size:1.4rem;color:' + color + ';flex-shrink:0">' + icon + '</span>'
+        + DOCS_LISTA[i]
+        + '</li>';
+    }).join('');
+  }
+
+  abrirModal('modal-docs-titular');
 }

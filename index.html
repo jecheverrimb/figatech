@@ -33,7 +33,7 @@
   m.mazeUniversalSnippetApiKey = e;
 })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '5ca8b370-175e-49ca-b3bf-9768a1406ace');
 </script>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/estilos.css">
 </head>
@@ -61,7 +61,7 @@
           <input type="password" id="inp-pass" placeholder="••••••••" value="" autocomplete="off" readonly
             onfocus="this.removeAttribute('readonly');if(!this.dataset.filled){this.value='password123';this.dataset.filled='1'};checkLoginReady()">
           <button class="login-eye-btn" type="button" onclick="togglePassVisibility()">
-            <span class="material-icons" id="eye-icon">visibility_off</span>
+            <span class="material-symbols-rounded" id="eye-icon">visibility_off</span>
           </button>
         </div>
       </div>
@@ -90,48 +90,48 @@
       <!-- Garantías -->
       <div class="nav-item">
         <span class="nav-link" id="nl-garantias" onclick="toggleMenu('dd-garantias',event)">
-          Garantías <span class="material-icons">expand_more</span>
+          Garantías <span class="material-symbols-rounded">expand_more</span>
         </span>
         <div class="nav-dropdown" id="dd-garantias" style="min-width:600px">
           <div class="nav-dd-section">Operaciones</div>
           <div class="nav-dd-grid" style="grid-template-columns:repeat(3, minmax(0, 1fr))">
             <a class="nav-dd-item" href="#" onclick="navTo('cargues');closeMenus();return false">
-              <div class="nav-dd-icon"><span class="material-icons">upload_file</span></div>
+              <div class="nav-dd-icon"><span class="material-symbols-rounded">upload_file</span></div>
               <div>
                 <div class="nav-dd-title">Cargues</div>
                 <div class="nav-dd-desc">Gestiona tus cargues</div>
               </div>
             </a>
             <a class="nav-dd-item" href="#" onclick="navTo('reclamos');closeMenus();return false">
-              <div class="nav-dd-icon"><span class="material-icons">gavel</span></div>
+              <div class="nav-dd-icon"><span class="material-symbols-rounded">gavel</span></div>
               <div>
                 <div class="nav-dd-title">Reclamos</div>
                 <div class="nav-dd-desc">Gestiona reclamaciones</div>
               </div>
             </a>
             <a class="nav-dd-item" href="#" onclick="navTo('reintegros');closeMenus();return false">
-              <div class="nav-dd-icon"><span class="material-icons">currency_exchange</span></div>
+              <div class="nav-dd-icon"><span class="material-symbols-rounded">currency_exchange</span></div>
               <div>
                 <div class="nav-dd-title">Reintegros</div>
                 <div class="nav-dd-desc">Historial de reintegros</div>
               </div>
             </a>
             <a class="nav-dd-item" href="#" onclick="navTo('reestructuraciones');closeMenus();return false">
-              <div class="nav-dd-icon"><span class="material-icons">build_circle</span></div>
+              <div class="nav-dd-icon"><span class="material-symbols-rounded">build_circle</span></div>
               <div>
                 <div class="nav-dd-title">Reestructuraciones</div>
                 <div class="nav-dd-desc">Modifica condiciones</div>
               </div>
             </a>
             <a class="nav-dd-item" href="#" onclick="navTo('venta-cartera');closeMenus();return false">
-              <div class="nav-dd-icon"><span class="material-icons">sell</span></div>
+              <div class="nav-dd-icon"><span class="material-symbols-rounded">sell</span></div>
               <div>
                 <div class="nav-dd-title">Venta de cartera</div>
                 <div class="nav-dd-desc">Cesión de garantías</div>
               </div>
             </a>
             <a class="nav-dd-item" href="#" onclick="navTo('consultas');closeMenus();return false">
-              <div class="nav-dd-icon"><span class="material-icons">manage_search</span></div>
+              <div class="nav-dd-icon"><span class="material-symbols-rounded">manage_search</span></div>
               <div>
                 <div class="nav-dd-title">Consulta de titulares</div>
                 <div class="nav-dd-desc">Busca titulares</div>
@@ -143,7 +143,7 @@
 
       <!-- Gestión de cartera -->
       <div class="nav-item">
-        <span class="nav-link" id="nl-gestion-cartera" onclick="closeMenus()">Gestión de cartera</span>
+        <span class="nav-link" id="nl-gestion-cartera" onclick="navTo('gestion-cartera')">Gestión de cartera</span>
       </div>
 
       <!-- Usuarios -->
@@ -151,31 +151,31 @@
         <span class="nav-link" id="nl-usuarios" onclick="closeMenus()">Usuarios</span>
       </div>
 
-      <!-- Documentos -->
+      <!-- Certificados -->
       <div class="nav-item">
-        <span class="nav-link" id="nl-documentos" onclick="closeMenus()">Documentos</span>
+        <span class="nav-link" id="nl-documentos" onclick="navTo('certificados')">Certificados</span>
       </div>
     </div>
 
     <!-- Derecha: campana + usuario -->
     <div class="nav-right">
       <button class="nav-bell" onclick="toggleMenu('dd-notifs',event)" title="Notificaciones">
-        <span class="material-icons">notifications</span>
+        <span class="material-symbols-rounded">notifications</span>
         <span class="bell-badge">3</span>
       </button>
       <div class="user-btn" onclick="toggleMenu('dd-user',event)">
-        <span class="material-icons user-icon">account_circle</span>
+        <span class="material-symbols-rounded user-icon">account_circle</span>
         <div class="user-info">
           <div class="uname">Bienvenido</div>
           <div class="urole">Intermediario</div>
         </div>
         <div class="user-dropdown" id="dd-user">
           <a href="#" onclick="closeMenus();return false">
-            <span class="material-icons">lock_reset</span> Cambiar contraseña
+            <span class="material-symbols-rounded">lock_reset</span> Cambiar contraseña
           </a>
           <hr>
           <a href="#" class="danger" onclick="doLogout();return false">
-            <span class="material-icons">logout</span> Cerrar sesión
+            <span class="material-symbols-rounded">logout</span> Cerrar sesión
           </a>
         </div>
       </div>
@@ -183,7 +183,7 @@
   </nav>
 
   <!-- CONTENIDO -->
-  <div class="app-body">
+  <div class="app-body" id="app-body">
     <!-- Las secciones se cargarán aquí dinamicamente -->
     <div id="sec-inicio" class="section active"></div>
     <div id="sec-cargues" class="section"></div>
@@ -201,6 +201,9 @@
     <div id="sec-novedades" class="section"></div>
     <div id="sec-compromiso-docs" class="section"></div>
     <div id="sec-docs-reclamo" class="section"></div>
+    <div id="sec-gestion-cartera" class="section"></div>
+    <div id="sec-certificados" class="section"></div>
+    <div id="sec-info-titular" class="section"></div>
   </div><!-- /app-body -->
 </div><!-- /view-app -->
 

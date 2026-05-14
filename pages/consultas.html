@@ -10,7 +10,7 @@
 <!-- Búsqueda -->
 <div class="step-card" style="margin-bottom:1rem">
   <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem">
-    <span class="material-icons" style="font-size:1.1rem;color:var(--gray-500)">search</span>
+    <span class="material-symbols-rounded" style="font-size:1.1rem;color:var(--gray-500)">search</span>
     <span class="consulta-section-title" style="margin-bottom:0">Búsqueda de titular</span>
   </div>
   <div style="display:flex;gap:0.75rem;align-items:center">
@@ -19,7 +19,7 @@
            onfocus="this.style.borderColor='var(--black)'" onblur="this.style.borderColor='var(--gray-300)'"
            onkeydown="if(event.key==='Enter')buscarTitular()">
     <button class="btn btn-filled" onclick="buscarTitular()" style="height:42px;padding:0 1.4rem;flex-shrink:0;display:flex;align-items:center;gap:0.4rem">
-      <span class="material-icons" style="font-size:17px">search</span> Buscar
+      <span class="material-symbols-rounded" style="font-size:17px">search</span> Buscar
     </button>
   </div>
 </div>
@@ -33,7 +33,7 @@
     <!-- Card: Información personal -->
     <div class="step-card">
       <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.25rem">
-        <span class="material-icons" style="font-size:1.1rem;color:var(--gray-500)">person</span>
+        <span class="material-symbols-rounded" style="font-size:1.1rem;color:var(--gray-500)">person</span>
         <span class="consulta-section-title" style="margin-bottom:0">Información personal</span>
       </div>
 
@@ -44,25 +44,25 @@
         </div>
         <div>
           <div class="cfield-label" style="display:flex;align-items:center;gap:0.3rem;margin-bottom:3px">
-            <span class="material-icons" style="font-size:0.85rem">credit_card</span> Documento
+            <span class="material-symbols-rounded" style="font-size:0.85rem">credit_card</span> Documento
           </div>
           <div id="res-doc-full" class="cfield-value"></div>
         </div>
         <div>
           <div class="cfield-label" style="display:flex;align-items:center;gap:0.3rem;margin-bottom:3px">
-            <span class="material-icons" style="font-size:0.85rem">phone</span> Teléfono
+            <span class="material-symbols-rounded" style="font-size:0.85rem">phone</span> Teléfono
           </div>
           <div id="res-telefono" style="font-size:0.92rem;color:var(--gray-700)"></div>
         </div>
         <div>
           <div class="cfield-label" style="display:flex;align-items:center;gap:0.3rem;margin-bottom:3px">
-            <span class="material-icons" style="font-size:0.85rem">mail</span> Correo
+            <span class="material-symbols-rounded" style="font-size:0.85rem">mail</span> Correo
           </div>
           <div id="res-correo" style="font-size:0.92rem;color:var(--gray-700)"></div>
         </div>
         <div style="grid-column:1/-1">
           <div class="cfield-label" style="display:flex;align-items:center;gap:0.3rem;margin-bottom:3px">
-            <span class="material-icons" style="font-size:0.85rem">location_on</span> Dirección
+            <span class="material-symbols-rounded" style="font-size:0.85rem">location_on</span> Dirección
           </div>
           <div id="res-direccion" style="font-size:0.92rem;color:var(--gray-700)"></div>
         </div>
@@ -72,11 +72,11 @@
     <!-- Card: Información del crédito -->
     <div class="step-card">
       <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.25rem">
-        <span class="material-icons" style="font-size:1.1rem;color:var(--gray-500)">credit_card</span>
+        <span class="material-symbols-rounded" style="font-size:1.1rem;color:var(--gray-500)">credit_card</span>
         <span class="consulta-section-title" style="margin-bottom:0">Información del crédito</span>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.6rem;margin-bottom:1.25rem">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1.25rem">
         <div style="background:var(--gray-100);border-radius:8px;padding:0.75rem 0.85rem">
           <div class="cfield-label" style="margin-bottom:4px">Valor desembolsado</div>
           <div id="res-valor-desembolsado" class="cfield-value"></div>
@@ -88,6 +88,10 @@
         <div style="background:var(--gray-100);border-radius:8px;padding:0.75rem 0.85rem">
           <div class="cfield-label" style="margin-bottom:4px">Comisión pagada</div>
           <div id="res-comision" class="cfield-value"></div>
+        </div>
+        <div style="background:var(--gray-100);border-radius:8px;padding:0.75rem 0.85rem">
+          <div class="cfield-label" style="margin-bottom:4px">N.° Pagaré</div>
+          <div id="res-num-pagare" class="cfield-value"></div>
         </div>
       </div>
 
@@ -109,7 +113,7 @@
         <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem">
           <div style="display:flex;align-items:center;gap:0.5rem">
             <div id="res-doc-icono" style="width:32px;height:32px;border-radius:7px;background:var(--gray-100);border:1px solid var(--gray-200);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <span class="material-icons" style="font-size:1rem;color:var(--gray-500)">folder</span>
+              <span class="material-symbols-rounded" style="font-size:1rem;color:var(--gray-500)">folder</span>
             </div>
             <div>
               <div class="cfield-label" style="margin-bottom:2px">Documentos</div>
@@ -126,14 +130,14 @@
   <!-- Card: Seguimiento de movimientos -->
   <div class="step-card">
     <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.25rem">
-      <span class="material-icons" style="font-size:1.1rem;color:var(--gray-500)">article</span>
+      <span class="material-symbols-rounded" style="font-size:1.1rem;color:var(--gray-500)">article</span>
       <span class="consulta-section-title" style="margin-bottom:0">Seguimiento de movimientos</span>
     </div>
 
     <!-- Cargue inicial -->
     <div class="movimiento-item">
       <div class="movimiento-icono">
-        <span class="material-icons">upload</span>
+        <span class="material-symbols-rounded">upload</span>
       </div>
       <div style="flex:1;min-width:0">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem">
@@ -188,6 +192,7 @@
     document.getElementById('res-valor-desembolsado').textContent = formatCOP(t.valorDesembolsado);
     document.getElementById('res-fecha-desembolso').textContent = t.fechaDesembolso;
     document.getElementById('res-comision').textContent = formatCOP(t.comisionPagada);
+    document.getElementById('res-num-pagare').textContent = t.numPagare || '—';
 
     // Cobertura reclamada
     var totalCobrado = (t.reclamos || []).reduce(function(s, r) { return s + r.valor; }, 0);
@@ -218,13 +223,13 @@
         badge.className = 'badge badge-pendiente';
         badge.textContent = 'Pendiente';
         icono.style.background = '#fef3c7';
-        icono.querySelector('.material-icons').style.color = '#d97706';
+        icono.querySelector('.material-symbols-rounded').style.color = '#d97706';
         sub.textContent = 'Pendiente de envío por parte del intermediario';
       } else {
         badge.className = 'badge badge-completado';
         badge.textContent = 'Enviados';
         icono.style.background = '#dcfce7';
-        icono.querySelector('.material-icons').style.color = '#16a34a';
+        icono.querySelector('.material-symbols-rounded').style.color = '#16a34a';
         sub.textContent = 'Documentos recibidos, en proceso de revisión';
       }
     } else {
@@ -245,7 +250,7 @@
         }[r.estado] || 'badge-cargado';
         var iconName = r.tipo === 'Total' ? 'warning' : 'remove_circle_outline';
         return '<div class="movimiento-item">'
-          + '<div class="movimiento-icono"><span class="material-icons">' + iconName + '</span></div>'
+          + '<div class="movimiento-icono"><span class="material-symbols-rounded">' + iconName + '</span></div>'
           + '<div style="flex:1;min-width:0">'
             + '<div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem">'
               + '<div style="font-size:0.9rem;font-weight:600;color:var(--black)">Cobro ' + r.tipo + '</div>'

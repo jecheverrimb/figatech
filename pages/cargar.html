@@ -47,7 +47,7 @@
         Fecha de reporte
         <span class="tooltip-wrap">
           <button class="tooltip-icon-btn" type="button" tabindex="-1">
-            <span class="material-icons">info</span>
+            <span class="material-symbols-rounded">info</span>
           </button>
           <span class="tooltip-box">
             Selecciona el mes al que corresponde<br>el cargue. No se permiten fechas futuras.
@@ -55,7 +55,7 @@
         </span>
       </label>
       <div class="fgroup-month-wrap">
-        <span class="material-icons fgroup-month-icon">calendar_month</span>
+        <span class="material-symbols-rounded fgroup-month-icon">calendar_month</span>
         <input type="month" id="sel-fecha" class="fgroup-month-input sin-valor"
                onchange="verificarBtnSiguiente();actualizarFechaPlaceholder()"
                onclick="try{this.showPicker()}catch(e){}">
@@ -70,18 +70,18 @@
     <!-- Estado vacío -->
     <div id="udz-empty" style="display:flex;flex-direction:column;align-items:center;width:100%;gap:0.4rem">
       <div class="udz-icon-wrap">
-        <span class="material-icons" style="font-size:2.2rem;color:var(--gray-400)">table_chart</span>
+        <span class="material-symbols-rounded" style="font-size:2.2rem;color:var(--gray-400)">table_chart</span>
       </div>
       <div class="udz-title">Sube el archivo Excel con el detalle de los créditos afianzados</div>
       <div class="udz-sub">Formato permitido: .xlsx · Tamaño máximo: 10 MB</div>
       <span class="btn btn-outline btn-sm" style="margin-top:0.9rem;pointer-events:none">
-        <span class="material-icons">upload_file</span> Seleccionar archivo
+        <span class="material-symbols-rounded">upload_file</span> Seleccionar archivo
       </span>
     </div>
 
     <!-- Estado con archivo -->
     <div id="udz-selected" style="display:none" class="udz-selected-content">
-      <span class="material-icons" style="font-size:2rem;color:#16a34a">check_circle</span>
+      <span class="material-symbols-rounded" style="font-size:2rem;color:#16a34a">check_circle</span>
       <div style="flex:1;min-width:0">
         <div class="udz-file-name" id="udz-file-name"></div>
         <div class="udz-sub" style="color:#16a34a;margin-top:2px">Archivo listo para analizar</div>
@@ -89,13 +89,13 @@
       <button class="btn btn-ghost btn-sm" type="button" data-quitar
               onclick="event.stopPropagation();quitarArchivo()"
               style="flex-shrink:0">
-        <span class="material-icons" style="font-size:15px">close</span> Quitar
+        <span class="material-symbols-rounded" style="font-size:15px">close</span> Quitar
       </button>
     </div>
   </div>
 
   <div class="udz-template-row">
-    <span class="material-icons" style="font-size:15px;color:var(--gray-400)">info</span>
+    <span class="material-symbols-rounded" style="font-size:15px;color:var(--gray-400)">info</span>
     ¿No tienes la plantilla del archivo?
     <a onclick="descargarPlantilla()">Descárgala aquí</a>
   </div>
@@ -105,7 +105,7 @@
     <button class="btn btn-ghost" onclick="navTo('cargues')">Cancelar</button>
     <div class="btn-sig-wrap" id="btn-sig-wrap">
       <button class="btn btn-filled" id="btn-siguiente" onclick="wizardSiguiente()" disabled>
-        <span class="material-icons" style="font-size:16px">arrow_forward</span>
+        <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span>
         <span id="btn-sig-txt">Analizar</span>
       </button>
       <div class="btn-sig-tip" id="btn-sig-tip"></div>
@@ -115,7 +115,7 @@
 
 <!-- Cargando (animación entre pasos) -->
 <div class="step-card paso-loading-card" id="paso-loading" style="display:none">
-  <span class="material-icons loading-spin-icon">autorenew</span>
+  <span class="material-symbols-rounded loading-spin-icon">autorenew</span>
   <div class="loading-title" id="loading-title">Analizando archivo...</div>
   <div class="loading-sub" id="loading-sub">Verificando registros y formato del archivo</div>
   <div class="loading-bar-wrap">
@@ -128,7 +128,7 @@
 <div class="step-card" id="paso2" style="display:none">
 
   <div class="val-banner">
-    <span class="material-icons" style="font-size:1.6rem;color:#16a34a;flex-shrink:0">check_circle</span>
+    <span class="material-symbols-rounded" style="font-size:1.6rem;color:#16a34a;flex-shrink:0">check_circle</span>
     <div>
       <div class="val-banner-title">Archivo validado correctamente</div>
       <div class="val-banner-sub">No se detectaron errores. Puedes <span class="val-banner-link">continuar</span> para generar la cuenta de cobro.</div>
@@ -172,7 +172,7 @@
   <!-- Botones paso 2 -->
   <div class="step-card-footer">
     <button class="btn btn-ghost" onclick="wizardAnterior()">
-      <span class="material-icons" style="font-size:16px">arrow_back</span> Atrás
+      <span class="material-symbols-rounded" style="font-size:16px">arrow_back</span> Atrás
     </button>
     <button class="btn btn-filled" onclick="wizardSiguiente()">
       Generar documento informativo
@@ -185,7 +185,7 @@
 
   <div class="doc-success-header">
     <div class="doc-success-icon">
-      <span class="material-icons" style="font-size:1.6rem;color:#16a34a">task_alt</span>
+      <span class="material-symbols-rounded" style="font-size:1.6rem;color:#16a34a">task_alt</span>
     </div>
     <div>
       <div class="doc-success-title">Documento informativo generado</div>
@@ -195,24 +195,24 @@
 
   <div class="doc-card">
     <div class="doc-card-icon">
-      <span class="material-icons" style="font-size:1.5rem;color:#2563eb">description</span>
+      <span class="material-symbols-rounded" style="font-size:1.5rem;color:#2563eb">description</span>
     </div>
     <div class="doc-card-info">
       <div class="doc-card-name" id="doc-nombre">Cuenta de cobro CC-2026-0422.pdf</div>
       <div class="doc-card-meta">Generado el <span id="doc-fecha-gen"></span> · 2 páginas</div>
     </div>
     <button class="btn btn-outline btn-sm" onclick="descargarDocumento()" style="flex-shrink:0">
-      <span class="material-icons">download</span> Descargar
+      <span class="material-symbols-rounded">download</span> Descargar
     </button>
   </div>
 
   <div class="doc-validity-note">
-    <span class="material-icons" style="font-size:1rem;flex-shrink:0">verified</span>
+    <span class="material-symbols-rounded" style="font-size:1rem;flex-shrink:0">verified</span>
     Este documento es válido para realizar el pago de las garantías afianzadas correspondientes al periodo seleccionado.
   </div>
 
   <div class="doc-next-step">
-    <span class="material-icons" style="font-size:1.3rem;color:var(--gray-500);flex-shrink:0;margin-top:2px">credit_card</span>
+    <span class="material-symbols-rounded" style="font-size:1.3rem;color:var(--gray-500);flex-shrink:0;margin-top:2px">credit_card</span>
     <div>
       <div class="doc-next-title">Siguiente paso</div>
       <div class="doc-next-desc">Una vez realices el pago, adjunta el soporte correspondiente para completar el proceso.</div>
@@ -222,7 +222,7 @@
   <!-- Botones paso 3 -->
   <div class="step-card-footer" style="justify-content:flex-end">
     <button class="btn btn-filled" onclick="guardarYPagar()">
-      <span class="material-icons">save</span> Guardar y pagar después
+      <span class="material-symbols-rounded">save</span> Guardar y pagar después
     </button>
   </div>
 </div>

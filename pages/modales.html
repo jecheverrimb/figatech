@@ -1,19 +1,19 @@
 <!-- Modal: Subir soporte de pago (2 archivos) -->
 <div class="overlay" id="modal-subir">
   <div class="modal" style="max-width:500px">
-    <button class="modal-close" onclick="cerrarModal('modal-subir')"><span class="material-icons">close</span></button>
+    <button class="modal-close" onclick="cerrarModal('modal-subir')"><span class="material-symbols-rounded">close</span></button>
     <h2 id="modal-subir-titulo">Soportes de pago</h2>
     <p class="modal-desc">Carga hasta 2 archivos de soporte (PNG, JPG, JPEG, PDF). Al menos uno es obligatorio.</p>
     <input type="file" id="file-soporte-1" style="display:none" accept=".png,.jpg,.jpeg,.pdf" onchange="handleSoporteFile(1,this)">
     <input type="file" id="file-soporte-2" style="display:none" accept=".png,.jpg,.jpeg,.pdf" onchange="handleSoporteFile(2,this)">
     <div class="upload-slots">
       <div class="upload-slot" id="upload-slot-1" onclick="simularSoporte(1)">
-        <span class="material-icons">cloud_upload</span>
+        <span class="material-symbols-rounded">cloud_upload</span>
         <div class="slot-label">Soporte 1</div>
         <div class="slot-name" id="nombre-soporte-1">Haz clic para subir</div>
       </div>
       <div class="upload-slot" id="upload-slot-2" onclick="simularSoporte(2)">
-        <span class="material-icons">add_circle_outline</span>
+        <span class="material-symbols-rounded">add_circle_outline</span>
         <div class="slot-label">Soporte 2 <span style="font-weight:400;color:var(--gray-400)">(opcional)</span></div>
         <div class="slot-name" id="nombre-soporte-2">Haz clic para subir</div>
       </div>
@@ -21,7 +21,7 @@
     <div class="modal-actions end">
       <button class="btn btn-ghost" onclick="cerrarModal('modal-subir')">Cancelar</button>
       <button class="btn btn-filled" id="btn-cargar-pago" onclick="cargarPago()">
-        <span class="material-icons" id="btn-cargar-pago-icon">payments</span> <span id="btn-cargar-pago-txt">Cargar pago</span>
+        <span class="material-symbols-rounded" id="btn-cargar-pago-icon">payments</span> <span id="btn-cargar-pago-txt">Cargar pago</span>
       </button>
     </div>
   </div>
@@ -30,7 +30,7 @@
 <!-- Modal: Confirmar cargue -->
 <div class="overlay" id="modal-confirmar">
   <div class="modal" style="max-width:480px">
-    <button class="modal-close" onclick="cerrarModal('modal-confirmar')"><span class="material-icons">close</span></button>
+    <button class="modal-close" onclick="cerrarModal('modal-confirmar')"><span class="material-symbols-rounded">close</span></button>
     <h2>Confirmar cargue</h2>
     <p class="modal-desc">Verifica que toda la información sea correcta antes de continuar.</p>
     <table class="confirm-table">
@@ -47,7 +47,7 @@
     <div class="modal-actions end" style="margin-top:1.5rem">
       <button class="btn btn-ghost" onclick="cerrarModal('modal-confirmar')">Atrás</button>
       <button class="btn btn-filled" onclick="procesarCargue()">
-        <span class="material-icons">cloud_upload</span> Cargar
+        <span class="material-symbols-rounded">cloud_upload</span> Cargar
       </button>
     </div>
   </div>
@@ -56,15 +56,15 @@
 <!-- Modal: Garantías cargadas (éxito) -->
 <div class="overlay" id="modal-exito">
   <div class="modal" style="max-width:460px">
-    <button class="modal-close" onclick="finalizarCargue()"><span class="material-icons">close</span></button>
+    <button class="modal-close" onclick="finalizarCargue()"><span class="material-symbols-rounded">close</span></button>
     <div class="success-body">
-      <span class="material-icons">check_circle</span>
+      <span class="material-symbols-rounded">check_circle</span>
       <h2>Garantías cargadas</h2>
       <p>Tus créditos afianzados han sido cargados con éxito. Descarga el documento informativo; una vez realizado el pago, recuerda subir el soporte de pago.</p>
     </div>
     <div class="modal-actions center" style="margin-top:1.5rem">
       <button class="btn btn-filled" onclick="finalizarCargue()">
-        <span class="material-icons">download</span> Descargar documento
+        <span class="material-symbols-rounded">download</span> Descargar documento
       </button>
       <button class="btn btn-ghost" onclick="finalizarCargue()">Cerrar</button>
     </div>
@@ -74,16 +74,16 @@
 <!-- Modal: Confirmar eliminación -->
 <div class="overlay" id="modal-eliminar">
   <div class="modal" style="max-width:420px">
-    <button class="modal-close" onclick="cerrarModal('modal-eliminar')"><span class="material-icons">close</span></button>
+    <button class="modal-close" onclick="cerrarModal('modal-eliminar')"><span class="material-symbols-rounded">close</span></button>
     <div style="text-align:center;padding:0.5rem 0">
-      <span class="material-icons modal-danger-icon">delete_forever</span>
+      <span class="material-symbols-rounded modal-danger-icon">delete_forever</span>
       <h2>Eliminar cargue</h2>
       <p class="modal-desc">¿Estás seguro de que deseas eliminar el cargue <strong id="eliminar-id-txt">#00</strong>? Esta acción no se puede deshacer.</p>
     </div>
     <div class="modal-actions end">
       <button class="btn btn-ghost" onclick="cerrarModal('modal-eliminar')">Cancelar</button>
       <button class="btn btn-danger" onclick="confirmarEliminar()">
-        <span class="material-icons">delete</span> Eliminar
+        <span class="material-symbols-rounded">delete</span> Eliminar
       </button>
     </div>
   </div>
@@ -92,7 +92,7 @@
 <!-- Modal: Compromiso de documentos -->
 <div class="overlay" id="modal-compromiso">
   <div class="modal" style="max-width:480px">
-    <button class="modal-close" onclick="cerrarModal('modal-compromiso')"><span class="material-icons">close</span></button>
+    <button class="modal-close" onclick="cerrarModal('modal-compromiso')"><span class="material-symbols-rounded">close</span></button>
     <h2>Compromiso de documentos</h2>
     <p class="modal-desc">Has realizado 1 Cobro Total, recuerda que tu compromiso es enviar los documentos:</p>
     <ul style="margin:0 0 1rem 1.2rem;display:flex;flex-direction:column;gap:5px">
@@ -107,11 +107,11 @@
     <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:0.85rem 1rem;margin-bottom:1.1rem;font-size:0.84rem;color:#0c4a6e;line-height:1.6">
       <strong style="display:block;margin-bottom:0.3rem">¿Cómo enviar los documentos?</strong>
       <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:0.25rem">
-        <span class="material-icons" style="font-size:15px;margin-top:2px;flex-shrink:0">home_work</span>
+        <span class="material-symbols-rounded" style="font-size:15px;margin-top:2px;flex-shrink:0">home_work</span>
         <span><strong>Firma física:</strong> Envíalos directamente a CC Comercial Chipichape, Cali.</span>
       </div>
       <div style="display:flex;align-items:flex-start;gap:6px">
-        <span class="material-icons" style="font-size:15px;margin-top:2px;flex-shrink:0">email</span>
+        <span class="material-symbols-rounded" style="font-size:15px;margin-top:2px;flex-shrink:0">email</span>
         <span><strong>Firma electrónica:</strong> Envíalos al correo <strong>gaf@figarantias.com</strong></span>
       </div>
     </div>
@@ -129,7 +129,7 @@
 <!-- Modal: Confirmar reclamo -->
 <div class="overlay" id="modal-confirmar-reclamo">
   <div class="modal" style="max-width:480px">
-    <button class="modal-close" onclick="cerrarModal('modal-confirmar-reclamo')"><span class="material-icons">close</span></button>
+    <button class="modal-close" onclick="cerrarModal('modal-confirmar-reclamo')"><span class="material-symbols-rounded">close</span></button>
     <h2>Confirmar reclamo</h2>
     <p class="modal-desc">Verifica que toda la información sea correcta antes de continuar.</p>
     <table class="confirm-table">
@@ -139,7 +139,7 @@
         <td>
           Cobros totales
           <span class="tooltip-wrap" style="margin-left:4px">
-            <button class="tooltip-icon-btn" type="button" tabindex="-1"><span class="material-icons">info</span></button>
+            <button class="tooltip-icon-btn" type="button" tabindex="-1"><span class="material-symbols-rounded">info</span></button>
             <span class="tooltip-box">Cobro donde se exige el<br>100% del valor asegurado.</span>
           </span>
         </td>
@@ -161,16 +161,16 @@
 <!-- Modal: Eliminar reclamo -->
 <div class="overlay" id="modal-eliminar-reclamo">
   <div class="modal" style="max-width:420px">
-    <button class="modal-close" onclick="cerrarModal('modal-eliminar-reclamo')"><span class="material-icons">close</span></button>
+    <button class="modal-close" onclick="cerrarModal('modal-eliminar-reclamo')"><span class="material-symbols-rounded">close</span></button>
     <div style="text-align:center;padding:0.5rem 0">
-      <span class="material-icons modal-danger-icon">delete_forever</span>
+      <span class="material-symbols-rounded modal-danger-icon">delete_forever</span>
       <h2>Eliminar reclamo</h2>
       <p class="modal-desc">¿Estás seguro de que deseas eliminar el reclamo <strong id="eliminar-reclamo-id-txt">#00</strong>? Esta acción no se puede deshacer.</p>
     </div>
     <div class="modal-actions end">
       <button class="btn btn-ghost" onclick="cerrarModal('modal-eliminar-reclamo')">Cancelar</button>
       <button class="btn btn-danger" onclick="confirmarEliminarReclamo()">
-        <span class="material-icons">delete</span> Eliminar
+        <span class="material-symbols-rounded">delete</span> Eliminar
       </button>
     </div>
   </div>
@@ -179,19 +179,19 @@
 <!-- Modal: Documentos comprometidos por titular -->
 <div class="overlay" id="modal-docs-titular">
   <div class="modal" style="max-width:500px">
-    <button class="modal-close" onclick="cerrarModal('modal-docs-titular')"><span class="material-icons">close</span></button>
+    <button class="modal-close" onclick="cerrarModal('modal-docs-titular')"><span class="material-symbols-rounded">close</span></button>
     <h2>Documentos comprometidos</h2>
     <p class="modal-desc" id="modal-docs-titular-nombre" style="margin-bottom:0.5rem"></p>
     <ul id="modal-docs-titular-lista" style="margin:0;padding:0;list-style:none"></ul>
     <div style="display:flex;align-items:center;gap:1.25rem;margin-top:1rem;padding-top:0.85rem;border-top:1px solid var(--gray-100);font-size:0.78rem;color:var(--gray-500);flex-wrap:wrap">
       <span style="display:flex;align-items:center;gap:4px">
-        <span class="material-icons" style="font-size:1.1rem;color:#16a34a">check_circle</span> Recibido
+        <span class="material-symbols-rounded" style="font-size:1.1rem;color:#16a34a">check_circle</span> Recibido
       </span>
       <span style="display:flex;align-items:center;gap:4px">
-        <span class="material-icons" style="font-size:1.1rem;color:#dc2626">cancel</span> No recibido
+        <span class="material-symbols-rounded" style="font-size:1.1rem;color:#dc2626">cancel</span> No recibido
       </span>
       <span style="display:flex;align-items:center;gap:4px">
-        <span class="material-icons" style="font-size:1.1rem;color:#d97706">warning</span> Faltante / no corresponde
+        <span class="material-symbols-rounded" style="font-size:1.1rem;color:#d97706">warning</span> Faltante / no corresponde
       </span>
     </div>
     <div class="modal-actions end" style="margin-top:1.25rem">
@@ -203,9 +203,9 @@
 <!-- Modal: Reclamo exitoso -->
 <div class="overlay" id="modal-exito-reclamo">
   <div class="modal" style="max-width:460px">
-    <button class="modal-close" onclick="finalizarReclamo()"><span class="material-icons">close</span></button>
+    <button class="modal-close" onclick="finalizarReclamo()"><span class="material-symbols-rounded">close</span></button>
     <div class="success-body">
-      <span class="material-icons">check_circle</span>
+      <span class="material-symbols-rounded">check_circle</span>
       <h2>Reclamo enviado</h2>
       <p>Tu reclamo ha sido registrado exitosamente. Recuerda enviar los documentos comprometidos para continuar con el proceso.</p>
     </div>

@@ -9,89 +9,87 @@
 <div class="page-header">
   <div>
     <div class="page-title">Cargue de garantías</div>
-    <div class="page-subtitle">Consulte, agregue o modifique el estado de sus cargues</div>
   </div>
 </div>
 
 <!-- Banner de éxito post-cargue -->
 <div style="background:#d1fae5;border:1.5px solid #6ee7b7;border-radius:10px;padding:1rem 1.5rem;display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem">
-  <span class="material-icons" style="color:#059669;font-size:1.5rem">check_circle</span>
+  <span class="material-symbols-rounded" style="color:#059669;font-size:1.5rem">check_circle</span>
   <div>
     <strong style="color:#065f46">¡Cargue exitoso!</strong>
     <span style="color:#065f46"> Recuerda subir el soporte de pago para completar el proceso.</span>
   </div>
 </div>
 
-<div class="cargues-search-bar">
-  <div class="search-box">
-    <span class="material-icons">search</span>
-    <input type="text" id="buscador2" placeholder="Buscar por ID o periodo" oninput="renderTablaCargues2()">
+<!-- Sección: En proceso -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.75rem;">
+  <div style="display:flex;align-items:center;gap:0.5rem;">
+    <span class="section-group-title">En proceso</span>
+    <span class="section-group-count" id="count-proceso2">0</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:0.625rem;flex-wrap:wrap;">
+    <div class="search-box">
+      <span class="material-symbols-rounded">search</span>
+      <input type="text" id="buscador2" placeholder="Buscar por ID o periodo" oninput="renderTablaCargues2()">
+    </div>
+    <button class="btn btn-filled" onclick="navTo('cargar')">
+      <span class="material-symbols-rounded" style="color:#fff">upload_file</span> Cargar créditos
+    </button>
   </div>
 </div>
 
-<!-- Sección: En proceso -->
-<div class="section-group">
-  <div class="section-group-header">
-    <span class="section-group-title">En proceso</span>
-    <span class="section-group-count" id="count-proceso2">0</span>
-    <button id="btn-cargar-proceso2" class="btn btn-filled" onclick="navTo('cargar')" style="display:none;margin-left:auto">
-      <span class="material-icons">upload_file</span> Cargar créditos
+<div class="rec-card" style="margin-bottom:1.5rem">
+  <div id="proceso-empty2" class="section-empty-state" style="display:none">
+    <span class="material-symbols-rounded" style="font-size:2.5rem;color:var(--gray-300)">upload_file</span>
+    <span style="font-weight:600;color:var(--gray-500)">No hay cargues en proceso</span>
+    <span style="font-size:0.82rem;color:var(--gray-400);margin-bottom:0.5rem">Cargue un nuevo archivo de créditos para comenzar</span>
+    <button class="btn btn-filled" onclick="navTo('cargar')" style="margin-top:0.25rem">
+      <span class="material-symbols-rounded" style="font-size:17px;color:#fff">upload_file</span> Cargar créditos
     </button>
   </div>
-  <div class="table-card">
-    <div id="proceso-empty2" class="section-empty-state" style="display:none">
-      <span class="material-icons" style="font-size:2.5rem;color:var(--gray-300)">upload_file</span>
-      <span style="font-weight:600;color:var(--gray-500)">No hay cargues en proceso</span>
-      <span style="font-size:0.82rem;color:var(--gray-400);margin-bottom:0.5rem">Cargue un nuevo archivo de créditos para comenzar</span>
-      <button class="btn btn-filled" onclick="navTo('cargar')" style="margin-top:0.25rem">
-        <span class="material-icons" style="font-size:17px">upload_file</span> Cargar créditos
-      </button>
-    </div>
-    <table id="tabla-proceso2">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Fecha de cargue</th>
-          <th>Cobertura</th>
-          <th>Administración</th>
-          <th>IVA</th>
-          <th>Comisión total</th>
-          <th>Estado</th>
-          <th>Opciones</th>
-        </tr>
-      </thead>
-      <tbody id="tbody-proceso2"></tbody>
-    </table>
-  </div>
+  <table id="tabla-proceso2">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Fecha de cargue</th>
+        <th>Cobertura</th>
+        <th>Administración</th>
+        <th>IVA</th>
+        <th>Comisión total</th>
+        <th>Estado</th>
+        <th>Opciones</th>
+      </tr>
+    </thead>
+    <tbody id="tbody-proceso2"></tbody>
+  </table>
 </div>
 
 <!-- Sección: Cargues completados -->
-<div class="section-group">
-  <div class="section-group-header">
-    <span class="section-group-title">Cargues completados</span>
-    <span class="section-group-count" id="count-completados2">0</span>
+<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">
+  <span class="section-group-title">Cargues completados</span>
+  <span class="section-group-count" id="count-completados2">0</span>
+</div>
+
+<div class="rec-card">
+  <div id="completados-empty2" class="section-empty-state" style="display:none">
+    <span class="material-symbols-rounded">inbox</span>
+    <span>No hay cargues completados</span>
   </div>
-  <div class="table-card">
-    <div id="completados-empty2" class="section-empty-state" style="display:none">
-      <span class="material-icons">inbox</span>
-      <span>No hay cargues completados</span>
-    </div>
-    <table id="tabla-completados2">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Fecha de cargue</th>
-          <th>Cobertura</th>
-          <th>Administración</th>
-          <th>IVA</th>
-          <th>Comisión total</th>
-          <th>Estado</th>
-          <th>Opciones</th>
-        </tr>
-      </thead>
-      <tbody id="tbody-completados2"></tbody>
-    </table>
-  </div>
+  <table id="tabla-completados2">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Fecha de cargue</th>
+        <th>Cobertura</th>
+        <th>Administración</th>
+        <th>IVA</th>
+        <th>Comisión total</th>
+        <th>Estado</th>
+        <th>Opciones</th>
+      </tr>
+    </thead>
+    <tbody id="tbody-completados2"></tbody>
+  </table>
 </div>
 
 <script>
@@ -118,8 +116,6 @@
     if (tablaP) tablaP.style.display = enProceso.length ? '' : 'none';
     var cntP = document.getElementById('count-proceso2');
     if (cntP) cntP.textContent = enProceso.length;
-    var btnP2 = document.getElementById('btn-cargar-proceso2');
-    if (btnP2) btnP2.style.display = enProceso.length ? '' : 'none';
 
     var tbodyC = document.getElementById('tbody-completados2');
     if (tbodyC) {
