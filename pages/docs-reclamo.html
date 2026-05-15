@@ -17,16 +17,18 @@
 <div class="docp-wrapper">
   <!-- Encabezado del card -->
   <div class="docp-controls">
-    <div style="font-weight:600;font-size:15px;color:var(--md-on-surface)" id="title-docs-reclamo">Reclamo de garantía # —</div>
+    <div>
+      <div style="font-weight:600;font-size:15px;color:var(--md-on-surface)" id="title-docs-reclamo">Reclamo de garantía # —</div>
+      <div style="font-size:13px;color:var(--gray-500);margin-top:2px" id="fecha-docs-reclamo"></div>
+    </div>
     <div style="display:flex;gap:0.625rem;align-items:center;flex-wrap:wrap">
       <div class="search-box">
         <span class="material-symbols-rounded">search</span>
         <input type="text" id="buscador-docs-reclamo" placeholder="Buscar" oninput="renderDocsReclamo()">
       </div>
       <button class="btn btn-outline">
-        <span class="material-symbols-rounded" style="font-size:16px">calendar_today</span> Fechas
+        <span class="material-symbols-rounded" style="font-size:16px">download</span> Descargar consolidado
       </button>
-      <button class="btn btn-outline">Descargar consolidado</button>
     </div>
   </div>
 
@@ -37,7 +39,6 @@
         <tr>
           <th style="width:22%">Titular</th>
           <th style="width:7%">Nº de pagaré</th>
-          <th style="width:7%;text-align:center">Fecha de reclamo</th>
           <th style="width:7%;text-align:center" data-tooltip="Fotocopia de cédula">Foto. cédula</th>
           <th style="width:7%;text-align:center" data-tooltip="Carta de instrucciones">Carta instruc.</th>
           <th style="width:7%;text-align:center" data-tooltip="Estado de cuenta">Estado de cuenta</th>
@@ -45,7 +46,7 @@
           <th style="width:7%;text-align:center" data-tooltip="Copia de pagaré">Copia pagaré</th>
           <th style="width:7%;text-align:center" data-tooltip="Aceptación de fianza">Acep. fianza</th>
           <th style="width:7%;text-align:center" data-tooltip="Formato de endoso">Formato endoso</th>
-          <th style="width:11%">Opciones</th>
+          <th style="width:17%">Opciones</th>
         </tr>
       </thead>
       <tbody id="tbody-docs-reclamo"></tbody>
@@ -80,11 +81,12 @@
 
     var titleEl = document.getElementById('title-docs-reclamo');
     var breadEl = document.getElementById('breadcrumb-docs-reclamo');
-    if (titleEl) titleEl.textContent = 'Reclamo de garantía # ' + id;
-    if (breadEl) breadEl.textContent = 'Reclamo # ' + id;
-
     var reclamo = (typeof reclamos !== 'undefined') ? reclamos.find(function(r) { return r.id === id; }) : null;
-    var fecha = reclamo ? reclamo.fecha : '—';
+    var fecha = reclamo ? reclamo.fecha : '';
+    if (titleEl) titleEl.textContent = 'Reclamo de garantía # ' + id;
+    var fechaEl = document.getElementById('fecha-docs-reclamo');
+    if (fechaEl) fechaEl.textContent = fecha;
+    if (breadEl) breadEl.textContent = 'Reclamo # ' + id;
 
     drFilas = creditos.filter(function(c) {
       if (!q) return true;
@@ -128,7 +130,6 @@
           +   '</div>'
           + '</div></td>'
           + '<td>' + pagare + '</td>'
-          + '<td style="text-align:center;line-height:1.5">' + f.fecha.replace(' / ', '<br>') + '</td>'
           + f.c.docs.map(function(d) { return '<td style="text-align:center">' + docpIcon(d) + '</td>'; }).join('')
           + '<td><button class="btn-accion" onclick="verInfoTitular(\'' + (window._reclamoDocsActivo || '') + '\',' + f.idx + ',\'docs-reclamo\')">'
           +   '<span class="material-symbols-rounded">person</span> Ver titular'

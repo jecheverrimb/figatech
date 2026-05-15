@@ -745,7 +745,7 @@ function docpIcon(estado) {
   if (estado === 'recibido') {
     return '<span class="material-symbols-rounded docp-doc-ok" data-tooltip="Documento recibido">check_circle</span>';
   } else if (estado === 'observacion') {
-    return '<span class="material-symbols-rounded docp-doc-obs" data-tooltip="Documento erróneo">error</span>';
+    return '<span class="material-symbols-rounded docp-doc-obs" data-tooltip="Documento erróneo">close</span>';
   } else {
     return '<span class="material-symbols-rounded docp-doc-pending" data-tooltip="No recibido">radio_button_unchecked</span>';
   }

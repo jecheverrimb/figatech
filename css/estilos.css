@@ -1587,7 +1587,7 @@ tr:last-child td { border-bottom: none; }
 .docp-cedula { font-size: 11.5px; color: var(--md-on-surface-variant); margin-top: 1px; }
 .docp-doc-ok      { font-size: 20px; color: #16a34a; }
 .docp-doc-pending { font-size: 20px; color: #d1d5db; }
-.docp-doc-obs     { font-size: 20px; color: #d97706; }
+.docp-doc-obs     { font-size: 20px; color: #ef4444; }
 .docp-pagination {
   display: flex;
   justify-content: center;
