@@ -1,111 +1,161 @@
-<!-- DOCUMENTOS PENDIENTES -->
+<!-- DOCUMENTACIÓN PENDIENTE -->
 <div class="breadcrumb">
   <a href="#" onclick="navTo('inicio');return false">Garantías</a>
   <span class="sep">/</span>
   <a href="#" onclick="navTo('reclamos');return false">Reclamos</a>
   <span class="sep">/</span>
-  <span>Documentos pendientes</span>
+  <span>Documentación pendiente</span>
 </div>
 
 <div class="page-header-row">
   <button class="btn-back" onclick="navTo('reclamos')">
     <span class="material-symbols-rounded">chevron_left</span>
   </button>
-  <div class="page-title" style="margin-bottom:0">Documentos pendientes</div>
+  <div class="page-title" style="margin-bottom:0">Documentación pendiente</div>
 </div>
 
-<!-- Barra de controles -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem;">
-  <div class="search-box">
-    <span class="material-symbols-rounded">search</span>
-    <input type="text" id="buscador-docs-pendientes" placeholder="Buscar por ID o estado" oninput="renderDocsPendientes()">
+<div class="docp-wrapper">
+  <!-- Barra de controles -->
+  <div class="docp-controls">
+    <div class="search-box">
+      <span class="material-symbols-rounded">search</span>
+      <input type="text" id="buscador-docs-pendientes" placeholder="Buscar" oninput="renderDocsPendientes()">
+    </div>
+    <div style="display:flex;gap:0.625rem;align-items:center">
+      <button class="btn btn-outline">
+        <span class="material-symbols-rounded" style="font-size:16px">calendar_today</span> Fechas
+      </button>
+      <button class="btn btn-outline">
+        Descargar consolidado
+      </button>
+    </div>
   </div>
-  <div style="display:flex;gap:0.625rem;">
-    <button class="btn btn-outline">
-      Filtro <span class="material-symbols-rounded" style="font-size:16px">filter_list</span>
-    </button>
-    <button class="btn btn-outline">
-      <span class="material-symbols-rounded">download</span> Descargar
-    </button>
+
+  <!-- Tabla -->
+  <div style="overflow:hidden">
+    <table class="docp-table" id="tabla-docs-pendientes">
+      <thead>
+        <tr>
+          <th>Titular</th>
+          <th>Nº de crédito</th>
+          <th>Fecha de reclamo</th>
+          <th data-tooltip="Fotocopia de cédula">Foto. cédula</th>
+          <th data-tooltip="Carta de instrucciones">Carta instruc.</th>
+          <th data-tooltip="Estado de cuenta">Estado de cuenta</th>
+          <th data-tooltip="Certificado de reporte de deuda">Cert. reporte</th>
+          <th data-tooltip="Copia de pagaré">Copia pagaré</th>
+          <th data-tooltip="Aceptación de fianza">Acep. fianza</th>
+          <th data-tooltip="Formato de endoso">Formato endoso</th>
+          <th>Opciones</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-docs-pendientes"></tbody>
+    </table>
   </div>
-</div>
 
-<!-- Tabla de filas tipo card -->
-<table class="card-rows-table" id="tabla-docs-pendientes">
-  <thead>
-    <tr>
-      <th>Nombre</th>
-      <th>No. Documento</th>
-      <th>Pagaré</th>
-      <th>Fecha del reclamo</th>
-      <th>Documentos</th>
-      <th>Opciones</th>
-    </tr>
-  </thead>
-  <tbody id="tbody-docs-pendientes"></tbody>
-</table>
+  <div id="docs-pendientes-empty" class="section-empty-state" style="display:none">
+    <span class="material-symbols-rounded" style="font-size:2.5rem;color:var(--gray-300)">folder_off</span>
+    <span style="font-weight:600;color:var(--gray-500)">No hay documentos pendientes</span>
+  </div>
 
-<div id="docs-pendientes-empty" class="section-empty-state" style="display:none">
-  <span class="material-symbols-rounded" style="font-size:2.5rem;color:var(--gray-300)">folder_off</span>
-  <span style="font-weight:600;color:var(--gray-500)">No hay documentos pendientes</span>
+  <div class="docp-pagination" id="docp-paginacion" style="display:none"></div>
 </div>
 
 <script>
-  function renderDocsPendientes() {
-    var q = (document.getElementById('buscador-docs-pendientes')
-      ? document.getElementById('buscador-docs-pendientes').value : '').toLowerCase();
+  var DOCP_PAGE_SIZE = 10;
+  var docpPagina = 1;
+  var docpFilas = [];
 
-    var filas = [];
+  function buildDocpFilas(q) {
+    var result = [];
     reclamos.forEach(function(r) {
       if (r.documentacion !== 'Pendiente' && r.documentacion !== 'Faltan soportes') return;
       var detalle = reclamosDetalle[r.id] || [];
       detalle.forEach(function(p, idx) {
-        var pagareCorto = p.pagare ? p.pagare.replace('PG-', '') : '—';
-        if (q && !p.nombre.toLowerCase().includes(q) && !p.cedula.includes(q) && !r.id.includes(q)) return;
-        filas.push({
-          nombre:     p.nombre,
-          cedula:     p.cedula,
-          pagare:     pagareCorto,
-          fecha:      r.fecha,
-          reclamoId:  r.id,
-          detalleIdx: idx
-        });
+        var docs = p.docs || [];
+        if (docs.length > 0 && docs.every(function(d) { return d === 'recibido'; })) return;
+        var pagareStr = p.pagare ? p.pagare.replace('PG-', '') : '';
+        if (q && !p.nombre.toLowerCase().includes(q) && !p.cedula.includes(q) && !pagareStr.includes(q)) return;
+        result.push({ r: r, p: p, idx: idx });
       });
     });
+    return result;
+  }
 
+  function renderDocsPendientes() {
+    docpPagina = 1;
+    var q = (document.getElementById('buscador-docs-pendientes')
+      ? document.getElementById('buscador-docs-pendientes').value : '').toLowerCase();
+    docpFilas = buildDocpFilas(q);
+    renderDocpTabla();
+  }
+
+  function docpIrPagina(n) {
+    var total = Math.ceil(docpFilas.length / DOCP_PAGE_SIZE);
+    if (n < 1 || n > total) return;
+    docpPagina = n;
+    renderDocpTabla();
+  }
+
+  function renderDocpTabla() {
     var tbody = document.getElementById('tbody-docs-pendientes');
     var empty = document.getElementById('docs-pendientes-empty');
     var tabla = document.getElementById('tabla-docs-pendientes');
+    var paginacion = document.getElementById('docp-paginacion');
 
-    if (!filas.length) {
+    if (!docpFilas.length) {
       if (tbody) tbody.innerHTML = '';
       if (empty) empty.style.display = 'flex';
       if (tabla) tabla.style.display = 'none';
+      if (paginacion) paginacion.style.display = 'none';
       return;
     }
 
     if (empty) empty.style.display = 'none';
     if (tabla) tabla.style.display = '';
 
+    var totalPaginas = Math.ceil(docpFilas.length / DOCP_PAGE_SIZE);
+    var inicio = (docpPagina - 1) * DOCP_PAGE_SIZE;
+    var filasPagina = docpFilas.slice(inicio, inicio + DOCP_PAGE_SIZE);
+
     if (tbody) {
-      tbody.innerHTML = filas.map(function(f) {
+      tbody.innerHTML = filasPagina.map(function(f) {
+        var pagare = f.p.pagare ? f.p.pagare.replace('PG-', '') : '—';
+        var docs = f.p.docs || [];
         return '<tr>'
-          + '<td><button class="col-nombre" onclick="verInfoTitular(\'' + f.reclamoId + '\',' + f.detalleIdx + ')" style="background:none;border:none;cursor:pointer;padding:0;text-align:left;font-family:\'Roboto\',sans-serif">'
-          +   '<span class="material-symbols-rounded">account_circle</span>'
-          +   '<span class="nombre-text" style="text-decoration:underline;text-underline-offset:3px">' + f.nombre + '</span>'
-          + '</button></td>'
-          + '<td>' + f.cedula + '</td>'
-          + '<td>' + f.pagare + '</td>'
-          + '<td>' + f.fecha + '</td>'
-          + '<td><span class="badge badge-pendiente" style="gap:5px">'
-          +   '<span class="material-symbols-rounded" style="font-size:13px">schedule</span>'
-          +   'Pendientes'
-          + '</span></td>'
-          + '<td><button class="btn-accion" onclick="abrirModalDocsTitular(\'' + f.reclamoId + '\',' + f.detalleIdx + ')">'
-          +   '<span class="material-symbols-rounded">visibility</span> Ver'
+          + '<td><div class="docp-titular">'
+          +   '<span class="material-symbols-rounded docp-avatar">account_circle</span>'
+          +   '<div style="min-width:0">'
+          +     '<div class="docp-nombre">' + f.p.nombre + '</div>'
+          +     '<div class="docp-cedula">C.C. ' + f.p.cedula + '</div>'
+          +   '</div>'
+          + '</div></td>'
+          + '<td>' + pagare + '</td>'
+          + '<td>' + f.r.fecha.replace(' / ', '<br>') + '</td>'
+          + docs.map(function(d) { return '<td>' + docpIcon(d) + '</td>'; }).join('')
+          + '<td><button class="btn-accion" onclick="verInfoTitular(\'' + f.r.id + '\',' + f.idx + ',\'compromiso-docs\')">'
+          +   '<span class="material-symbols-rounded">person</span> Ver titular'
           + '</button></td>'
           + '</tr>';
       }).join('');
+    }
+
+    if (paginacion) {
+      if (totalPaginas <= 1) {
+        paginacion.style.display = 'none';
+      } else {
+        paginacion.style.display = 'flex';
+        var html = '<button class="docp-page-btn" onclick="docpIrPagina(' + (docpPagina - 1) + ')"'
+          + (docpPagina <= 1 ? ' disabled' : '') + '>'
+          + '<span class="material-symbols-rounded" style="font-size:18px">chevron_left</span></button>';
+        for (var i = 1; i <= totalPaginas; i++) {
+          html += '<button class="docp-page-btn' + (i === docpPagina ? ' active' : '') + '" onclick="docpIrPagina(' + i + ')">' + i + '</button>';
+        }
+        html += '<button class="docp-page-btn" onclick="docpIrPagina(' + (docpPagina + 1) + ')"'
+          + (docpPagina >= totalPaginas ? ' disabled' : '') + '>'
+          + '<span class="material-symbols-rounded" style="font-size:18px">chevron_right</span></button>';
+        paginacion.innerHTML = html;
+      }
     }
   }
 

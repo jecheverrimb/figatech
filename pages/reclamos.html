@@ -8,30 +8,29 @@
   <div>
     <div class="page-title">Reclamos de garantías</div>
   </div>
-</div>
-
-<!-- Sección: En proceso -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.75rem;">
-  <span style="font-size:1.05rem;font-weight:700;color:var(--md-on-surface)">En proceso</span>
-  <div style="display:flex;align-items:center;gap:0.625rem;flex-wrap:wrap;">
-    <div class="search-box">
-      <span class="material-symbols-rounded">search</span>
-      <input type="text" id="buscador-reclamos" placeholder="Buscar por ID o estado" oninput="renderReclamos()">
-    </div>
-    <button class="btn btn-outline">
-      Filtro <span class="material-symbols-rounded" style="font-size:16px">filter_list</span>
-    </button>
-    <button class="btn btn-outline" onclick="navTo('compromiso-docs')">
-      <span class="material-symbols-rounded">assignment_late</span> Documentos pendientes
-      <span class="docs-pending-badge" id="badge-docs-pendientes">0</span>
-    </button>
-    <button class="btn btn-filled" onclick="navTo('reclamar')">
-      <span class="material-symbols-rounded">gavel</span> Reclamar
-    </button>
+  <div class="search-box">
+    <span class="material-symbols-rounded">search</span>
+    <input type="text" id="buscador-reclamos" placeholder="Buscar por ID o estado" oninput="renderReclamos()">
   </div>
 </div>
 
-<div class="rec-card" style="margin-bottom:1.5rem">
+<!-- Sección: En proceso -->
+<div class="rec-card" style="margin-bottom:1.5rem;padding:0;">
+  <div class="rec-card-header">
+    <span style="font-size:1.05rem;font-weight:700;color:var(--md-on-surface)">En proceso</span>
+    <div style="display:flex;align-items:center;gap:0.625rem;flex-wrap:wrap;">
+      <button class="btn btn-outline">
+        <span class="material-symbols-rounded" style="font-size:16px">filter_list</span> Filtros
+      </button>
+      <button class="btn btn-outline" onclick="navTo('compromiso-docs')">
+        Documentación pendiente
+        <span class="docs-pending-badge" id="badge-docs-pendientes">0</span>
+      </button>
+      <button class="btn btn-filled" onclick="navTo('reclamar')">
+        <span class="material-symbols-rounded">gavel</span> Reclamar
+      </button>
+    </div>
+  </div>
   <div id="r-proceso-empty" class="section-empty-state">
     <span class="material-symbols-rounded" style="font-size:2.5rem;color:var(--gray-300)">gavel</span>
     <span style="font-weight:600;color:var(--gray-500)">No hay reclamos en proceso</span>
@@ -49,17 +48,18 @@
         <th>Valor del reclamo</th>
         <th>Estado</th>
         <th>Documentación</th>
-        <th>Opciones</th>
+        <th>Acciones</th>
       </tr>
     </thead>
     <tbody id="r-tbody-proceso"></tbody>
   </table>
 </div>
 
-<!-- Sección: Finalizado -->
-<span style="display:block;font-size:1.05rem;font-weight:700;color:var(--md-on-surface);margin-bottom:0.75rem">Finalizado</span>
-
-<div class="rec-card">
+<!-- Sección: Finalizados -->
+<div class="rec-card" style="padding:0;">
+  <div class="rec-card-header">
+    <span style="font-size:1.05rem;font-weight:700;color:var(--md-on-surface)">Finalizados</span>
+  </div>
   <div id="r-pagados-empty" class="section-empty-state">
     <span class="material-symbols-rounded">inbox</span>
     <span>No hay reclamos finalizados</span>
@@ -97,9 +97,18 @@
     var badgeInfo = BADGE_ESTADO_RECLAMO[r.estado] || { clase: 'badge-pendiente', texto: r.estado };
     var docInfo   = DOC_DISPLAY_RECLAMO[r.documentacion] || { label: r.documentacion, tipo: 'pendiente' };
 
-    var docCell = docInfo.tipo === 'recibido'
-      ? '<button class="doc-pill doc-pill-received" onclick="verDocsReclamo(\'' + r.id + '\')">' + docInfo.label + '<span class="material-symbols-rounded">check_circle</span></button>'
-      : '<button class="doc-pill doc-pill-pending" onclick="verDocsReclamo(\'' + r.id + '\')">' + docInfo.label + '<span class="material-symbols-rounded">warning</span></button>';
+    var docCell;
+    if (docInfo.tipo === 'pendiente') {
+      docCell = '<button class="doc-link" onclick="verDocsReclamo(\'' + r.id + '\')">'
+        + '<span class="doc-link-text">Ver pendientes</span>'
+        + '<span class="doc-link-badge">' + r.registros + '</span></button>';
+    } else if (docInfo.label === 'Recibida') {
+      docCell = '<span class="doc-text doc-text-received">Recibida'
+        + '<span class="material-symbols-rounded">check_circle</span></span>';
+    } else {
+      docCell = '<span class="doc-text doc-text-norequiere">No requiere'
+        + '<span class="material-symbols-rounded">remove_circle</span></span>';
+    }
 
     var btnPrincipal = r.estado === 'En revisión'
       ? '<button class="btn-accion" onclick="solicitarEliminarReclamo(\'' + r.id + '\')">'

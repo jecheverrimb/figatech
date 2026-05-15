@@ -1,140 +1,159 @@
-<!-- CRÉDITOS DE RECLAMO -->
+<!-- DOCUMENTACIÓN DEL RECLAMO -->
 <div class="breadcrumb">
   <a href="#" onclick="navTo('inicio');return false">Garantías</a>
   <span class="sep">/</span>
   <a href="#" onclick="navTo('reclamos');return false">Reclamos</a>
   <span class="sep">/</span>
-  <span id="breadcrumb-docs-reclamo">Documentos pendientes</span>
+  <span id="breadcrumb-docs-reclamo">Documentación del reclamo</span>
 </div>
 
 <div class="page-header-row">
   <button class="btn-back" onclick="navTo('reclamos')">
     <span class="material-symbols-rounded">chevron_left</span>
   </button>
-  <div class="page-title" id="title-docs-reclamo" style="margin-bottom:0">Documentos pendientes</div>
+  <div class="page-title" style="margin-bottom:0">Documentación del reclamo</div>
 </div>
 
-<!-- Barra de controles -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem;">
-  <div class="search-box">
-    <span class="material-symbols-rounded">search</span>
-    <input type="text" id="buscador-docs-reclamo" placeholder="Buscar por nombre o cédula" oninput="renderDocsReclamo()">
+<div class="docp-wrapper">
+  <!-- Encabezado del card -->
+  <div class="docp-controls">
+    <div style="font-weight:600;font-size:15px;color:var(--md-on-surface)" id="title-docs-reclamo">Reclamo de garantía # —</div>
+    <div style="display:flex;gap:0.625rem;align-items:center;flex-wrap:wrap">
+      <div class="search-box">
+        <span class="material-symbols-rounded">search</span>
+        <input type="text" id="buscador-docs-reclamo" placeholder="Buscar" oninput="renderDocsReclamo()">
+      </div>
+      <button class="btn btn-outline">
+        <span class="material-symbols-rounded" style="font-size:16px">calendar_today</span> Fechas
+      </button>
+      <button class="btn btn-outline">Descargar consolidado</button>
+    </div>
   </div>
-  <div style="display:flex;gap:0.625rem;">
-    <button class="btn btn-outline">
-      Filtro <span class="material-symbols-rounded" style="font-size:16px">filter_list</span>
-    </button>
-    <button class="btn btn-outline">
-      <span class="material-symbols-rounded">download</span> Descargar
-    </button>
-  </div>
-</div>
 
-<!-- Tabla -->
-<div id="docs-reclamo-empty" class="section-empty-state" style="display:none">
-  <span class="material-symbols-rounded" style="font-size:2.5rem;color:var(--gray-300)">folder_off</span>
-  <span style="font-weight:600;color:var(--gray-500)">No hay créditos que coincidan</span>
+  <!-- Tabla -->
+  <div style="overflow:hidden">
+    <table class="docp-table docp-table-dr" id="tabla-docs-reclamo">
+      <thead>
+        <tr>
+          <th style="width:22%">Titular</th>
+          <th style="width:7%">Nº de pagaré</th>
+          <th style="width:7%;text-align:center">Fecha de reclamo</th>
+          <th style="width:7%;text-align:center" data-tooltip="Fotocopia de cédula">Foto. cédula</th>
+          <th style="width:7%;text-align:center" data-tooltip="Carta de instrucciones">Carta instruc.</th>
+          <th style="width:7%;text-align:center" data-tooltip="Estado de cuenta">Estado de cuenta</th>
+          <th style="width:7%;text-align:center" data-tooltip="Certificado de reporte de deuda">Cert. reporte</th>
+          <th style="width:7%;text-align:center" data-tooltip="Copia de pagaré">Copia pagaré</th>
+          <th style="width:7%;text-align:center" data-tooltip="Aceptación de fianza">Acep. fianza</th>
+          <th style="width:7%;text-align:center" data-tooltip="Formato de endoso">Formato endoso</th>
+          <th style="width:11%">Opciones</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-docs-reclamo"></tbody>
+    </table>
+  </div>
+
+  <div id="docs-reclamo-empty" class="section-empty-state" style="display:none">
+    <span class="material-symbols-rounded" style="font-size:2.5rem;color:var(--gray-300)">folder_off</span>
+    <span style="font-weight:600;color:var(--gray-500)">No hay créditos que coincidan</span>
+  </div>
+
+  <div class="docp-pagination" id="dr-paginacion" style="display:none"></div>
 </div>
-<table class="card-rows-table" id="tabla-docs-reclamo" style="display:none">
-  <thead>
-    <tr>
-      <th>Nombre</th>
-      <th>No. Documento</th>
-      <th>Pagaré</th>
-      <th>Fecha del reclamo</th>
-      <th>Documentos</th>
-      <th>Opciones</th>
-    </tr>
-  </thead>
-  <tbody id="tbody-docs-reclamo"></tbody>
-</table>
 
 <script>
-  var DOC_BADGE_DR = {
-    'Pendiente':              { clase: 'badge-pendiente', icon: 'schedule',     label: 'Pendientes'   },
-    'Con observaciones':      { clase: 'badge-alerta',    icon: 'warning',      label: 'Observaciones'},
-    'Recibido y verificado':  { clase: 'badge-completado',icon: 'check_circle', label: 'Recibida'     }
-  };
+  var DR_PAGE_SIZE = 10;
+  var drPagina = 1;
+  var drFilas = [];
+
+  function drIrPagina(n) {
+    var total = Math.ceil(drFilas.length / DR_PAGE_SIZE);
+    if (n < 1 || n > total) return;
+    drPagina = n;
+    renderDrTabla();
+  }
 
   function renderDocsReclamo() {
+    drPagina = 1;
     var id = window._reclamoDocsActivo || '';
     var creditos = (typeof reclamosDetalle !== 'undefined' && reclamosDetalle[id]) ? reclamosDetalle[id] : [];
-    var reclamo  = (typeof reclamos !== 'undefined') ? reclamos.find(function(r){ return r.id === id; }) : null;
-    var fechaReclamo = reclamo ? reclamo.fecha : '—';
     var q = ((document.getElementById('buscador-docs-reclamo') || {}).value || '').toLowerCase();
 
-    var label = 'Documentos pendientes - Reclamo ' + id;
     var titleEl = document.getElementById('title-docs-reclamo');
     var breadEl = document.getElementById('breadcrumb-docs-reclamo');
-    if (titleEl) titleEl.textContent = label;
-    if (breadEl) breadEl.textContent = label;
+    if (titleEl) titleEl.textContent = 'Reclamo de garantía # ' + id;
+    if (breadEl) breadEl.textContent = 'Reclamo # ' + id;
 
-    var filtrados = creditos.filter(function(c) {
-      return !q || c.nombre.toLowerCase().includes(q) || c.cedula.includes(q);
-    });
+    var reclamo = (typeof reclamos !== 'undefined') ? reclamos.find(function(r) { return r.id === id; }) : null;
+    var fecha = reclamo ? reclamo.fecha : '—';
 
-    window._creditosDocsActivos = creditos;
+    drFilas = creditos.filter(function(c) {
+      if (!q) return true;
+      var pagareStr = c.pagare ? c.pagare.replace('PG-', '') : '';
+      return c.nombre.toLowerCase().includes(q) || c.cedula.includes(q) || pagareStr.includes(q);
+    }).map(function(c) { return { c: c, idx: creditos.indexOf(c), fecha: fecha }; });
 
+    renderDrTabla();
+  }
+
+  function renderDrTabla() {
     var tbody = document.getElementById('tbody-docs-reclamo');
     var empty = document.getElementById('docs-reclamo-empty');
     var tabla = document.getElementById('tabla-docs-reclamo');
+    var paginacion = document.getElementById('dr-paginacion');
 
-    if (!filtrados.length) {
+    if (!drFilas.length) {
       if (tbody) tbody.innerHTML = '';
       if (empty) empty.style.display = 'flex';
       if (tabla) tabla.style.display = 'none';
+      if (paginacion) paginacion.style.display = 'none';
       return;
     }
 
     if (empty) empty.style.display = 'none';
     if (tabla) tabla.style.display = '';
 
-    if (tbody) tbody.innerHTML = filtrados.map(function(c) {
-      var idx = creditos.indexOf(c);
-      var pagareCorto = c.pagare ? c.pagare.replace('PG-', '') : '—';
-      var badgeInfo = DOC_BADGE_DR[c.docEstado] || { clase: 'badge-pendiente', icon: 'schedule', label: 'Pendientes' };
-      return '<tr>'
-        + '<td><button class="col-nombre" onclick="verInfoTitular(\'' + (window._reclamoDocsActivo||'') + '\',' + idx + ')" style="background:none;border:none;cursor:pointer;padding:0;text-align:left;font-family:\'Roboto\',sans-serif">'
-        +   '<span class="material-symbols-rounded">account_circle</span>'
-        +   '<span class="nombre-text" style="text-decoration:underline;text-underline-offset:3px">' + c.nombre + '</span>'
-        + '</button></td>'
-        + '<td>' + c.cedula + '</td>'
-        + '<td>' + pagareCorto + '</td>'
-        + '<td>' + fechaReclamo + '</td>'
-        + '<td><span class="badge ' + badgeInfo.clase + '" style="gap:5px">'
-        +   '<span class="material-symbols-rounded" style="font-size:13px">' + badgeInfo.icon + '</span>'
-        +   badgeInfo.label
-        + '</span></td>'
-        + '<td><button class="btn-accion" onclick="abrirDocsTitular(' + idx + ')">'
-        +   '<span class="material-symbols-rounded">visibility</span> Ver'
-        + '</button></td>'
-        + '</tr>';
-    }).join('');
-  }
+    var totalPaginas = Math.ceil(drFilas.length / DR_PAGE_SIZE);
+    var inicio = (drPagina - 1) * DR_PAGE_SIZE;
+    var filasPagina = drFilas.slice(inicio, inicio + DR_PAGE_SIZE);
 
-  function abrirDocsTitular(idx) {
-    var creditos = window._creditosDocsActivos || [];
-    var c = creditos[idx];
-    if (!c) return;
-
-    var nombreEl = document.getElementById('modal-docs-titular-nombre');
-    if (nombreEl) nombreEl.textContent = c.nombre + ' · C.C. ' + c.cedula;
-
-    var lista = document.getElementById('modal-docs-titular-lista');
-    if (lista) {
-      lista.innerHTML = c.docs.map(function(estado, i) {
-        var icon, color;
-        if (estado === 'recibido')         { icon = 'check_circle'; color = '#16a34a'; }
-        else if (estado === 'observacion') { icon = 'warning';      color = '#d97706'; }
-        else                               { icon = 'cancel';       color = '#dc2626'; }
-        return '<li style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0;border-bottom:1px solid var(--gray-100);font-size:0.9rem;color:var(--gray-700)">'
-          + '<span class="material-symbols-rounded" style="font-size:1.4rem;color:' + color + ';flex-shrink:0">' + icon + '</span>'
-          + DOCS_LISTA[i]
-          + '</li>';
+    if (tbody) {
+      tbody.innerHTML = filasPagina.map(function(f) {
+        var pagare = f.c.pagare ? f.c.pagare.replace('PG-', '') : '—';
+        return '<tr>'
+          + '<td><div class="docp-titular">'
+          +   '<span class="material-symbols-rounded docp-avatar">account_circle</span>'
+          +   '<div style="min-width:0">'
+          +     '<div class="docp-nombre">' + f.c.nombre + '</div>'
+          +     '<div class="docp-cedula">C.C. ' + f.c.cedula + '</div>'
+          +   '</div>'
+          + '</div></td>'
+          + '<td>' + pagare + '</td>'
+          + '<td style="text-align:center;line-height:1.5">' + f.fecha.replace(' / ', '<br>') + '</td>'
+          + f.c.docs.map(function(d) { return '<td style="text-align:center">' + docpIcon(d) + '</td>'; }).join('')
+          + '<td><button class="btn-accion" onclick="verInfoTitular(\'' + (window._reclamoDocsActivo || '') + '\',' + f.idx + ',\'docs-reclamo\')">'
+          +   '<span class="material-symbols-rounded">person</span> Ver titular'
+          + '</button></td>'
+          + '</tr>';
       }).join('');
     }
 
-    abrirModal('modal-docs-titular');
+    if (paginacion) {
+      if (totalPaginas <= 1) {
+        paginacion.style.display = 'none';
+      } else {
+        paginacion.style.display = 'flex';
+        var html = '<button class="docp-page-btn" onclick="drIrPagina(' + (drPagina - 1) + ')"'
+          + (drPagina <= 1 ? ' disabled' : '') + '>'
+          + '<span class="material-symbols-rounded" style="font-size:18px">chevron_left</span></button>';
+        for (var i = 1; i <= totalPaginas; i++) {
+          html += '<button class="docp-page-btn' + (i === drPagina ? ' active' : '') + '" onclick="drIrPagina(' + i + ')">' + i + '</button>';
+        }
+        html += '<button class="docp-page-btn" onclick="drIrPagina(' + (drPagina + 1) + ')"'
+          + (drPagina >= totalPaginas ? ' disabled' : '') + '>'
+          + '<span class="material-symbols-rounded" style="font-size:18px">chevron_right</span></button>';
+        paginacion.innerHTML = html;
+      }
+    }
   }
 
   renderDocsReclamo();

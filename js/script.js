@@ -713,7 +713,45 @@ function verDocsReclamo(id) {
   navTo('docs-reclamo');
 }
 
-function verInfoTitular(reclamoId, idx) {
+// Tooltip engine global
+document.addEventListener('DOMContentLoaded', function() {
+  if (document.getElementById('k-tooltip')) return;
+  var kTip = document.createElement('div');
+  kTip.id = 'k-tooltip';
+  kTip.style.cssText = 'position:fixed;background:rgba(28,28,28,0.9);color:#fff;font-size:12px;font-family:Roboto,sans-serif;padding:5px 10px;border-radius:5px;pointer-events:none;opacity:0;transition:opacity 0.1s;z-index:9999;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.25);';
+  document.body.appendChild(kTip);
+  document.addEventListener('mouseover', function(e) {
+    var el = e.target && e.target.closest ? e.target.closest('[data-tooltip]') : null;
+    if (el && el.dataset.tooltip) {
+      kTip.textContent = el.dataset.tooltip;
+      kTip.style.opacity = '1';
+      kTip.style.left = (e.clientX + 14) + 'px';
+      kTip.style.top  = (e.clientY - 32) + 'px';
+    }
+  });
+  document.addEventListener('mouseout', function(e) {
+    var el = e.target && e.target.closest ? e.target.closest('[data-tooltip]') : null;
+    if (el) kTip.style.opacity = '0';
+  });
+  document.addEventListener('mousemove', function(e) {
+    if (kTip.style.opacity !== '0') {
+      kTip.style.left = (e.clientX + 14) + 'px';
+      kTip.style.top  = (e.clientY - 32) + 'px';
+    }
+  });
+});
+
+function docpIcon(estado) {
+  if (estado === 'recibido') {
+    return '<span class="material-symbols-rounded docp-doc-ok" data-tooltip="Documento recibido">check_circle</span>';
+  } else if (estado === 'observacion') {
+    return '<span class="material-symbols-rounded docp-doc-obs" data-tooltip="Documento erróneo">error</span>';
+  } else {
+    return '<span class="material-symbols-rounded docp-doc-pending" data-tooltip="No recibido">radio_button_unchecked</span>';
+  }
+}
+
+function verInfoTitular(reclamoId, idx, back) {
   var creditos = (typeof reclamosDetalle !== 'undefined' && reclamosDetalle[reclamoId]) ? reclamosDetalle[reclamoId] : [];
   var c = creditos[idx];
   if (!c) return;
@@ -733,6 +771,7 @@ function verInfoTitular(reclamoId, idx) {
     reclamos: [],
     documentos: null
   };
+  window._infoTitularBack = back || 'docs-reclamo';
   navTo('info-titular');
 }
 
